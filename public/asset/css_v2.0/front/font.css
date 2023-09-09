@@ -1,0 +1,42 @@
+
+/*
+* 100 : Thin
+* 200 : Extra Light (Ultra Light)
+* 300 : Light
+* 400 : Regular
+* 500 : Medium
+* 600 : Semi Bold (Demi Bold)
+* 700 : Bold
+* 800 : Extra Bold (Ultra Bold)
+* 900 : Black (Heavy)
+*/
+
+@font-face {
+	font-family: 'NanumSquare';
+	font-style: normal;
+    font-weight: 400;
+	src:url(/asset/font/NanumSquareR.eot);
+	src:local(※),
+		url(/asset/font/NanumSquareR.eot?#iefix) format('embedded-opentype'),
+		url(/asset/font/NanumSquareR.woff) format('woff');
+}
+
+@font-face {
+	font-family: 'NanumSquare';
+	font-style: normal;
+    font-weight: 700;
+	src:url(/asset/font/NanumSquareB.eot);
+	src:local(※),
+		url(/asset/font/NanumSquareB.eot?#iefix) format('embedded-opentype'),
+		url(/asset/font/NanumSquareB.woff) format('woff');
+}
+
+@font-face {
+	font-family: 'OpenSans';
+	font-style: normal;
+    font-weight: 400;
+	src:url(/asset/font/OpenSansL.eot);
+	src:local(※),
+		url(/asset/font/OpenSansL.eot?#iefix) format('embedded-opentype'),
+		url(/asset/font/OpenSansL.woff) format('woff');
+}

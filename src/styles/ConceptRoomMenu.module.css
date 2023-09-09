@@ -1,0 +1,50 @@
+/* top menu */
+.navbar {
+    width: 100%;
+    height: 50px;
+    background: #fff;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.btn {
+    padding: 5px 20px;
+    border-radius: 20px;
+    background: #f29642;
+    color: #fff;
+    font-size: 12px;
+}
+
+.menu {
+    width: 100%;
+    height: 40px;
+    background: #333333;
+}
+
+.top__menu_ul {
+    list-style-type: none;
+    display: flex;
+    color: #fff;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+}
+
+.top__menu_ul li > a {
+    width: 140px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.top__menu_ul li > a:hover{
+    background: #000;
+}
+
+/* end top menu */

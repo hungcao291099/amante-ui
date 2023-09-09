@@ -1,0 +1,303 @@
+.container {
+    margin: 50px auto !important;
+}
+
+.box__container {
+    margin: 50px auto !important;
+}
+
+.title__container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 50px auto !important;
+}
+
+.title__upper {
+    font-family: "Noto Sans KR" !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 20px !important;
+    line-height: 29px !important;
+    letter-spacing: -0.055em !important;
+    color: #454545 !important;
+}
+
+.title__lower {
+    font-family: "SUIT" !important;
+    font-style: normal !important;
+    font-weight: 300 !important;
+    font-size: 48px !important;
+    line-height: 113% !important;
+    /* or 54px */
+    text-transform: capitalize !important;
+    color: #333333 !important;
+}
+
+.title__create {
+    font-family: "Noto Sans KR" !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    font-size: 17.7778px !important;
+    line-height: 26px !important;
+    color: #000000 !important;
+}
+
+.divider {
+    border: 1px solid #000 !important;
+}
+
+.input__group {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 120px;
+}
+
+.input {
+    border: 1px solid #f8f8f8 !important;
+    border-radius: 5px !important;
+    width: 500px !important;
+    height: 40px !important;
+    padding: 0 15px !important;
+    background: #f8f8f8 !important;
+    font-weight: 600 !important;
+    flex: 0.5 !important;
+}
+
+.label {
+    font-family: "Noto Sans KR" !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+    line-height: 23px !important;
+    letter-spacing: -0.05em !important;
+    color: #000000 !important;
+    min-width: 160px !important;
+}
+
+.input:focus {
+    outline: none !important;
+}
+
+.input__container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.check__group {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.select {
+    border-radius: 5px !important;
+    width: 500px !important;
+    height: 40px !important;
+    flex: 0.5 !important;
+}
+
+.preview__box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.file__upload {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.button {
+    width: 100px !important;
+    height: 32px !important;
+    border-radius: 5px !important;
+    color: #f8f8f8 !important;
+    background: #f29642 !important;
+    font-weight: 600 !important;
+}
+
+.btn__cancel {
+    width: 145px !important;
+    height: 45px !important;
+    border-radius: 5px !important;
+}
+
+.btn__save {
+    width: 145px !important;
+    height: 45px !important;
+    border-radius: 5px !important;
+    background: #f29642 !important;
+    color: #f8f8f8 !important;
+}
+
+.btn__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.checkbox__container {
+    height: 200px;
+    width: 100%;
+    overflow-y: scroll;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    background: #f8f8f8;
+    padding: 20px;
+}
+
+.room__list {
+    display: flex;
+    gap: 20px;
+}
+
+.button__view {
+    width: max-content;
+    padding: 0 10px;
+    height: 45px;
+    border-radius: 5px;
+    font-weight: 400;
+    color: #000;
+    background: #f8f8f8;
+}
+
+.active {
+    color: #f8f8f8 !important;
+    background: #f29642 !important;
+}
+
+.button__view:focus {
+    color: #f8f8f8 !important;
+    background: #f29642 !important;
+}
+
+.button__coord {
+    width: max-content;
+    padding: 0 10px;
+    height: 45px;
+    border-radius: 5px;
+    font-weight: 400;
+    color: #f8f8f8 !important;
+    background: #f29642 !important;
+}
+
+.coord__box {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0px 4px 22px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(29px);
+    width: 680px;
+    height: 400px;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.close__btn {
+    font-family: "Noto Sans KR" !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    font-size: 17.7778px !important;
+    line-height: 26px !important;
+    color: #000000 !important;
+    background: none !important;
+}
+
+.button__cancel {
+    width: 175px !important;
+    height: 52px !important;
+    border-radius: 2px !important;
+}
+
+.button__save {
+    width: 175px !important;
+    height: 52px !important;
+    background: #f29642 !important;
+    border-radius: 2px !important;
+    color: #ffffff !important;
+}
+
+.coord__icon {
+    position: absolute;
+}
+
+.object__container {
+    width: 100%;
+    height: 170px;
+    background: #f9f9f9;
+}
+
+.object__box {
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0px 4px 22px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(29px);
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.parent__object {
+    width: 500px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0px 4px 22px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(29px);
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.big__title{
+    font-size: 25px !important;
+    font-weight: bolder !important;
+    color: #333333 !important;
+}
+
+.big__title::after{
+    content: " | ";
+}
+
+.small__title{
+    color: #777 !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+
+.link__btn{
+    text-decoration: none !important;
+    color: #ffffff !important;
+    background: #454545;
+    padding: 2px 10px !important;
+    border-radius: 3px !important;
+}
+
+.table{
+    width: 100% !important;
+}
+
+.table, th, td {
+    border-top: 1px solid #d3d3d3 !important;
+    border-bottom: 1px solid #d3d3d3 !important;
+}
+
+.table th {
+    color: #777 !important;
+    font-weight: 500 !important;
+    font-size: 12px !important;
+}
+
+.table td {
+    color: #333333 !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
+}

@@ -1,0 +1,37 @@
+{
+    "menu1" : [
+        {
+            "code"  : "01",
+            "name"  : "메인 관리",
+            "menu2" : [
+                { "code" : "01", "name" : "배너", "url" : "/manager/banner/lists" },
+				{ "code" : "02", "name" : "코드관리", "url" : "/manager/code/lists" }
+            ]
+        },
+        {
+            "code"  : "02",
+            "name"  : "회원 관리",
+            "menu2" : [
+                { "code" : "01", "name" : "회원", "url" : "/manager/member/lists" },
+                { "code" : "02", "name" : "관리자", "url" : "/manager/admin/lists" }
+            ]
+        },
+        {
+            "code"  : "03",
+            "name"  : "게시판 관리",
+            "menu2" : [
+                { "code" : "01", "name" : "언론보도", "url" : "/manager/media/lists" },
+                { "code" : "02", "name" : "치료효과", "url" : "/manager/effect/lists" },
+                { "code" : "03", "name" : "공지사항", "url" : "/manager/notice/lists" },
+                { "code" : "04", "name" : "병원이야기", "url" : "/manager/story/lists" },
+                { "code" : "05", "name" : "건강지식", "url" : "/manager/health/lists" },
+                { "code" : "06", "name" : "치료후기", "url" : "/manager/epilogue/lists" },
+                { "code" : "07", "name" : "전후사진", "url" : "/manager/beforeafter/lists" },
+                { "code" : "08", "name" : "셀카후기", "url" : "/manager/self/lists" },
+                { "code" : "09", "name" : "자주묻는질문", "url" : "/manager/faq/lists" },
+                { "code" : "10", "name" : "온라인 상담", "url" : "/manager/counsel/lists" },
+                { "code" : "11", "name" : "LIVE 교정", "url" : "/manager/live/lists" }
+            ]
+        }
+    ]
+}

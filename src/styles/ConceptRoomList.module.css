@@ -1,0 +1,208 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+}
+
+.title {
+    font-family: "Sora" !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    font-size: 46.3009px !important;
+    line-height: 56px !important;
+    /* identical to box height, or 120% */
+    text-align: center !important;
+    letter-spacing: 0.005em !important;
+    color: #000000 !important;
+}
+
+.search__form {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #acacac !important;
+    border-bottom: 1px solid #acacac !important;
+}
+
+.left__col {
+    font-style: normal;
+    font-weight: 400;
+    line-height: 30px;
+    height: 100%;
+    /* or 556% */
+    letter-spacing: 0.005em;
+    color: #777777;
+    background: #d9d9d9;
+    padding: 3px 10px 3px 5px;
+}
+
+.right__col {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0 4px 6px;
+}
+
+.select {
+    color: #777777 !important;
+    border: 1px solid #acacac !important;
+}
+
+.big__title{
+    font-size: 25px !important;
+    font-weight: bolder !important;
+    color: #333333 !important;
+}
+
+.big__title::after{
+    content: " | ";
+}
+
+.small__title{
+    color: #777 !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+
+.input__text {
+    border: 1px solid #acacac !important;
+    border-radius: 0 !important;
+    color: #777777 !important;
+    padding: 0 5px !important;
+}
+
+.input__group {
+    display: flex;
+    gap: 4px;
+}
+
+.active__btn {
+    background: #000000 !important;
+    border-radius: 2px !important;
+    color: #ffffff !important;
+    padding: 0 11px !important;
+}
+
+.disable__btn {
+    background: #777777 !important;
+    border-radius: 2px !important;
+    color: #ffffff !important;
+    padding: 0 11px !important;
+}
+
+.active__btn:focus,
+.disable__btn:focus,
+.select:focus,
+.input__text:focus {
+    outline: none !important;
+}
+
+.room__container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.table__container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.table {
+    width: 100%;
+}
+
+.table thead {
+    background: #d9d9d9 !important;
+    color: #777777 !important;
+}
+
+.table thead th {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 50px;
+    text-align: center;
+    border-top: 1px solid #acacac !important;
+    border-bottom: 1px solid #acacac !important;
+}
+
+.table thead th:not(.no__border) {
+    border-right: 1px solid #acacac !important;
+}
+
+.last__th {
+    border-right: none !important;
+}
+
+.table tbody td {
+    text-align: center;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    color: #777777;
+    line-height: 40px;
+}
+
+.table tbody td:not(.no__border) {
+    border-right: 1px solid #acacac !important;
+}
+
+.use__yn{
+    cursor: pointer;
+}
+
+.btn__group {
+    line-height: 30px !important;
+}
+
+.btn__box{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    /* align-items: center; */
+}
+
+.delete__btn {
+    background: #FF2222 !important;
+    color: #ffffff !important;
+    padding: 0 11px !important;
+    border-radius: 2px !important;
+}
+
+.status{
+    color: #777777 !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 13px !important;
+}
+
+.list__btn {
+    font-family: "Sora";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: #ffffff !important;
+    width: max-content;
+    padding: 2px 12px;
+    border-radius: 2px;
+    background: #F29642 !important;
+}
+
+.product_cd, .product_nm{
+    color: #777777 !important;
+}
+
+.product_cd {
+    border-right: 1px solid #777 !important;
+    padding: 0 10px 0 0 !important;
+}
+
+.product_nm {
+    padding: 0 0 0 10px !important;
+}

@@ -1,0 +1,39 @@
+{
+  "Contact":
+    {
+        "phone": [
+            { "mode": 1, "number": "010" },
+            { "mode": 1, "number": "011" },
+            { "mode": 1, "number": "016" },
+            { "mode": 1, "number": "017" },
+            { "mode": 1, "number": "018" },
+            { "mode": 1, "number": "019" },
+            { "mode": 2, "number": "02" },
+            { "mode": 2, "number": "051" },
+            { "mode": 2, "number": "053" },
+            { "mode": 2, "number": "032" },
+            { "mode": 2, "number": "062" },
+            { "mode": 2, "number": "042" },
+            { "mode": 2, "number": "052" },
+            { "mode": 2, "number": "044" },
+            { "mode": 2, "number": "031" },
+            { "mode": 2, "number": "033" },
+            { "mode": 2, "number": "043" },
+            { "mode": 2, "number": "041" },
+            { "mode": 2, "number": "063" },
+            { "mode": 2, "number": "061" },
+            { "mode": 2, "number": "054" },
+            { "mode": 2, "number": "055" },
+            { "mode": 2, "number": "064" },
+            { "mode": 2, "number": "070" }
+        ],
+        "email": [
+            { "value": "naver.com" },
+            { "value": "daum.net" },
+            { "value": "hanmail.net" },
+            { "value": "nate.com" },
+            { "value": "gmail.com" },
+            { "value": "hotmail.com" }
+        ]
+    }
+}

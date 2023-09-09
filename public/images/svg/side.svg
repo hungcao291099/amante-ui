@@ -1,0 +1,11 @@
+<svg width="39" height="38" viewBox="0 0 39 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="19.7168" cy="18.8955" r="18.8809" fill="white"/>
+<path d="M20.0173 9.8501L28.3969 11.9318V25.3874L20.0173 27.4203M20.0173 9.8501V27.4203M20.0173 9.8501L11.9258 11.9318V25.3874L20.0173 27.4203" stroke="#D0D0D0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M20.0173 9.8501L28.3969 11.9318V25.3874L20.0173 27.4203M20.0173 9.8501V27.4203M20.0173 9.8501L11.9258 11.9318V25.3874L20.0173 27.4203" stroke="#D0D0D0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M20.0173 9.8501L28.3969 11.9318V25.3874L20.0173 27.4203M20.0173 9.8501V27.4203M20.0173 9.8501L11.9258 11.9318V25.3874L20.0173 27.4203" stroke="#D0D0D0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<mask id="path-3-inside-1_1_924" fill="white">
+<rect x="22.3342" y="12.3503" width="4.42463" height="5.93628" rx="1"/>
+</mask>
+<rect x="22.3342" y="12.3503" width="4.42463" height="5.93628" rx="1" stroke="#D0D0D0" stroke-width="3" stroke-linejoin="round" mask="url(#path-3-inside-1_1_924)"/>
+<circle cx="19.7129" cy="18.8955" r="16.334" stroke="white"/>
+</svg>

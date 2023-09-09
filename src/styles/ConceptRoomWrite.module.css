@@ -1,0 +1,131 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  font-family: "Sora", sans-serif !important;
+}
+
+.loading_btn {
+  background-color: #6d6d6d !important;
+  pointer-events: none !important;
+}
+
+.loading__circle {
+  border: 5px solid #d9d9d9;
+  border-top: 5px solid #f29642;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.title {
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 46.3009px;
+  line-height: 56px;
+  /* identical to box height, or 120% */
+  text-align: center;
+  letter-spacing: 0.005em;
+  color: #000000;
+}
+
+.active__config,
+.disable__config {
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 56px;
+  background: none;
+  width: max-content;
+  padding: 5px 25px;
+}
+
+.active__config {
+  border-bottom: 1px solid #f29642;
+}
+
+.disable__config {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.write__container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.button__grp {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.save__btn,
+.delete__btn,
+.list__btn {
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: #ffffff;
+  width: max-content;
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+
+.save__btn {
+  background: #000000;
+}
+
+.list__btn {
+  background: #f29642;
+}
+
+.delete__btn {
+  background: #ff2222;
+}
+
+.file__label {
+  /* position: relative; */
+  cursor: pointer;
+}
+
+.file__input {
+  position: absolute;
+  visibility: hidden;
+}
+
+.file__label .save__btn {
+  padding-top: 6px;
+  padding-bottom: 5px;
+  cursor: pointer;
+}
+
+.slide__btn__group {
+  display: flex;
+  justify-content: end;
+  gap: 20px;
+}
+
+.order__btn {
+  width: 30px;
+  height: 30px;
+  background: #f29642;
+  color: white;
+  border-radius: 2px;
+}

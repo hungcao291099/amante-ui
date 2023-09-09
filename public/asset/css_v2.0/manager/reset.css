@@ -1,0 +1,40 @@
+/* Default Style */
+@import url("http://fonts.googleapis.com/earlyaccess/nanumgothic.css");
+/* @font-face {
+    font-family: 'NotoSansCJKkr';
+    font-style: normal;
+    font-weight: 400;
+    src: local('NotoSansCJKkr-Regula'), local('NotoSansCJKkr-Regula'),
+    url(../../font/NotoSansCJKkr-Regular.eot),
+    url(../../font/NotoSansCJKkr-Regular?#iefix) format('embedded-opentype'),
+    url(../../font/NotoSansCJKkr-Regular.woff) format('woff'),
+    url(../../font/NotoSansCJKkr-Regular.woff2) format('woff2'),
+    url(../../font/NotoSansCJKkr-Regular.otf) format('opentype');
+} */
+*{margin:0;padding:0}
+body{color:#666;font-size:12px;line-height:18px;letter-spacing:-0.005em}
+ul,ol,li{list-style:none}
+img,hr{border:none}
+img{vertical-align:top; border:0px}
+
+table{border-spacing:0;width:100%;table-layout:fixed}
+table td img{vertical-align:middle;}
+a{display:block;color:#666;font-weight:bold}
+a:link, a:visited, a:active, a:hover{text-decoration:none;color:inherit}
+body,p,div,ul,li,dl,dt,dd,ol,fieldset,textarea,input,select,table,th,td,address,cite,h1,h2,h3,h4,h5,h6,strong,b,label{font-family:'Nanum Gothic', dotum, Arial, sans-serif}
+strong,h1,h2,h3,h4,h5,h6,th,b,dt{font-size:inherit;color:inherit}
+
+input{vertical-align:middle;outline:none}
+input[type='text'],
+input[type='password']{display:inline-block; width: 100%;height:30px; box-sizing: border-box;padding:0 5px; border:1px solid #ccc; background-color:#fff; font-size:12px; color:#666; line-height:30px; box-sizing: border-box; vertical-align:top;}
+input.ip25 {height: 25px;line-height: 25px;}
+select{display:inline-block; height:30px; padding:0 0 0 5px; border:1px solid #ccc; background-color:#fff; font-family:'NotoSansCJKkr', sans-serif; font-size:12px; color:#666; line-height:30px;  vertical-align:top}
+select.sel25 {height: 25px;line-height: 25px}
+textarea{display:inline-block; padding:5px; border:solid 1px #ccc; background-color:#fff; font-size:12px; color:#666; line-height:16px; box-sizing: border-box;vertical-align:middle}
+input[type='file'], input[type='image'], input[type='reset'], input[type='button'], input[type='submit'] {cursor:pointer}
+
+hr, caption     {position:absolute; left:-9999px; top:-9999px;}
+legend          {position:absolute; height:0; font-size:0px; line-height:0; overflow:hidden; text-indent:-9999px;}
+address,cite,em {font-style:normal;}
+fieldset        {border:0; padding:0;}
+label           {cursor:pointer;}

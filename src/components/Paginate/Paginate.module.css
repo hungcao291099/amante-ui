@@ -1,0 +1,28 @@
+.paginate__container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.paginate__container a {
+    color: #777777;
+    text-decoration: none;
+}
+
+.paginate__container li {
+    list-style-type: none;
+}
+
+.page__btn{
+    width: fit-content;
+    border: 1px solid #777777;
+    color: #777777;
+    padding: 5px 10px;
+    background: #fff;
+}
+
+.active__page{
+    background: #d3d3d3;
+}
