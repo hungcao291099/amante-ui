@@ -300,7 +300,6 @@ export default () => {
                             {width > 768 ? (
                                  
                                 <>
-                                { console.log(data)}
                                     <Slider {...settings}>
                                       
                                         {data.bestMenuTab.length > 0 && data.bestMenuTab.map((cate, idx) => (
@@ -363,6 +362,7 @@ export default () => {
                                 {data.newMenuTab.length > 0 && data.newMenuTab.map((mainCate1Row, idx) => (
                                     <li key={idx} className={`${mainCate1Row.category_cd} ${selectedNew == mainCate1Row.category_cd ? "on" : ""}`}>
                                         <Link
+                                            
                                             onClick={(e) => {
                                                 setSelectedNew(mainCate1Row.category_cd)
                                                 // e.preventDefault()

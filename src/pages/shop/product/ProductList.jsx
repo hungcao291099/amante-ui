@@ -12,9 +12,16 @@ import Filter from './Filter';
 import jwt_decode from 'jwt-decode';
 import parse from 'html-react-parser';
 import { Helmet } from 'react-helmet';
+import { transform } from 'framer-motion';
+import { AiOutlineDown } from "react-icons/ai";
+import { MdOutlineCancel } from "react-icons/md";
+
+
 
 const ProductList = () => {
-  const [products, setProducts] = useState({});
+  const [products, setProducts] = useState([]);
+  const [productsLoaded, setProductsLoaded] = useState();
+  const [getData, setData] = useState([]);
   const [sorts, setSorts] = useState([]);
   const [orderBy, setOrderBy] = useState('A');
   const [inStock, setInStock] = useState(false);
@@ -36,6 +43,48 @@ const ProductList = () => {
   const userData = token ? jwt_decode(token) : null;
   const cust_seq = userData?.cust_seq || null;
   const navigate = useNavigate();
+  const [categories, setCategories] = useState();
+  const [Props, setProps] = useState();
+  const [Hcode, setHcode] = useState();
+  const [curPage, setcurPage] = useState(1);
+
+  let selectedProps=[];
+
+  let cat_code = Number(urlParams.get('cat_code')) || '';
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await api({
+          url: `/shop/product/category/newlist`,
+          method: "GET",
+        });
+        setCategories(data.data);
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await api({
+          url: `/shop/app/product/hCode/dCode`,
+          method: "GET",
+          params:{
+            CAT_CODE: cat_code,
+          }
+        });
+        setProps(data.response);
+        setHcode(data.response.filter(x => x.CAT_CODE === cat_code))
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,45 +92,46 @@ const ProductList = () => {
       setSorts(sortList);
       setCodes(codeList);
     };
-
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await productCate(category1Cd, category2Cd, category3Cd, token);
-      setCateData(data.cateData);
-      setCateBanner(data.cateBanner);
-    };
+  
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const data = await productCate(category1Cd, category2Cd, category3Cd, token);
+  //     setCateData(data.cateData);
+  //     setCateBanner(data.cateBanner);
+  //   };
 
-    fetchData();
-  }, [category1Cd, category2Cd, category3Cd]);
+  //   fetchData();
+  // }, [category1Cd, category2Cd, category3Cd]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await api.get(`/shop/product/list`, {
-          params: {
-            pageCnt: rowCount,
-            orderBy,
-            inStock,
-            sh_category1_cd: category1Cd,
-            sh_category2_cd: category2Cd,
-            sh_category3_cd: category3Cd,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setProducts(data);
-        setRowCount(Number(data.pageCnt));
-        setHasMore(data.data.length > 0);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [rowCount, orderBy, inStock, category1Cd, category2Cd, category3Cd]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const { data } = await api.get(`/shop/product/list`, {
+  //         params: {
+  //           pageCnt: rowCount,
+  //           orderBy,
+  //           inStock,
+  //           sh_category1_cd: category1Cd,
+  //           sh_category2_cd: category2Cd,
+  //           sh_category3_cd: category3Cd,
+  //         },
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //       setProducts(data);
+  //       setRowCount(Number(data.pageCnt));
+  //       setHasMore(data.data.length > 0);
+  //       console.log(data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [rowCount, orderBy, inStock, category1Cd, category2Cd, category3Cd]);
 
   const getSortValue = (e) => {
     setOrderBy(e.target.value);
@@ -100,20 +150,129 @@ const ProductList = () => {
     [hasMore]
   );
 
+  const [checkedOption, setCheckedOption] = useState([])
+  const handleCheckOption = (e) => {
+    if(e.target.checked) {
+      if(checkedOption==null) {setProducts([]),setHasMore(true)}
+      setCheckedOption(prev => {
+        return [...prev, e.target.value]
+      })
+    } else {
+      setCheckedOption(checkedOption.filter(x => x !== e.target.value))
+    } 
+ 
+  }
+  const cancelOption=(value)=>{
+    setCheckedOption(checkedOption.filter(x => x !== value))
+    if(checkedOption== null){setProducts([]),setHasMore(true)}
+  }
+
+  useEffect(()=>{
+    const wrap = document.getElementById('wrap')
+    window.addEventListener('scroll', () => {
+      if (window.scrollY + window.innerHeight > wrap.clientHeight + wrap.offsetTop) {
+      setcurPage((curPage)=>curPage+1)
+      
+      }
+    })
+  },[window.scrollY])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if(checkedOption.length >0){
+          if(hasMore==true){
+            const { data } = await api({
+              url: `/shop/app/filter/product`,
+              method: "POST",
+              data: {data:checkedOption,
+                     pages: curPage
+              }
+            })
+            if(data.response.length === productsLoaded){setHasMore(false)}
+              setProducts(data.response);
+              setProductsLoaded(data.response.length)
+          }
+        
+        }
+        else{
+          if(hasMore==true){
+            const data = await api({
+              url: `/shop/app/product/category`,
+              method: "GET",
+              params: { 
+                CAT_CODE: cat_code,
+                page:curPage
+              }
+            });
+            // setProducts(data.data);
+            if(data.data.response.length === productsLoaded){setHasMore(false)}
+            setProducts((product)=>[...product,...data.data.response]);
+            setProductsLoaded(data.data.response.length)
+          }
+          
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [checkedOption,curPage])
+console.log(products,productsLoaded,hasMore);
+  
+
+$(document).ready(function() {
+  $(".arrow").unbind('click').click(function (){
+    $(this).parent().find(".depth-2").slideToggle();
+    $(this).toggleClass('rotate');
+  })
+    
+  $(".arrow2").unbind('click').click(function (e){
+    e.preventDefault();
+    $(this).parent().find(".depth-3").slideToggle();
+    $(this).toggleClass('rotate');
+
+  })
+  $(".depth-2 li").unbind('click').click(function (e){
+    e.stopPropagation();
+  })
+  $(".prop").unbind().click(function (){
+    $(".sub-prop").hide();
+    $(this).find(".sub-prop").toggle();
+    $(".prop-outside").css('visibility', 'visible');
+  })
+  $(".prop-outside").unbind().click(function (){
+    $(".prop-outside").css('visibility', 'hidden');
+    $(".sub-prop").hide('fast');
+  })
+
+ 
+  $(".option-text").unbind().hover(function (){
+    $(this).parent().find(".more-text").toggle();
+  })
+
+  
+})
+
+
+
   return (
     <>
+     
+     
       <Helmet>
         <title>
           {`아망떼 ㅣ
           ${
-            cate?.category3_nm
-              ? cate.category3_nm.replace(/<[^>]+>/g, '')
-              : cate?.category2_nm
-              ? cate.category2_nm.replace(/<[^>]+>/g, '')
-              : cate?.category_nm ? cate?.category_nm.replace(/<[^>]+>/g, '') : ''
+            categories?.CAT_NAME
+              ? categories.category3_nm.replace(/<[^>]+>/g, '')
+              : categories?.category2_nm
+              ? categories.category2_nm.replace(/<[^>]+>/g, '')
+              : categories?.category_nm ? cate?.category_nm.replace(/<[^>]+>/g, '') : ''
           }`}
         </title>
       </Helmet>
+        {/* <BannerCategory baseUrl={baseUrl} cateBanner={cateBanner} /> */}
       <div
         className={`content product product_lists_page ${
           category1Cd === 3 && category2Cd === ''
@@ -121,16 +280,16 @@ const ProductList = () => {
             : category1Cd === 13 && category2Cd === ''
             ? 'disney_page'
             : ''
+            
         }`}
       >
-        <BannerCategory baseUrl={baseUrl} cateBanner={cateBanner} />
-
-        <PageNavigate
+        <div className='prop-outside'></div>
+        {/* <PageNavigate
           cateData={cate}
           category2Cd={category2Cd}
           category3Cd={category3Cd}
           parse={parse}
-        />
+        /> */}
 
         <div className="mb_prd_lnb">
           {cate?.category3_nm
@@ -140,7 +299,84 @@ const ProductList = () => {
             : cate?.category_nm && parse(cate.category_nm.replace('<br>', ''))}
         </div>
 
-        <div className="wrap">
+        <div className="wrap" id='wrap'>
+            <div className="left-wrap">
+            <div className="sidebar">
+            <ul className="depth-1">
+                <div className="cate-panel">
+                {categories?.map((cate, index) => {
+                  return(
+                    <li key={index} >
+                      <div className="space">
+                      <Link
+                      onClick={(cate.CAT_CODE)}
+                        className="cate2"
+                        to={`/shop/product/product_lists?cat_code=${cate.CAT_CODE}`}
+                      >
+                         <h3>{cate.CAT_NAME && parse(cate.CAT_NAME)}</h3>                                      
+                        {cate.cate_list_2.length > 0 ? (
+                          <div className="depth-2">
+                            <ul>
+                                <div className="cate-list-2">
+                                  {cate.cate_list_2?.map((cate2, index) => (
+                                    <li key={index}>
+                                      <div className="space">
+                                        <Link
+                                        
+                                        className="cate2"
+                                          to={`/shop/product/product_lists?cat_code=${cate2.CAT_CODE}`}
+                                        >
+                                          <h4>{cate2.CAT_NAME && parse(cate2.CAT_NAME)}</h4>
+                                          
+                                          {cate2.cate_list_3.length > 0 ? (
+                                            <ul className="depth-3">
+                                              {cate2.cate_list_3?.map(
+                                                (cate3, index) => (
+                                                  <li
+                                                  key={index}
+                                                  >
+                                                    <div className="space">
+                                                      <Link
+                                                     
+                                                        to={`/shop/product/product_lists?cat_code=${cate3.CAT_CODE}`}
+                                                      >
+                                                        <h5>{cate3.CAT_NAME && parse(cate3.CAT_NAME)}</h5>
+                                                          
+                                                      </Link>
+                                                    </div>
+                                                  </li>
+                                                )
+                                              )}
+                                            </ul>
+                                          ) : null}
+                                        </Link>
+                                      </div>
+                                     {cate2.cate_list_3.length >0 ?<div className="arrow2" ></div>:null} 
+                                    </li>
+                                  ))}
+                                </div>
+                               
+                              
+                            </ul>
+                          </div>
+                        ):null                          
+                        }
+                        
+                      </Link>
+                      </div>
+                      {cate.cate_list_2.length > 0 ?<div className="arrow" ></div>:null} 
+                    </li>
+                  )
+                }
+                )}
+                
+                </div>
+              </ul>
+              
+            </div>
+            </div>
+
+          <div className="right-wrap" >
           <div className="pc_prd_lnb">
             {cate?.category3_nm
               ? parse(cate.category3_nm.replace('<br>', ''))
@@ -149,51 +385,113 @@ const ProductList = () => {
               : cate?.category_nm && parse(cate.category_nm.replace('<br>', ''))}
           </div>
 
-          {category1Cd !== '' && category2Cd === '' && cate2?.length > 0 && (
+
+          {/* <BestList bests={bests} Item={Item} /> */}
+          
+          {Hcode  && (
             <ul
-              className={`prd_depth1_btn ${
-                category1Cd === 1 || category1Cd === 3
-                  ? 'point_depth'
-                  : category1Cd === 5 && 'point_depth_02'
-              }`}
+              className={"prd-props" }
             >
-              {cate2?.map((cate, index) => (
-                <li key={index}>
-                  <Link
-                    to={`/shop/product/product_lists?sh_category1_cd=${category1Cd}&sh_category2_cd=${cate.category_cd}`}
-                  >
-                    {cate?.category_nm && parse(cate.category_nm.replace('<br>', ''))}
-                  </Link>
-                </li>
-              ))}
+                             
+
+              {Hcode?.map((h_code, index) => {
+                return(
+                <>
+                  
+                  <li key={index}>
+                    <div className='prop' >
+                    { h_code?.H_NAME}
+                    <AiOutlineDown/>
+                    {h_code.DETAILED?.length > 0 ? ( 
+                    <div className='sub-prop' >
+                      <div className='option-container'>
+                      {h_code.DETAILED?.map((d_code,index) =>{
+                        return (
+                        
+                          <div className='option'>
+                           {/* <div className='checkbox' Hcode={h_code.H_CODE} Dcode={d_code.D_CODE} Catcode={cat_code} onClick={()=>{selectOption()}} ></div> */}
+                           <input type='checkbox' id={`${h_code.H_CODE}-${index}`}  
+                           value={`${h_code.H_CODE}|${d_code.D_CODE}|${cat_code}`} onClick={handleCheckOption} />
+                           <label htmlFor={`${h_code.H_CODE}-${index}`}>{d_code.D_NAME}</label>
+                         
+                           
+                          {d_code.D_NAME.length > 10 ? (
+                           <div className='more-text'>
+                             {d_code.D_NAME}
+                           </div>
+                          ):null}
+                           </div>
+                         )
+                      })}
+                      </div>
+                    </div>):null}
+                   
+                    </div>
+                      
+                  </li>
+                </>
+               
+              )})}
             </ul>
+
           )}
 
-          {category2Cd !== '' && cate3?.length > 0 && (
-            <ul className="prd_depth1_btn">
-              {cate3?.map((cate, index) => (
-                <li key={index} className={category3Cd === cate.category_cd ? 'on' : ''}>
-                  <Link
-                    to={`/shop/product/product_lists?sh_category1_cd=${category1Cd}&sh_category2_cd=${category2Cd}&sh_category3_cd=${cate.category_cd}`}
-                  >
-                    {cate?.category_nm && parse(cate.category_nm.replace('<br>', ''))}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
+          <div >
+            {checkedOption.length > 0?(
+               <ul className='total-props'>
+               {checkedOption.map((value,index)=>{
+                var s = value.split("|")
+                var hcode = Hcode.filter(x => x.H_CODE === parseInt(s[0]))
+                var dcode = hcode[0].DETAILED.filter(x => x.D_CODE === parseInt(s[1]))
+                var dname=dcode[0].D_NAME
+                return(
+                  <div className='selected-prop' onClick={()=>{cancelOption(value)}}>
+                  <li>{dname}</li>
+                  <MdOutlineCancel />
+                  </div>
+                )
+               })}
+                 
+             
+                
+              </ul>
+            ):null}
+           
+          </div>
 
-          <BestList bests={bests} Item={Item} />
 
-          <Filter
+          {/* <Filter
             products={products}
             setInStock={setInStock}
             sorts={sorts}
             getSortValue={getSortValue}
-          />
+          /> */}
 
           <div className="prd_list">
             <ul id="product_ul">
+              
+              {products?.length > 0 ? (
+                products.map((product, index) =>
+                
+                  index + 1 === products.length ? (
+                    <Item
+                      key={index}
+                      item={product}
+                     
+                    />
+                  ) : (
+                    <Item
+                      key={index}
+                      item={product}
+                   
+                    />
+                  )
+                )
+              ) : (
+                <li className="nodata">등록된 상품이 없습니다.</li>
+              )}
+            </ul>
+            {/* <ul id="product_ul">
               {products.data?.length > 0 ? (
                 products.data.map((product, index) =>
                   index + 1 === products.data.length ? (
@@ -220,7 +518,8 @@ const ProductList = () => {
               ) : (
                 <li className="nodata">등록된 상품이 없습니다.</li>
               )}
-            </ul>
+            </ul> */}
+          </div>
           </div>
         </div>
       </div>

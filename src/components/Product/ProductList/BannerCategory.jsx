@@ -5,6 +5,8 @@ const BannerCategory = ({ baseUrl, cateBanner }) => {
   const settings = {
     dots: true,
     arrows: false,
+    slidesToShow: 3,
+    slidesToScroll: 3
   };
 
   return (

@@ -44,6 +44,7 @@
     "react-svg": "^16.1.18",
     "screenfull": "^6.0.2",
     "swiper": "^9.3.0",
+    "tippy.js": "^6.3.7",
     "universal-cookie": "^4.0.4",
     "uuid": "^9.0.0"
   },

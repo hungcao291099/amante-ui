@@ -310,7 +310,7 @@ input[type='radio']+label,input[type='checkbox']+label{display:inline-block;curs
 .content.product_lists_page{padding:0}
 .product_lists_page.kids_page .mb_prd_lnb{width:94px;height:41px;margin:0 auto;background:url(/asset/images/shop/default/ico_gnb_kids.jpg) no-repeat 50% 50%;background-size:100%;text-indent:-9999px;overflow:hidden}
 .product_lists_page.disney_page .mb_prd_lnb{width:94px;height:41px;margin:0 auto;background:url(/asset/images/shop/default/ico_gnb_disney.jpg) no-repeat 50% 50%;background-size:100%;text-indent:-9999px;overflow:hidden}
-.product_lists_page .prd_homde_keyvisual{max-width:100vw;overflow:hidden}
+.product_lists_page .prd_homde_keyvisual{max-width: 800px;overflow:hidden}
 .product_lists_page .prd_homde_keyvisual .slick-slide .wrap{padding:0;position:relative}
 .product_lists_page .prd_homde_keyvisual .slick-slide{position:relative}
 .product_lists_page .prd_homde_keyvisual .slick-slide .img img{width:100%}
@@ -420,7 +420,7 @@ input[type='radio']+label,input[type='checkbox']+label{display:inline-block;curs
 .product_lists_page .round_sub_tab li:nth-child(4n) a{border:1px solid #ddd;border-left:0;border-radius:0 5px 5px 0}
 .product_lists_page .round_sub_tab li.on a{background:#f5f5f5;color:#111}
 
-.sale_lists_page.product_lists_page .must_buy_this{border:0}
+.sale_lists_page.product_lists_page .must_buy_this{border:0;width: 800px;height: 500px;}
 .sale_lists_page.product_lists_page .prd_top{margin-top:25px}
 .sale_lists_page .round_sub_tab li a br{display:none}
 .sale_lists_page .must_buy_this .prd_list ul li .box{position:relative;overflow:hidden;border-radius:8px;box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1)}
@@ -808,7 +808,10 @@ input[type='radio']+label,input[type='checkbox']+label{display:inline-block;curs
 .slick-arrow{position:absolute;top:50%;left:50%;width:40px;height:40px;overflow:hidden;text-indent:-9999px;box-shadow:0 3px 6px 0 rgba(0, 0, 0, 0.16);border-radius:100%;z-index:50}
 .slick-arrow.slick-prev{background:#fff url(/asset/images/shop/default/slide_arrow.png) 50% no-repeat;transform:rotate(180deg);margin-left:-620px;}
 .slick-arrow.slick-next{background:#fff url(/asset/images/shop/default/slide_arrow.png) 50% no-repeat;margin-left:580px;}
-.prd_list .slick-arrow{top:33%}
+.prd_list .slick-arrow{top:30%}
+.prd_list .slick-arrow.slick-prev{margin-left: -51%;}
+.prd_list .slick-arrow.slick-next{margin-left: 48%;}
+.prd_list .slick-list{height: 500px;}
 
 /* 헤더공유하기 */
 .header .share_area .share_layer{top:-102px;left:50%;right:auto;transform:translateX(-50%)}

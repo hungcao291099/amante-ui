@@ -24,6 +24,7 @@
 
     display: block;
     overflow: hidden;
+    height: inherit;
 
     margin: 0;
     padding: 0;
@@ -53,7 +54,7 @@
     position: relative;
     top: 0;
     left: 0;
-
+    height: inherit;
     display: block;
 }
 .slick-track:before,

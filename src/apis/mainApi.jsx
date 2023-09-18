@@ -12,6 +12,7 @@ export const mainApi = async () => {
         const mainMiddleApi = "/shop/banner/mainMiddle"
         const bestMenuTabApi = "/shop/category/best/list";
         const newMenuTabApi = "/shop/category/new/list";
+        const newCate = "/shop/product/category/newlist";
 
         const responses = await Promise.all([
             api.get(categoryListApi),
@@ -24,6 +25,7 @@ export const mainApi = async () => {
             api.get(mainMiddleApi),
             api.get(bestMenuTabApi),
             api.get(newMenuTabApi),
+            api.get(newCate),
         ])
 
         const result = {
@@ -36,10 +38,10 @@ export const mainApi = async () => {
             mainKeyword: responses[6].data.data,
             mainMiddle: responses[7].data.data,
             bestMenuTab: responses[8].data.data.reverse(),
-            newMenuTab: responses[9].data.data.reverse()
+            newMenuTab: responses[9].data.data.reverse(),
+            newCate: responses[10].data.data,
         }
 
-        console.log(result)
         return result
     } catch (error) {
         console.log(error)
@@ -53,9 +55,14 @@ export const getProductList = async (category_cd, mode) => {
         return response.data.data
     } catch (error) {
         console.log(error)
-    }
-}
+    }   
 
+}
+export const getBestCateImg = async (category_cd) => {
+    let endpoint = `/shop/product/main/best/cate_img?category1_cd=${category_cd}`
+    const response = await api.get(endpoint);
+        return response.data
+}
 export const getInsta = async (mode) => {
     try {
         let endpoint = mode == "pet" ? "/shop/main/insta_img_pet/list" : "/shop/main/insta_img/list"

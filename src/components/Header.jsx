@@ -16,6 +16,7 @@ import useScrollDirection from "../hooks/useScrollDirection";
 import { Html } from "@mui/icons-material";
 import { useContext } from 'react';
 import { CdnContext } from "@contexts/cdnContext";
+import { getBestCateImg } from "../apis/mainApi";
 function Header() {
   const { baseUrl } = useContext(CdnContext);
 
@@ -31,6 +32,9 @@ function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const { pathname } = useLocation();
 
+
+
+
   const scrollDirection = useScrollDirection();
 
   useEffect(() => {
@@ -40,6 +44,7 @@ function Header() {
     };
     fetchData();
   }, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,7 +81,7 @@ function Header() {
     $(".dropdown-category").on("blur", function () {
       $(this).find(".cate-depth-1").removeClass("active");
     });
-
+   
     $(".cate-depth-1 li").hover(
       function () {
         $(this).find(".cate-depth-2").addClass("active");
@@ -113,7 +118,7 @@ function Header() {
     const fetchData = async () => {
       try {
         const { data } = await api({
-          url: `/shop/product/category/list`,
+          url: `/shop/product/category/newlist`,
           method: "GET",
         });
         setCategories(data.data);
@@ -121,9 +126,11 @@ function Header() {
         console.log(error);
       }
     };
-
     fetchData();
   }, []);
+
+
+  
 
   const searchProductHandler = () => {
     const searchText = $(".search-text").val();
@@ -204,9 +211,9 @@ function Header() {
       setIsLogin(false);
     }
   };
+
   return (
     <>
-    {console.log(categories)}
       <div className="wrapp" onClick={removeCate}></div>
       <div
         className={`header-pc ${scrollDirection === "down" ? "hidden" : ""}`}
@@ -307,79 +314,95 @@ function Header() {
               모든 카테고리
               <ul className="cate-depth-1">
                 <div className="cate-panel">
-                {categories?.map((cate, index) => (
-                  <li key={index} onClick={removeList}>
-                    <Link
-                      className="cate2"
-                      to={`/shop/product/product_lists?sh_category1_cd=${cate.category_cd}`}
-                    >
-                      <div className="cate-1-container">
-                        <div className="cate-1-img">
-                        <img src={`${baseUrl}/uploads/category/${cate.file_nm1}`} alt=""></img>
-                        </div>
-                        <div className="cate-1-text">
-                          {cate.category_nm.includes("br")
-                            ? parse(cate.category_nm.replace("<br>", ""))
-                            : cate.category_nm.includes("<")
-                            ? parse(cate.category_nm)
-                            : parse(cate.category_nm)}
-                        </div>
-                      </div>
-                      {cate.cate_list_2.length > 0 ? (
-                        <div className="cate-depth-2">
-                          <ul>
-                            <div className="cate-container">
-                              <div className="cate-list-2">
-                                {cate.cate_list_2?.map((cate2, index) => (
-                                  <li onClick={removeList} key={index}>
-                                    <Link
-                                      to={`/shop/product/product_lists?sh_category1_cd=${cate.category_cd}&sh_category2_cd=${cate2.category_cd}`}
-                                    >
-                                      {cate2.category_nm &&
-                                        parse(cate2.category_nm)}
+                {categories?.map((cate, index) => {
+                    
+                    
+                  return(
 
-                                      {cate2.cate_list_3.length > 0 ? (
-                                        <ul className="cate-depth-3">
-                                          {cate2.cate_list_3?.map(
-                                            (cate3, index) => (
-                                              <li
-                                                style={{ color: "#b6b6b6" }}
-                                                onClick={removeList}
-                                                key={index}
-                                              >
-                                                <Link
-                                                  to={`/shop/product/product_lists?sh_category1_cd=${cate.category_cd}&sh_category2_cd=${cate2.category_cd}&sh_category3_cd=${cate3.category_cd}`}
-                                                >
-                                                  {cate3.category_nm &&
-                                                    parse(cate3.category_nm)}
-                                                </Link>
-                                              </li>
-                                            )
-                                          )}
-                                        </ul>
-                                      ) : null}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </div>
-                              <div className="cate-image"></div>
+                  <>
+                      <Link
+                          
+                          className="cate2"
+                          to={`/shop/product/product_lists?cat_code=${cate.CAT_CODE}`}
+                        >
+                      <li key={index} onClick={removeList} className={`cate_cd_${cate.CAT_CODE}`}>
+                          
+                          <div className="cate-1-container">
+                            <div className="cate-1-img">
+                            <img src={`${baseUrl}/uploads/category/${cate.PC_ICON_FILE_NM1}`} alt=""></img>
                             </div>
-                          </ul>
-                        </div>
-                      ) : (
-                        <div className="cate-depth-2">
-                          <div className="cate-container">
-                            <div className="cate-list-2"></div>
-                            <div className="cate-image"></div>
+                            <div className="cate-1-text">
+                            {cate.CAT_NAME &&
+                                            parse(cate.CAT_NAME)}
+                            </div>
                           </div>
-                        </div>
-                      )}
-                    </Link>
-                  </li>
-                )
+                          {cate.cate_list_2.length > 0 ? (
+                            <div className="cate-depth-2">
+                              <ul>
+                                <div className="cate-container">
+                                  <div className="cate-list-2">
+                                    {cate.cate_list_2?.map((cate2, index) => (
+                                      <Link
+                                          to={`/shop/product/product_lists?cat_code=${cate2.CAT_CODE}`}
+                                        >
+                                      <li onClick={removeList} key={index}>
+                                          {cate2.CAT_NAME &&
+                                            parse(cate2.CAT_NAME)}
+    
+                                          {cate2.cate_list_3.length > 0 ? (
+                                            <ul className="cate-depth-3">
+                                              {cate2.cate_list_3?.map(
+                                                (cate3, index) => (
+                                                  <Link
+                                                      to={`/shop/product/product_lists?cat_code=${cate3.CAT_CODE}`}
+                                                    >
+                                                  <li
+                                                    style={{ color: "#b6b6b6" }}
+                                                    onClick={removeList}
+                                                    key={index}
+                                                  >
+                                                      {cate3.CAT_NAME &&
+                                                        parse(cate3.CAT_NAME)}
+                                                  </li>
+                                                    </Link>
+                                                )
+                                              )}
+                                            </ul>
+                                          ) : null}
+                                      </li>
+                                        </Link>
+                                    ))}
+                                  </div>
+                                  <div className="cate-image">
+                                    {cate.file_nm?(<img src={`${baseUrl}/uploads/product/285/${cate.file_nm[0].file_nm}`} alt="" />): null}
+                                    {/* {console.log(`${cate.CAT_CODE}-----${cate.file_nm[0].file_nm}`)} */}
+                                  </div>
+                                </div>
+                              </ul>
+                            </div>
+                          ) : (
+                            <div className="cate-depth-2">
+                              <div className="cate-container">
+                                <div className="cate-list-2"></div>
+                                <div className="cate-image">
+                                {cate.file_nm?(<img src={`${baseUrl}/uploads/product/285/${cate.file_nm[0].file_nm}`} alt="" />): null}
+                                </div>
+                              </div>
+  
+                            </div>
+                          )
+                            
+                          }
+                      </li>
+                        </Link>
+                  </>
+                  )
+                }
                 )}
+                
                 </div>
               </ul>
+              
             </li>
 
             <li>
