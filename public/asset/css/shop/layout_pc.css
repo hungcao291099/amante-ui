@@ -809,7 +809,12 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	white-space: nowrap
   }
   
-
+.option .option_checkbox{
+	opacity: 1;
+	position: static;
+	width: 20px;
+	height: 20px;
+}
   .more-text{
 	background-color: #6D6D6D;	
 	color: white;

@@ -319,7 +319,7 @@ function Header() {
                     
                   return(
 
-                  <>
+                  <React.Fragment key={index}>
                       <Link
                           
                           className="cate2"
@@ -343,6 +343,7 @@ function Header() {
                                   <div className="cate-list-2">
                                     {cate.cate_list_2?.map((cate2, index) => (
                                       <Link
+                                      key={index}
                                           to={`/shop/product/product_lists?cat_code=${cate2.CAT_CODE}`}
                                         >
                                       <li onClick={removeList} key={index}>
@@ -354,6 +355,7 @@ function Header() {
                                               {cate2.cate_list_3?.map(
                                                 (cate3, index) => (
                                                   <Link
+                                                    key={index}
                                                       to={`/shop/product/product_lists?cat_code=${cate3.CAT_CODE}`}
                                                     >
                                                   <li
@@ -395,7 +397,7 @@ function Header() {
                           }
                       </li>
                         </Link>
-                  </>
+                  </React.Fragment>
                   )
                 }
                 )}

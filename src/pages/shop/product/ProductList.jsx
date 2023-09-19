@@ -15,11 +15,13 @@ import { Helmet } from 'react-helmet';
 import { transform } from 'framer-motion';
 import { AiOutlineDown } from "react-icons/ai";
 import { MdOutlineCancel } from "react-icons/md";
+import React from 'react'
 
 
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
+  const [resetproducts, resetProducts] = useState(false);
   const [productsLoaded, setProductsLoaded] = useState();
   const [getData, setData] = useState([]);
   const [sorts, setSorts] = useState([]);
@@ -139,10 +141,12 @@ const ProductList = () => {
 
   const lastRef = useCallback(
     (node) => {
+      console.log("calling")
+      console.log(node)
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setRowCount((prev) => prev + 10);
+          setcurPage((curPage) => curPage + 1);
         }
       });
       if (node) observer.current.observe(node);
@@ -150,10 +154,25 @@ const ProductList = () => {
     [hasMore]
   );
 
+  console.log(curPage)
+
+  // const lastRef = useCallback(
+  //   (node) => {
+  //     if (observer.current) observer.current.disconnect();
+  //     observer.current = new IntersectionObserver((entries) => {
+  //       if (entries[0].isIntersecting && hasMore) {
+  //         setRowCount((prev) => prev + 10);
+  //       }
+  //     });
+  //     if (node) observer.current.observe(node);
+  //   },
+  //   [hasMore]
+  // );
+
   const [checkedOption, setCheckedOption] = useState([])
   const handleCheckOption = (e) => {
+    if(checkedOption.length==0){setProducts([]),setHasMore(true)}
     if(e.target.checked) {
-      if(checkedOption==null) {setProducts([]),setHasMore(true)}
       setCheckedOption(prev => {
         return [...prev, e.target.value]
       })
@@ -162,54 +181,51 @@ const ProductList = () => {
     } 
  
   }
-  const cancelOption=(value)=>{
-    setCheckedOption(checkedOption.filter(x => x !== value))
-    if(checkedOption== null){setProducts([]),setHasMore(true)}
+  const cancelOption=(value,hcode,dcode,catcode)=>{
+    // setCheckedOption(checkedOption.filter(x => x !== value))
+    $(`#${hcode}-${dcode}`).prop('checked',false);
+    
+    setCheckedOption(prev => prev.filter(x => x !== value))
   }
-
-  useEffect(()=>{
-    const wrap = document.getElementById('wrap')
-    window.addEventListener('scroll', () => {
-      if (window.scrollY + window.innerHeight > wrap.clientHeight + wrap.offsetTop) {
-      setcurPage((curPage)=>curPage+1)
-      
-      }
-    })
-  },[window.scrollY])
+  const resetAllOptions = ()=>{
+    setProducts([]);resetProducts(false);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if(checkedOption.length >0){
-          if(hasMore==true){
+        if(checkedOption.length >0 ){
             const { data } = await api({
               url: `/shop/app/filter/product`,
-              method: "POST",
-              data: {data:checkedOption,
-                     pages: curPage
+              method: "GET",
+              params: {
+                data:checkedOption,
+                pages: curPage
               }
             })
-            if(data.response.length === productsLoaded){setHasMore(false)}
+            if(data.response.length === productsLoaded){}
               setProducts(data.response);
               setProductsLoaded(data.response.length)
-          }
+              setHasMore(data.data.response.length > 0);
+          
         
         }
         else{
-          if(hasMore==true){
+          
             const data = await api({
               url: `/shop/app/product/category`,
               method: "GET",
               params: { 
                 CAT_CODE: cat_code,
-                page:curPage
+                page: curPage
               }
             });
             // setProducts(data.data);
-            if(data.data.response.length === productsLoaded){setHasMore(false)}
-            setProducts((product)=>[...product,...data.data.response]);
-            setProductsLoaded(data.data.response.length)
-          }
+            if(data.data.response?.length === productsLoaded){}
+            setProducts(data.data.response);
+            setProductsLoaded(data.data.response?.length)
+            setHasMore(data.data.response?.length > 0);
+          
           
         }
       } catch (error) {
@@ -217,9 +233,7 @@ const ProductList = () => {
       }
     };
     fetchData();
-  }, [checkedOption,curPage])
-console.log(products,productsLoaded,hasMore);
-  
+  }, [hasMore,curPage,checkedOption,resetproducts])
 
 $(document).ready(function() {
   $(".arrow").unbind('click').click(function (){
@@ -387,18 +401,18 @@ $(document).ready(function() {
 
 
           {/* <BestList bests={bests} Item={Item} /> */}
-          
+
           {Hcode  && (
             <ul
               className={"prd-props" }
             >
-                             
+                          
 
               {Hcode?.map((h_code, index) => {
                 return(
-                <>
+                <React.Fragment key={index}>
                   
-                  <li key={index}>
+                  <li>
                     <div className='prop' >
                     { h_code?.H_NAME}
                     <AiOutlineDown/>
@@ -408,11 +422,11 @@ $(document).ready(function() {
                       {h_code.DETAILED?.map((d_code,index) =>{
                         return (
                         
-                          <div className='option'>
+                          <div key={index} className='option'>
                            {/* <div className='checkbox' Hcode={h_code.H_CODE} Dcode={d_code.D_CODE} Catcode={cat_code} onClick={()=>{selectOption()}} ></div> */}
-                           <input type='checkbox' id={`${h_code.H_CODE}-${index}`}  
+                           <input className='option_checkbox' type='checkbox' id={`${h_code.H_CODE}-${d_code.D_CODE}`}  
                            value={`${h_code.H_CODE}|${d_code.D_CODE}|${cat_code}`} onClick={handleCheckOption} />
-                           <label htmlFor={`${h_code.H_CODE}-${index}`}>{d_code.D_NAME}</label>
+                           <label htmlFor={`${h_code.H_CODE}-${d_code.D_CODE}`}>{d_code.D_NAME}</label>
                          
                            
                           {d_code.D_NAME.length > 10 ? (
@@ -429,7 +443,7 @@ $(document).ready(function() {
                     </div>
                       
                   </li>
-                </>
+                </React.Fragment>
                
               )})}
             </ul>
@@ -445,7 +459,7 @@ $(document).ready(function() {
                 var dcode = hcode[0].DETAILED.filter(x => x.D_CODE === parseInt(s[1]))
                 var dname=dcode[0].D_NAME
                 return(
-                  <div className='selected-prop' onClick={()=>{cancelOption(value)}}>
+                  <div key={index} className='selected-prop' onClick={()=>{cancelOption(value,parseInt(s[0]),parseInt(s[1]))}}>
                   <li>{dname}</li>
                   <MdOutlineCancel />
                   </div>
@@ -477,7 +491,7 @@ $(document).ready(function() {
                     <Item
                       key={index}
                       item={product}
-                     
+                      lastRef={lastRef}
                     />
                   ) : (
                     <Item
