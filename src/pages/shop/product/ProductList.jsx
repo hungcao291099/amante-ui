@@ -21,7 +21,6 @@ import React from 'react'
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
-  const [resetproducts, resetProducts] = useState(false);
   const [productsLoaded, setProductsLoaded] = useState();
   const [getData, setData] = useState([]);
   const [sorts, setSorts] = useState([]);
@@ -141,8 +140,7 @@ const ProductList = () => {
 
   const lastRef = useCallback(
     (node) => {
-      console.log("calling")
-      console.log(node)
+     
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
@@ -153,8 +151,6 @@ const ProductList = () => {
     },
     [hasMore]
   );
-
-  console.log(curPage)
 
   // const lastRef = useCallback(
   //   (node) => {
@@ -206,7 +202,6 @@ const ProductList = () => {
             if(data.response.length === productsLoaded){}
               setProducts(data.response);
               setProductsLoaded(data.response.length)
-              setHasMore(data.data.response.length > 0);
           
         
         }
@@ -221,11 +216,9 @@ const ProductList = () => {
               }
             });
             // setProducts(data.data);
-            if(data.data.response?.length === productsLoaded){}
+            if(data.data.response?.length === productsLoaded){setHasMore(false)}
             setProducts(data.data.response);
             setProductsLoaded(data.data.response?.length)
-            setHasMore(data.data.response?.length > 0);
-          
           
         }
       } catch (error) {
@@ -233,7 +226,7 @@ const ProductList = () => {
       }
     };
     fetchData();
-  }, [hasMore,curPage,checkedOption,resetproducts])
+  }, [hasMore,curPage,checkedOption])
 
 $(document).ready(function() {
   $(".arrow").unbind('click').click(function (){
