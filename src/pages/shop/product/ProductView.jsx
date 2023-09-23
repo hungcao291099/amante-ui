@@ -60,7 +60,6 @@ const ProductView = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      debugger
       setLoading(true);
       try {
         const { data } = await api.get(`/shop/product/detail?product_cd=${productCd}`, {

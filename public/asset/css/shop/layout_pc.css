@@ -608,6 +608,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	position: fixed;
 	transform: translateY(-10%);
 	overflow: hidden;
+	overflow-y: scroll;
 	/* top:20%; */
 }
 .right-wrap{
@@ -671,25 +672,25 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
   overflow-anchor: none;
   }
   
-  .cate-panel::-webkit-scrollbar{
+  .sidebar::-webkit-scrollbar{
+  width: 0;
+  }
+  /* .sidebar::-webkit-scrollbar{
   width: 5px;
   }
-  .cate-list-2::-webkit-scrollbar{
-  width: 5px;
-  }
-  .cate-panel::-webkit-scrollbar-track {
+  .sidebar::-webkit-scrollbar-track {
 	-webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.137); 
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
   }
   
   /* Handle */
-  .cate-panel::-webkit-scrollbar-thumb {
+  /* .sidebar::-webkit-scrollbar-thumb {
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
 	background: rgb(99, 99, 99); 
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
-  }
+  }  */
 
   .wrap .sidebar .depth-1 li .depth-2 {
 	width: fit-content;
@@ -756,6 +757,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	display: flex;
 	gap: 20px;
 	align-items: center;
+	cursor: pointer;
   }
   .sub-prop{
 	width: 400px;
@@ -774,11 +776,11 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 
   .total-props{
 	width: 900px;
-	min-height: 50px;
+	min-height: 30px;
 	margin: 0 auto 20px auto; 
 	border: 1px solid #777;
 	border-radius: 12px;
-	padding: 20px;
+	padding: 10px;
 	display: flex;
 	gap: 20px;
 	flex-wrap: wrap  
@@ -791,6 +793,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	display: flex;
 	gap: 20px;
 	align-items: center;
+	cursor: pointer;
   }
   .option-container{
 	display: grid;
@@ -803,17 +806,18 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	padding: 10px;
 	position: relative;
   }
-  .option li{
+  .option input[type='checkbox']+label {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap
   }
   
-.option .option_checkbox{
+.option input[type='checkbox']{
 	opacity: 1;
 	position: static;
 	width: 20px;
 	height: 20px;
+	cursor: pointer;
 }
   .more-text{
 	background-color: #6D6D6D;	
@@ -827,4 +831,27 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	border-radius: 10px;
 	width: fit-content;
   }
- 
+  .loading-overlay{
+	
+	background-color:#3333334b;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 999999;
+	display: none;
+
+  }
+  .loading-overlay img{
+	display: block;
+  }
+  .loading-container{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+  }

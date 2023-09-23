@@ -16,6 +16,8 @@ import { transform } from 'framer-motion';
 import { AiOutlineDown } from "react-icons/ai";
 import { MdOutlineCancel } from "react-icons/md";
 import React from 'react'
+import LoadingBox from '@components/LoadingBox';
+
 
 
 
@@ -39,6 +41,7 @@ const ProductList = () => {
   const category2Cd = Number(urlParams.get('sh_category2_cd')) || '';
   const category3Cd = Number(urlParams.get('sh_category3_cd')) || '';
   const { cate, cate2, cate3, bests } = cateData;
+  
   const cookies = new Cookies();
   const token = cookies.get('member_access_token');
   const userData = token ? jwt_decode(token) : null;
@@ -47,26 +50,32 @@ const ProductList = () => {
   const [categories, setCategories] = useState();
   const [Props, setProps] = useState();
   const [Hcode, setHcode] = useState();
+  const [ThisCate, setThisCate] = useState();
   const [curPage, setcurPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [toltalSelect, settoltalSelect] = useState([]);
 
-  let selectedProps=[];
 
   let cat_code = Number(urlParams.get('cat_code')) || '';
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await api({
           url: `/shop/product/category/newlist`,
           method: "GET",
+          
         });
         setCategories(data.data);
-
+        setThisCate(data.data.filter(x => x.CAT_CODE === cat_code));
+        
       } catch (error) {
         console.log(error);
       }
+      
     };
     fetchData();
-  }, []);
+  }, [cat_code]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -85,7 +94,7 @@ const ProductList = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [cat_code]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -183,23 +192,22 @@ const ProductList = () => {
     
     setCheckedOption(prev => prev.filter(x => x !== value))
   }
-  const resetAllOptions = ()=>{
-    setProducts([]);resetProducts(false);
-  }
-
+ 
   useEffect(() => {
+    setLoading(true)
     const fetchData = async () => {
       try {
         if(checkedOption.length >0 ){
+         
             const { data } = await api({
               url: `/shop/app/filter/product`,
               method: "GET",
               params: {
-                data:checkedOption,
+                props:checkedOption,
                 pages: curPage
               }
             })
-            if(data.response.length === productsLoaded){}
+            if(data.response.length === productsLoaded){setHasMore(false)}
               setProducts(data.response);
               setProductsLoaded(data.response.length)
           
@@ -221,12 +229,16 @@ const ProductList = () => {
             setProductsLoaded(data.data.response?.length)
           
         }
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
-    };
+      
+    }
+    
     fetchData();
-  }, [hasMore,curPage,checkedOption])
+  }
+  , [hasMore,curPage,checkedOption])
 
 $(document).ready(function() {
   $(".arrow").unbind('click').click(function (){
@@ -254,13 +266,21 @@ $(document).ready(function() {
   })
 
  
-  $(".option-text").unbind().hover(function (){
+  $(".opt-text").unbind().hover(function (){
     $(this).parent().find(".more-text").toggle();
   })
 
   
 })
 
+useEffect(()=>{
+  if(loading){
+    $(".loading-overlay").fadeIn("fast");
+  }
+  else{
+    $(".loading-overlay").fadeOut("fast");
+  }
+},[loading])
 
 
   return (
@@ -272,10 +292,10 @@ $(document).ready(function() {
           {`아망떼 ㅣ
           ${
             categories?.CAT_NAME
-              ? categories.category3_nm.replace(/<[^>]+>/g, '')
-              : categories?.category2_nm
-              ? categories.category2_nm.replace(/<[^>]+>/g, '')
-              : categories?.category_nm ? cate?.category_nm.replace(/<[^>]+>/g, '') : ''
+              // ? categories.category3_nm.replace(/<[^>]+>/g, '')
+              // : categories?.category2_nm
+              // ? categories.category2_nm.replace(/<[^>]+>/g, '')
+              // : categories?.category_nm ? cate?.category_nm.replace(/<[^>]+>/g, '') : ''
           }`}
         </title>
       </Helmet>
@@ -290,6 +310,12 @@ $(document).ready(function() {
             
         }`}
       >
+        <div className="loading-overlay">
+          <div className="loading-container">
+          <img src="/images/login_logo.png" alt="" />
+          <LoadingBox/>
+          </div>
+        </div>
         <div className='prop-outside'></div>
         {/* <PageNavigate
           cateData={cate}
@@ -299,11 +325,7 @@ $(document).ready(function() {
         /> */}
 
         <div className="mb_prd_lnb">
-          {cate?.category3_nm
-            ? parse(cate.category3_nm.replace('<br>', ''))
-            : cate?.category2_nm
-            ? parse(cate.category2_nm.replace('<br>', ''))
-            : cate?.category_nm && parse(cate.category_nm.replace('<br>', ''))}
+        {/* {ThisCate?(ThisCate[0].CAT_NAME):null} */}
         </div>
 
         <div className="wrap" id='wrap'>
@@ -316,7 +338,6 @@ $(document).ready(function() {
                     <li key={index} >
                       <div className="space">
                       <Link
-                      onClick={(cate.CAT_CODE)}
                         className="cate2"
                         to={`/shop/product/product_lists?cat_code=${cate.CAT_CODE}`}
                       >
@@ -385,11 +406,7 @@ $(document).ready(function() {
 
           <div className="right-wrap" >
           <div className="pc_prd_lnb">
-            {cate?.category3_nm
-              ? parse(cate.category3_nm.replace('<br>', ''))
-              : cate?.category2_nm
-              ? parse(cate.category2_nm.replace('<br>', ''))
-              : cate?.category_nm && parse(cate.category_nm.replace('<br>', ''))}
+          {/* {ThisCate?(ThisCate[0].CAT_NAME):null} */}
           </div>
 
 
@@ -419,7 +436,7 @@ $(document).ready(function() {
                            {/* <div className='checkbox' Hcode={h_code.H_CODE} Dcode={d_code.D_CODE} Catcode={cat_code} onClick={()=>{selectOption()}} ></div> */}
                            <input className='option_checkbox' type='checkbox' id={`${h_code.H_CODE}-${d_code.D_CODE}`}  
                            value={`${h_code.H_CODE}|${d_code.D_CODE}|${cat_code}`} onClick={handleCheckOption} />
-                           <label htmlFor={`${h_code.H_CODE}-${d_code.D_CODE}`}>{d_code.D_NAME}</label>
+                           <label className='opt-text' htmlFor={`${h_code.H_CODE}-${d_code.D_CODE}`}>{d_code.D_NAME}</label>
                          
                            
                           {d_code.D_NAME.length > 10 ? (
