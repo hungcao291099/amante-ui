@@ -152,9 +152,11 @@ const ProductList = () => {
      
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
+        
         if (entries[0].isIntersecting && hasMore) {
           setcurPage((curPage) => curPage + 1);
         }
+       
       });
       if (node) observer.current.observe(node);
     },
@@ -176,40 +178,89 @@ const ProductList = () => {
 
   const [checkedOption, setCheckedOption] = useState([])
   const handleCheckOption = (e) => {
+    const value = e.target.value;
+    const optSelected = value.split("|")
     if(checkedOption.length==0){setProducts([]),setHasMore(true)}
+    // if(e.target.checked) {
+    //   const obj = checkedOption.filter(el => el.split("|")[0] === optSelected[0])[0]
+    //   if(obj) {
+    //     setCheckedOption(checkedOption.map(el => el.split("|")[0] === optSelected[0] ? `${el.split("|")[0]}|${el.split("|")[1]}.${optSelected[1]}` : el))
+    //   } else {
+    //     setCheckedOption(prev => {
+    //       return [...prev, `${value.split("|")[0]}|${value.split("|")[1]}`]
+    //     })
+    //   }
+    // } else {
+     
+    //   setCheckedOption(checkedOption.map(el => el.split("|")[0] === optSelected[0] ? `${el.replace(`.${optSelected[1]}`, "")}` :  el ))
+    // } 
+    var checkedOpt = {
+      H_CODE: optSelected[0],
+      D_CODE: [optSelected[1]]
+    }
     if(e.target.checked) {
-      setCheckedOption(prev => {
-        return [...prev, e.target.value]
-      })
-    } else {
-      setCheckedOption(checkedOption.filter(x => x !== e.target.value))
-    } 
- 
+      const obj = checkedOption.filter(el => el.H_CODE === optSelected[0])[0]
+      if(obj){
+        setCheckedOption(checkedOption.map(el => el.H_CODE === optSelected[0] ? {...el, D_CODE: [...el.D_CODE, optSelected[1]]} :el))
+      }
+      else{
+        setCheckedOption(prev => {
+          return [...prev, checkedOpt]
+        })
+        
+      }  
+    }
+    else{
+      const obj = checkedOption.filter(el => el.D_CODE === optSelected[1])[0]
+      if(obj){
+
+        setCheckedOption(checkedOption.map(el => el.H_CODE === optSelected[0] ? {...el, D_CODE: el.D_CODE.filter(x => x !== optSelected[1])} : el))
+      }
+      else{
+        setCheckedOption(prev => prev.filter(x => x.H_CODE!==optSelected[0]))
+      }
+    }
   }
   const cancelOption=(value,hcode,dcode,catcode)=>{
     // setCheckedOption(checkedOption.filter(x => x !== value))
     $(`#${hcode}-${dcode}`).prop('checked',false);
     
-    setCheckedOption(prev => prev.filter(x => x !== value))
+    const obj = checkedOption.filter(el => el.D_CODE === hcode)[0]
+    if(obj){
+
+      setCheckedOption(checkedOption.map(el => el.H_CODE === hcode ? {...el, D_CODE: el.D_CODE.filter(x => x !== dcode)} : el))
+    }
+    else{
+      setCheckedOption(prev => prev.filter(x => x.H_CODE!==hcode))
+    }
   }
- 
+
+
+ useEffect(()=>{
+  setProductsLoaded(products.length)
+ },[products])
   useEffect(() => {
+    setHasMore(true)
     setLoading(true)
+   
     const fetchData = async () => {
       try {
         if(checkedOption.length >0 ){
-         
             const { data } = await api({
-              url: `/shop/app/filter/product`,
-              method: "GET",
-              params: {
+              url: `/shop/app/product/code/props/and`,
+              method: "POST",
+              data: {
                 props:checkedOption,
-                pages: curPage
+                page: curPage,
+                CAT_CODE:cat_code
               }
             })
-            if(data.response.length === productsLoaded){setHasMore(false)}
+            if(data.response.length ==0 && curPage > 2){setHasMore(false)}
+            else{
+
               setProducts(data.response);
-              setProductsLoaded(data.response.length)
+              console.log(data.response.length,productsLoaded,curPage);
+            }
           
         
         }
@@ -223,10 +274,7 @@ const ProductList = () => {
                 page: curPage
               }
             });
-            // setProducts(data.data);
-            if(data.data.response?.length === productsLoaded){setHasMore(false)}
             setProducts(data.data.response);
-            setProductsLoaded(data.data.response?.length)
           
         }
         setLoading(false);
@@ -238,7 +286,7 @@ const ProductList = () => {
     
     fetchData();
   }
-  , [hasMore,curPage,checkedOption])
+  , [curPage,checkedOption])
 
 $(document).ready(function() {
   $(".arrow").unbind('click').click(function (){
@@ -461,19 +509,23 @@ useEffect(()=>{
           )}
 
           <div >
-            {checkedOption.length > 0?(
+            
+            {checkedOption.length>0?(
                <ul className='total-props'>
                {checkedOption.map((value,index)=>{
-                var s = value.split("|")
-                var hcode = Hcode.filter(x => x.H_CODE === parseInt(s[0]))
-                var dcode = hcode[0].DETAILED.filter(x => x.D_CODE === parseInt(s[1]))
-                var dname=dcode[0].D_NAME
-                return(
-                  <div key={index} className='selected-prop' onClick={()=>{cancelOption(value,parseInt(s[0]),parseInt(s[1]))}}>
-                  <li>{dname}</li>
-                  <MdOutlineCancel />
-                  </div>
-                )
+                 var hcode = Hcode.filter(x => x.H_CODE === Number(value.H_CODE))[0]
+                 value.D_CODE.map((vl,index)=>{
+                   var dcode = hcode.DETAILED.filter(x => x.D_CODE === Number(vl))[0]
+                   var dname=dcode.D_NAME
+                  return(
+                    <div key={index} className='selected-prop' onClick={()=>{cancelOption(value,Number(value.H_CODE),Number(value.D_CODE))}}>
+                    <li>{dname}</li>
+                    <MdOutlineCancel />
+                    </div>
+                  )
+                })
+               
+
                })}
                  
              
