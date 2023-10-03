@@ -187,7 +187,6 @@ const ProductList = () => {
       H_CODE: optSelected[0],
       D_CODE: [optSelected[1]],
     };
-    console.log(e);
     if (e.target.checked) {
       const obj = checkedOption.filter((el) => el.H_CODE === optSelected[0])[0];
       if (obj) {
@@ -243,34 +242,31 @@ const ProductList = () => {
     }
   };
   const findCategory = (categories, targetCode) => {
-    for (const category of categories) {
-      if (category.H_CODE === targetCode) {
-        return category.H_NAME;
-      }
-      if (category.children && category.children.length > 0) {
-        const nestedCategory = findCategory(category.children, targetCode);
-        if (nestedCategory) {
-          return nestedCategory;
-        }
-      }
-    }
-    return null;
+    categories.map(category => {
+      if(category.CAT_CODE == targetCode) return setCatName(category.CAT_NAME)
+      category.map(child =>child? findCategory(child, targetCode):null)
+    })
   };
   
-  useEffect(() => {
-    if (categories && cat_code !== undefined) {
-      const categoryName = findCategory(categories, cat_code);
-      if (categoryName) {
-        setCatName(categoryName);
-      } else {
-        // Handle the case when no category is found
-        setCatName('Category Not Found');
-      }
-    }
-  }, [cat_code, categories]);
+  // useEffect(() => {
+    
+  //   if (categories && cat_code !== undefined) {
+  //     const categoryName = findCategory(categories, cat_code);
+  //     if (categoryName) {
+  //       setCatName(categoryName);
+  //     } else {
+  //       // Handle the case when no category is found
+  //       setCatName('Category Not Found');
+  //     }
+  //   }
+  // }, [cat_code, categories]);
   useEffect(() => {
     setProductsLoaded(products.length);
   }, [products]);
+
+useEffect(()=>{
+setCheckedOption([])},[cat_code])
+
   useEffect(() => {
     setHasMore(true);
     setLoading(true);
@@ -367,7 +363,7 @@ const ProductList = () => {
         <title>
           {`아망떼 ㅣ
           ${
-            categories?.CAT_NAME
+            cat_name
             // ? categories.category3_nm.replace(/<[^>]+>/g, '')
             // : categories?.category2_nm
             // ? categories.category2_nm.replace(/<[^>]+>/g, '')
@@ -481,7 +477,7 @@ const ProductList = () => {
 
           <div className="right-wrap">
             <div className="pc_prd_lnb">
-              {/* {ThisCate?(ThisCate[0].CAT_NAME):null} */}
+              {cat_name}
             </div>
 
             {/* <BestList bests={bests} Item={Item} /> */}
