@@ -18,6 +18,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import React from "react";
 import LoadingBox from "@components/LoadingBox";
 import { stringify } from "uuid";
+import { Login } from "@mui/icons-material";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -50,7 +51,7 @@ const ProductList = () => {
   const [Hcode, setHcode] = useState();
   const [curPage, setcurPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [toltalSelect, settoltalSelect] = useState([]);
+  const [pageCount, setpageCount] = useState([]);
 
   let cat_code = Number(urlParams.get("cat_code")) || "";
   const [cat_name, setCatName] = useState();
@@ -165,6 +166,7 @@ const ProductList = () => {
 
   const [checkedOption, setCheckedOption] = useState([]);
   const handleCheckOption = (e) => {
+    setProducts([])
     const value = e.target.value;
     const optSelected = value.split("|");
     if (checkedOption.length == 0) {
@@ -222,8 +224,8 @@ const ProductList = () => {
     }
   };
   const cancelOption = ( hcode, dcode) => {
-    
     // setCheckedOption(checkedOption.filter(x => x !== value))
+    setProducts([])
     $(`#${hcode}-${dcode}`).prop("checked", false);
     const temp = checkedOption.filter((el) => el.H_CODE === String(hcode))[0];
     if (temp.D_CODE.length > 1) {
@@ -240,29 +242,16 @@ const ProductList = () => {
     } else {
       setCheckedOption((prev) => prev.filter((x) => x.H_CODE !== temp.H_CODE));
     }
-  };
-  const findCategory = (categories, targetCode) => {
-    categories.map(category => {
-      if(category.CAT_CODE == targetCode) return setCatName(category.CAT_NAME)
-      category.map(child =>child? findCategory(child, targetCode):null)
-    })
-  };
-  
-  // useEffect(() => {
+
     
-  //   if (categories && cat_code !== undefined) {
-  //     const categoryName = findCategory(categories, cat_code);
-  //     if (categoryName) {
-  //       setCatName(categoryName);
-  //     } else {
-  //       // Handle the case when no category is found
-  //       setCatName('Category Not Found');
-  //     }
-  //   }
-  // }, [cat_code, categories]);
+    
+  };
+
+
   useEffect(() => {
     setProductsLoaded(products.length);
   }, [products]);
+
 
 useEffect(()=>{
 setCheckedOption([])},[cat_code])
@@ -288,6 +277,7 @@ setCheckedOption([])},[cat_code])
           } else {
             setProducts(data.response);
           }
+          
         } else {
           const data = await api({
             url: `/shop/app/product/category`,
@@ -308,6 +298,44 @@ setCheckedOption([])},[cat_code])
     fetchData();
   }, [curPage, checkedOption,cat_code]);
 
+
+  
+  useEffect(()=>{
+    if(checkedOption.length > 0) {
+      const fetchData = async () => {
+        const data = await api({
+          url: `/shop/app/count/product/code/props/and`,
+          method: "POST",
+                data: {
+                  props: checkedOption,
+                  CAT_CODE: cat_code,
+                },
+        });
+        setpageCount(data.data.response.countProductFilter);
+      };
+      fetchData();
+    }
+    else{
+      const fetchData = async () => {
+        const data = await api({
+          url: `/shop/app/count/product/category`,
+          method: "GET",
+          params: {
+            CAT_CODE: cat_code
+          },
+        });
+        setpageCount(data.data.response[0].countProductCate)
+      };
+      fetchData();
+    }
+    
+  },[checkedOption,cat_code])
+
+  
+
+
+
+
   $(document).ready(function () {
     $(".arrow")
       .unbind("click")
@@ -323,11 +351,7 @@ setCheckedOption([])},[cat_code])
         $(this).parent().find(".depth-3").slideToggle();
         $(this).toggleClass("rotate");
       });
-    $(".depth-2 li")
-      .unbind("click")
-      .click(function (e) {
-        e.stopPropagation();
-      });
+   
     $(".prop")
       .unbind()
       .click(function () {
@@ -364,6 +388,7 @@ setCheckedOption([])},[cat_code])
           {`아망떼 ㅣ
           ${
             cat_name
+            
             // ? categories.category3_nm.replace(/<[^>]+>/g, '')
             // : categories?.category2_nm
             // ? categories.category2_nm.replace(/<[^>]+>/g, '')
@@ -406,11 +431,12 @@ setCheckedOption([])},[cat_code])
                 <div className="cate-panel">
                   {categories?.map((cate, index) => {
                     return (
-                      <li key={index}>
+                      <li key={index} >
                         <div className="space">
                           <Link
                             className="cate2"
                             to={`/shop/product/product_lists?cat_code=${cate.CAT_CODE}`}
+                            onClick={() => setCatName(cate.CAT_NAME)}
                           >
                             <h3>{cate.CAT_NAME && parse(cate.CAT_NAME)}</h3>
                             {cate.cate_list_2.length > 0 ? (
@@ -418,9 +444,10 @@ setCheckedOption([])},[cat_code])
                                 <ul>
                                   <div className="cate-list-2">
                                     {cate.cate_list_2?.map((cate2, index) => (
-                                      <li key={index}>
+                                      <li key={index}  >
                                         <div className="space">
                                           <Link
+                                          onClick={() => setCatName(cate2.CAT_NAME)}
                                             className="cate2"
                                             to={`/shop/product/product_lists?cat_code=${cate2.CAT_CODE}`}
                                           >
@@ -433,9 +460,10 @@ setCheckedOption([])},[cat_code])
                                               <ul className="depth-3">
                                                 {cate2.cate_list_3?.map(
                                                   (cate3, index) => (
-                                                    <li key={index}>
+                                                    <li key={index} >
                                                       <div className="space">
                                                         <Link
+                                                        onClick={() => setCatName(cate3.CAT_NAME)}
                                                           to={`/shop/product/product_lists?cat_code=${cate3.CAT_CODE}`}
                                                         >
                                                           <h5>
@@ -479,7 +507,6 @@ setCheckedOption([])},[cat_code])
             <div className="pc_prd_lnb">
               {cat_name}
             </div>
-
             {/* <BestList bests={bests} Item={Item} /> */}
 
             {Hcode && (
@@ -529,8 +556,10 @@ setCheckedOption([])},[cat_code])
                   );
                 })}
               </ul>
+              
             )}
-
+           
+           <div className="page-count">{`총 ${pageCount?pageCount:0} 개`}</div>
             <div>
               {checkedOption.length > 0 ? (
                 <ul className="total-props">

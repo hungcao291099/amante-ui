@@ -809,7 +809,9 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
   .option input[type='checkbox']+label {
 	overflow: hidden;
 	text-overflow: ellipsis;
-	white-space: nowrap
+	white-space: nowrap;
+	width: 120px;
+	
   }
   
 .option input[type='checkbox']{
@@ -855,3 +857,9 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	align-items: center;
 	height: 100%;
   }
+.page-count{
+	color: #4d4d4d;
+	font-weight: 500;
+	padding: 10px;
+
+}
