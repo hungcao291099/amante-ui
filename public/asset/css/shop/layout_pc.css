@@ -796,6 +796,9 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
   .option-container{
 	display: grid;
 	grid-template-columns: auto auto;
+	max-height: 175px;
+	overflow: hidden;
+	cursor:default;
   }
   .option{
 	display: flex;
@@ -827,7 +830,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	display: none;
 	transform: translateY(50%);
 	margin-top: 10px;
-	z-index: 99;
+	z-index: 9999;
 	border-radius: 10px;
 	width: fit-content;
   }
@@ -861,3 +864,15 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	padding: 10px;
 
 }
+.more-subs{
+	display: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: -99;
+}
+.more-subs p{
+	color: rgb(97, 97, 250);
+	width: fit-content;
+}
+

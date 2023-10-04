@@ -356,13 +356,18 @@ setCheckedOption([])},[cat_code])
     if(cat_code && categories)
       findCategory(cat_code,categories)
       else{
-        setCatName("Category Not Found");
+        setCatName("");
       }
-   },[cat_code])
+   },[cat_code,categories])
 
-
-
-
+   function showMoreOpt(){
+    $(".option-container").css("max-height","fit-content");
+    $(".more-subs").hide();
+   }
+   function hideOpt(){
+    $(".option-container").css("max-height","175px");
+    $(".more-subs").show();
+     }
   $(document).ready(function () {
     $(".arrow")
       .unbind("click")
@@ -391,7 +396,13 @@ setCheckedOption([])},[cat_code])
       .click(function () {
         $(".prop-outside").css("visibility", "hidden");
         $(".sub-prop").hide("fast");
+        hideOpt();
       });
+
+    $(".more-subs").unbind().click(function () {
+      (this).hide();
+     
+    })
 
     $(".opt-text")
       .unbind()
@@ -399,6 +410,7 @@ setCheckedOption([])},[cat_code])
         $(this).parent().find(".more-text").toggle();
       });
   });
+
 
   useEffect(() => {
     if (loading) {
@@ -546,12 +558,12 @@ setCheckedOption([])},[cat_code])
                           {h_code?.H_NAME}
                           <AiOutlineDown />
                           {h_code.DETAILED?.length > 0 ? (
-                            <div className="sub-prop">
+                            <div className={`sub-prop opt-${h_code.H_CODE}`}>
                               <div className="option-container">
                                 {h_code.DETAILED?.map((d_code, index) => {
-                                  return (
+                              
+                                    return (
                                     <div key={index} className="option">
-                                      {/* <div className='checkbox' Hcode={h_code.H_CODE} Dcode={d_code.D_CODE} Catcode={cat_code} onClick={()=>{selectOption()}} ></div> */}
                                       <input
                                         className="option_checkbox"
                                         type="checkbox"
@@ -572,9 +584,12 @@ setCheckedOption([])},[cat_code])
                                         </div>
                                       ) : null}
                                     </div>
-                                  );
+                                  )
                                 })}
                               </div>
+                              {h_code.DETAILED.length>8?<div className="more-subs"onClick={()=>{showMoreOpt()}}><p >+ 더보기</p></div>:null}
+                                
+                              
                             </div>
                           ) : null}
                         </div>
