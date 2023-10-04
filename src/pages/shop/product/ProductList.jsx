@@ -331,7 +331,34 @@ setCheckedOption([])},[cat_code])
     
   },[checkedOption,cat_code])
 
-  
+  function findCategory (cat_code,categories){
+    
+    var category = categories.filter(x => x.CAT_CODE === cat_code)[0]
+    if(category){setCatName(category.CAT_NAME)}
+    else{
+       categories.map(cate2 =>{
+
+         let category2 = cate2.cate_list_2.filter(x => x.CAT_CODE === cat_code)[0]
+        if(category2){setCatName(category2.CAT_NAME)}
+        else{
+          cate2.cate_list_2.map(cate3 =>{
+            let category =cate3.cate_list_3.filter(x => x.CAT_CODE=== cat_code)[0]
+            if(category){setCatName(category.CAT_NAME)}
+           
+          })
+        }
+       })
+    }
+  }
+
+  useEffect(() => {setCheckedOption([]),
+    $(".option_checkbox").prop("checked", false);
+    if(cat_code && categories)
+      findCategory(cat_code,categories)
+      else{
+        setCatName("Category Not Found");
+      }
+   },[cat_code])
 
 
 
@@ -436,7 +463,7 @@ setCheckedOption([])},[cat_code])
                           <Link
                             className="cate2"
                             to={`/shop/product/product_lists?cat_code=${cate.CAT_CODE}`}
-                            onClick={() => setCatName(cate.CAT_NAME)}
+                            
                           >
                             <h3>{cate.CAT_NAME && parse(cate.CAT_NAME)}</h3>
                             {cate.cate_list_2.length > 0 ? (
@@ -447,7 +474,7 @@ setCheckedOption([])},[cat_code])
                                       <li key={index}  >
                                         <div className="space">
                                           <Link
-                                          onClick={() => setCatName(cate2.CAT_NAME)}
+                                          
                                             className="cate2"
                                             to={`/shop/product/product_lists?cat_code=${cate2.CAT_CODE}`}
                                           >
@@ -463,7 +490,7 @@ setCheckedOption([])},[cat_code])
                                                     <li key={index} >
                                                       <div className="space">
                                                         <Link
-                                                        onClick={() => setCatName(cate3.CAT_NAME)}
+                                                        
                                                           to={`/shop/product/product_lists?cat_code=${cate3.CAT_CODE}`}
                                                         >
                                                           <h5>

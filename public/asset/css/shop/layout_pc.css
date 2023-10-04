@@ -752,7 +752,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
   }
   .prop{
 	padding:5px 10px;
-	border-radius: 12px;
+	border-radius: 5px;
 	border: 1px solid rgb(124, 124, 124);
 	display: flex;
 	gap: 20px;
@@ -778,7 +778,6 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	width: 900px;
 	min-height: 30px;
 	margin: 0 auto 20px auto; 
-	border: 1px solid #777;
 	border-radius: 12px;
 	padding: 10px;
 	display: flex;
@@ -787,9 +786,8 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 }
   .selected-prop{
 	padding: 5px 10px;
-	background-color: #bbbbbb;
-	border-radius: 12px;
-	border: 1px solid #777;
+	background-color: #cccccc67;
+	border-radius: 5px;
 	display: flex;
 	gap: 20px;
 	align-items: center;
