@@ -47,11 +47,11 @@ const ProductList = () => {
   const cust_seq = userData?.cust_seq || null;
   const navigate = useNavigate();
   const [categories, setCategories] = useState();
-  const [Props, setProps] = useState();
   const [Hcode, setHcode] = useState();
   const [curPage, setcurPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [pageCount, setpageCount] = useState([]);
+  const [ParentCate, setParentCate ] = useState([]);
 
   let cat_code = Number(urlParams.get("cat_code")) || "";
   const [cat_name, setCatName] = useState();
@@ -63,6 +63,11 @@ const ProductList = () => {
           method: "GET",
         });
         setCategories(data.data);
+        setParentCate([])
+        data.data.map(cate => {
+          setParentCate(prev => [...prev, cate.CAT_CODE])
+        })
+
       } catch (error) {
         console.log(error);
       }
@@ -72,6 +77,7 @@ const ProductList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+       
         const { data } = await api({
           url: `/shop/app/product/hCode/dCode`,
           method: "GET",
@@ -79,8 +85,14 @@ const ProductList = () => {
             CAT_CODE: cat_code,
           },
         });
-        setProps(data.response);
-        setHcode(data.response.filter((x) => x.CAT_CODE === cat_code));
+        const temp = ParentCate.filter(p => p===cat_code)[0]
+        if(temp){
+           setHcode([])
+        }
+        else{
+          setHcode(data.response.filter((x) => x.CAT_CODE === cat_code));
+        }
+        
       } catch (error) {
         console.log(error);
       }
@@ -248,6 +260,7 @@ const ProductList = () => {
   };
 
 
+
   useEffect(() => {
     setProductsLoaded(products.length);
   }, [products]);
@@ -280,7 +293,7 @@ setCheckedOption([])},[cat_code])
           
         } else {
           const data = await api({
-            url: `/shop/app/product/category`,
+            url: `/shop/app/product/category/all`,
             method: "GET",
             params: {
               CAT_CODE: cat_code,
@@ -311,6 +324,7 @@ setCheckedOption([])},[cat_code])
                   CAT_CODE: cat_code,
                 },
         });
+        console.log(data.data);
         setpageCount(data.data.response.countProductFilter);
       };
       fetchData();
@@ -318,18 +332,19 @@ setCheckedOption([])},[cat_code])
     else{
       const fetchData = async () => {
         const data = await api({
-          url: `/shop/app/count/product/category`,
+          url: `/shop/app/count/product/category/all`,
           method: "GET",
           params: {
             CAT_CODE: cat_code
           },
         });
-        setpageCount(data.data.response[0].countProductCate)
+        setpageCount(data.data.response.countProductCatAll)
       };
       fetchData();
     }
     
   },[checkedOption,cat_code])
+  
 
   function findCategory (cat_code,categories){
     
@@ -521,7 +536,7 @@ setCheckedOption([])},[cat_code])
                                           </Link>
                                         </div>
                                         {cate2.cate_list_3.length > 0 ? (
-                                          <div className="arrow2"></div>
+                                          <div className="arrow2"><AiOutlineDown /></div>
                                         ) : null}
                                       </li>
                                     ))}
@@ -532,7 +547,7 @@ setCheckedOption([])},[cat_code])
                           </Link>
                         </div>
                         {cate.cate_list_2.length > 0 ? (
-                          <div className="arrow"></div>
+                          <div className="arrow"><AiOutlineDown /></div>
                         ) : null}
                       </li>
                     );

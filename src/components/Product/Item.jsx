@@ -87,7 +87,14 @@ const Item = ({ item, product, codes, lastRef, cust_seq, navigate }) => {
           <p className="tit">{item.product_nm && parse(item.product_nm)}</p>
         </Link>
         <p className="price">
-          {item.supply_price !== item.sale_price ? (
+          {item.suply_price == item.sale_price ? (<ins>{formatNumber(item.suply_price)}</ins>):(
+           <>
+              <del>{formatNumber(item.supply_price)}</del>
+              <span>{Math.round(((item.supply_price - item.sale_price) / item.supply_price) * 100)}%</span>
+              <ins>{formatNumber(item.sale_price)}</ins>
+           </>
+          )}
+          {/* {item.supply_price !== item.sale_price ? (
             <del>{formatNumber(item.supply_price)}</del>
           ) : (
             <ins>{formatNumber(item.sale_price)}</ins>
@@ -99,7 +106,7 @@ const Item = ({ item, product, codes, lastRef, cust_seq, navigate }) => {
               {Math.round(((item.supply_price - item.sale_price) / item.supply_price) * 100)}%
             </span>
           )}{' '}
-          <ins>{formatNumber(item.sale_price)}</ins>
+          <ins>{formatNumber(item.sale_price)}</ins> */}
         </p>
         <p className="review">
           <span>리뷰 {item.review_cnt > 0 && formatNumber(item.review_cnt)}</span>

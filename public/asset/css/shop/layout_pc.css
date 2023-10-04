@@ -123,7 +123,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 .footer .company_info_area span.mb_hidden{display:inline !important}
 .footer .company_info_area p{display:inline-block;width:auto;font-size:12px}
 /* content */
-#contents{padding-top:150px;min-height: 700px;}
+#contents{padding-top:150px;height: fit-content;}
 .content{width:1200px;margin:0 auto;padding:60px 0}
 /* guide - guide */
 .guide_page.content{max-width:1900px;width:100%;padding:78px 50px 60px}
@@ -600,15 +600,9 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 }
 /* common style - button */
 .sidebar{
-	--height:500px;
 	width: 300px;
-	border: 1px solid #b4b4b4;
 	border-radius: 15px;
-	height: var(--height);
-	position: fixed;
-	transform: translateY(-10%);
-	overflow: hidden;
-	overflow-y: scroll;
+
 	/* top:20%; */
 }
 .right-wrap{
@@ -618,25 +612,21 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	width: 300px;
 }
 .slider h3{
-	font-size: 18px;
-	color: #111;
+	font-size: 16px;
+	color: #000000;
 }
 .slider h4{
-	font-size: 16px;
+	font-size: 14px;
 	color: #222;
 }
 .slider h5{
 	font-size: 14px;
-	color: #333;
+	color: #222;
 }
 .arrow,.arrow2{
-	background: url('../../../images/concept-room/icon/pc_ico_gnb_arrow.png') center / contain no-repeat ;
-	width:20px;
-	height: 20px;
+
 	display: block;
-	padding: 10px;
 	cursor: pointer;
-	transform: rotate(90deg);
 	transition: .3s;
 }
 .rotate {
@@ -657,7 +647,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	border-top-right-radius: 15px;
   }
   .wrap .sidebar .depth-1 li {
-	padding:15px;
+	padding:5px 15px;
 	width: 100%;
 	height: fit-content;
 	text-align: left;
@@ -667,7 +657,6 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	
   }
   .wrap .sidebar .depth-1 .cate-panel {
-	height: 800px;
   overflow-y: scroll;
   overflow-anchor: none;
   }
@@ -711,7 +700,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
   .wrap .sidebar .depth-1 li .depth-2 li {
 	width: 200px;
 	height: fit-content;
-	padding: 7px 0;
+	padding: 3px 0;
 	margin-right: 10px;
 	display: flex;
 	align-items: flex-start;
@@ -721,7 +710,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
   .wrap .sidebar .depth-1 li .depth-2 .depth-3 li{
 	text-align: left;
 	width: 100%;
-	padding: 5px 0;
+	padding: 3px 0;
 	margin-right: 10px;
   }
   
@@ -868,11 +857,18 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	display: none;
 	display: flex;
 	justify-content: center;
-	align-items: center;
 	z-index: -99;
 }
 .more-subs p{
 	color: rgb(97, 97, 250);
 	width: fit-content;
 }
-
+.cate2 h3:hover{
+color: #c8877a
+}
+.cate2 h4:hover{
+color: #c8877a
+}
+.cate2 h5:hover{
+color: #c8877a
+}
