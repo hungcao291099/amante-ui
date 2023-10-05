@@ -630,7 +630,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	transition: .3s;
 }
 .rotate {
-    transform: rotate(-90deg);
+    transform: rotate(-180deg);
     /*transform: rotate(180deg);*/
     transition: .3s;
 }
@@ -760,14 +760,40 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	transform: translateY(50%);
 	margin-top: 50px;
 	z-index: 99;
+	box-shadow: 2px 2px 5px #6d6d6d5e;
 
   }
-
-  .total-props{
+  .props-container{
 	width: 900px;
-	min-height: 30px;
-	margin: 0 auto 20px auto; 
+	display: flex;
+	justify-content: space-between;
+	border: 1px solid #8888 ;
 	border-radius: 12px;
+	margin-bottom: 20px;
+  }
+  
+  .reset-props{
+	width: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+
+  }
+  .reset-btn{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 34px;
+	height: 34px;
+	background-color: #b3b3b367;
+	border-radius: 5px;
+	cursor: pointer;
+  }
+  .total-props{
+	width: 850px;
+	min-height: 30px;
+	margin: 0; 
 	padding: 10px;
 	display: flex;
 	gap: 20px;
@@ -860,7 +886,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	z-index: -99;
 }
 .more-subs p{
-	color: rgb(97, 97, 250);
+	color: rgb(97, 168, 250);
 	width: fit-content;
 }
 .cate2 h3:hover{
@@ -871,4 +897,8 @@ color: #c8877a
 }
 .cate2 h5:hover{
 color: #c8877a
+}
+.prop-active{
+	border: 1px solid #c8877a !important;
+	color: #c8877a !important;
 }

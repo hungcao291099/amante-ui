@@ -87,9 +87,11 @@ const Item = ({ item, product, codes, lastRef, cust_seq, navigate }) => {
           <p className="tit">{item.product_nm && parse(item.product_nm)}</p>
         </Link>
         <p className="price">
-          {item.suply_price == item.sale_price ? (<ins>{formatNumber(item.suply_price)}</ins>):(
+          {
+          
+          item.supply_price === item.sale_price ? (<ins>{formatNumber(item.supply_price)}</ins>):(
            <>
-              <del>{formatNumber(item.supply_price)}</del>
+              <del>{formatNumber(item.supply_price)}</del>{" "}
               <span>{Math.round(((item.supply_price - item.sale_price) / item.supply_price) * 100)}%</span>
               <ins>{formatNumber(item.sale_price)}</ins>
            </>

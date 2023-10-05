@@ -15,6 +15,7 @@ import { Helmet } from "react-helmet";
 import { transform } from "framer-motion";
 import { AiOutlineDown } from "react-icons/ai";
 import { MdOutlineCancel } from "react-icons/md";
+import { BsArrowClockwise } from "react-icons/bs";
 import React from "react";
 import LoadingBox from "@components/LoadingBox";
 import { stringify } from "uuid";
@@ -57,27 +58,27 @@ const ProductList = () => {
   const [cat_name, setCatName] = useState();
   useEffect(() => {
     const fetchData = async () => {
+
       try {
         const { data } = await api({
           url: `/shop/product/category/newlist`,
           method: "GET",
         });
-        setCategories(data.data);
-        setParentCate([])
+    
         data.data.map(cate => {
           setParentCate(prev => [...prev, cate.CAT_CODE])
         })
+        setCategories(data.data);
 
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-  }, [cat_code]);
+  }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {
-       
         const { data } = await api({
           url: `/shop/app/product/hCode/dCode`,
           method: "GET",
@@ -85,8 +86,9 @@ const ProductList = () => {
             CAT_CODE: cat_code,
           },
         });
-        const temp = ParentCate.filter(p => p===cat_code)[0]
-        if(temp){
+        
+        const temp = ParentCate.filter(p => p===cat_code)
+        if(temp.length>0){
            setHcode([])
         }
         else{
@@ -98,7 +100,8 @@ const ProductList = () => {
       }
     };
     fetchData();
-  }, [cat_code]);
+  }, [ParentCate,cat_code]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -235,6 +238,11 @@ const ProductList = () => {
       }
     }
   };
+  const ClearSelectedProp =() =>{
+    $(".option_checkbox").prop("checked", false);
+    setProducts([])
+    setCheckedOption([])
+  }
   const cancelOption = ( hcode, dcode) => {
     // setCheckedOption(checkedOption.filter(x => x !== value))
     setProducts([])
@@ -324,7 +332,6 @@ setCheckedOption([])},[cat_code])
                   CAT_CODE: cat_code,
                 },
         });
-        console.log(data.data);
         setpageCount(data.data.response.countProductFilter);
       };
       fetchData();
@@ -375,6 +382,13 @@ setCheckedOption([])},[cat_code])
       }
    },[cat_code,categories])
 
+   useEffect(()=>{
+    $(".prop").css("border-color","rgb(124, 124, 124)")
+    checkedOption.map(opt => {
+      $(`.h-${opt.H_CODE}`).css("border-color","#c8877a")
+    })
+   },[checkedOption])
+
    function showMoreOpt(){
     $(".option-container").css("max-height","fit-content");
     $(".more-subs").hide();
@@ -404,6 +418,7 @@ setCheckedOption([])},[cat_code])
       .click(function () {
         $(".sub-prop").hide();
         $(this).find(".sub-prop").toggle();
+        $(this).toggleClass("prop-active")
         $(".prop-outside").css("visibility", "visible");
       });
     $(".prop-outside")
@@ -411,13 +426,11 @@ setCheckedOption([])},[cat_code])
       .click(function () {
         $(".prop-outside").css("visibility", "hidden");
         $(".sub-prop").hide("fast");
+        $(".prop").removeClass("prop-active")
         hideOpt();
       });
 
-    $(".more-subs").unbind().click(function () {
-      (this).hide();
-     
-    })
+    
 
     $(".opt-text")
       .unbind()
@@ -569,7 +582,7 @@ setCheckedOption([])},[cat_code])
                   return (
                     <React.Fragment key={index}>
                       <li>
-                        <div className="prop">
+                        <div className={`prop h-${h_code.H_CODE}`}>
                           {h_code?.H_NAME}
                           <AiOutlineDown />
                           {h_code.DETAILED?.length > 0 ? (
@@ -619,28 +632,34 @@ setCheckedOption([])},[cat_code])
            <div className="page-count">{`총 ${pageCount?pageCount:0} 개`}</div>
             <div>
               {checkedOption.length > 0 ? (
-                <ul className="total-props">
-                {checkedOption.flatMap((value, i) => {
-                  var hcode = Hcode.filter((x) => x.H_CODE === Number(value.H_CODE))[0];
-                  return value.D_CODE.map((vl, index) => {
-                    var dcode = hcode.DETAILED.filter((x) => x.D_CODE === Number(vl))[0];
-                    var dname = dcode.D_NAME;
-              
-                    return (
-                      <div
-                        key={`${i}-${index}`}
-                        className="selected-prop"
-                        onClick={() => {
-                          cancelOption(hcode.H_CODE, dcode.D_CODE);
-                        }}
-                      >
-                        <li>{dname}</li>
-                        <MdOutlineCancel />
-                      </div>
-                    );
-                  });
-                })}
-              </ul>
+                <div className="props-container">
+                  <ul className="total-props">
+                  {checkedOption.flatMap((value, i) => {
+                    var hcode = Hcode.filter((x) => x.H_CODE === Number(value.H_CODE))[0];
+                    return value.D_CODE.map((vl, index) => {
+                      var dcode = hcode.DETAILED.filter((x) => x.D_CODE === Number(vl))[0];
+                      var dname = dcode.D_NAME;
+                
+                      return (
+                        <div
+                          key={`${i}-${index}`}
+                          className="selected-prop"
+                          onClick={() => {
+                            cancelOption(hcode.H_CODE, dcode.D_CODE);
+                          }}
+                        >
+                          <li>{dname}</li>
+                          <MdOutlineCancel />
+                        </div>
+                      );
+                    });
+                  })}
+                </ul>
+                <div className="reset-props">
+                  <div className="reset-btn" onClick={()=>{ClearSelectedProp()}}><BsArrowClockwise/></div>
+                  
+                  </div>
+                </div>
               ) : null}
             </div>
 
