@@ -20,6 +20,9 @@ import React from "react";
 import LoadingBox from "@components/LoadingBox";
 import { stringify } from "uuid";
 import { Login } from "@mui/icons-material";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import { formatNumber } from '@utils/functions';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -51,8 +54,10 @@ const ProductList = () => {
   const [Hcode, setHcode] = useState();
   const [curPage, setcurPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
   const [pageCount, setpageCount] = useState([]);
   const [ParentCate, setParentCate ] = useState([]);
+  const [props, setProps ] = useState([]);
 
   let cat_code = Number(urlParams.get("cat_code")) || "";
   const [cat_name, setCatName] = useState();
@@ -65,9 +70,9 @@ const ProductList = () => {
           method: "GET",
         });
     
-        data.data.map(cate => {
-          setParentCate(prev => [...prev, cate.CAT_CODE])
-        })
+        // data.data.map(cate => {
+        //   setParentCate(prev => [...prev, cate.CAT_CODE])
+        // })
         setCategories(data.data);
 
       } catch (error) {
@@ -80,20 +85,14 @@ const ProductList = () => {
     const fetchData = async () => {
       try {
         const { data } = await api({
-          url: `/shop/app/product/hCode/dCode`,
+          url: `/shop/app/product/hCode/dCode2`,
           method: "GET",
           params: {
             CAT_CODE: cat_code,
           },
         });
         
-        const temp = ParentCate.filter(p => p===cat_code)
-        if(temp.length>0){
-           setHcode([])
-        }
-        else{
-          setHcode(data.response.filter((x) => x.CAT_CODE === cat_code));
-        }
+        setHcode(data.response);
         
       } catch (error) {
         console.log(error);
@@ -183,10 +182,12 @@ const ProductList = () => {
   const handleCheckOption = (e) => {
     setProducts([])
     const value = e.target.value;
-    const optSelected = value.split("|");
+    const optSelected = value.split("_");
     if (checkedOption.length == 0) {
       setProducts([]), setHasMore(true);
+      
     }
+        
     // if(e.target.checked) {
     //   const obj = checkedOption.filter(el => el.split("|")[0] === optSelected[0])[0]
     //   if(obj) {
@@ -200,17 +201,21 @@ const ProductList = () => {
 
     //   setCheckedOption(checkedOption.map(el => el.split("|")[0] === optSelected[0] ? `${el.replace(`.${optSelected[1]}`, "")}` :  el ))
     // }
+
+
+
     var checkedOpt = {
-      H_CODE: optSelected[0],
-      D_CODE: [optSelected[1]],
+      CAT_CODE: optSelected[0],
+      H_CODE : optSelected[1],
+      D_CODE: [optSelected[2]],
     };
     if (e.target.checked) {
-      const obj = checkedOption.filter((el) => el.H_CODE === optSelected[0])[0];
+      const obj = checkedOption.filter((el) => `${el.CAT_CODE}-${el.H_CODE}` === `${optSelected[0]}-${optSelected[1]}`)[0];
       if (obj) {
         setCheckedOption(
           checkedOption.map((el) =>
-            el.H_CODE === optSelected[0]
-              ? { ...el, D_CODE: [...el.D_CODE, optSelected[1]] }
+          `${el.CAT_CODE}-${el.H_CODE}` === `${optSelected[0]}-${optSelected[1]}`
+              ? { ...el, D_CODE: [...el.D_CODE, optSelected[2]] }
               : el
           )
         );
@@ -221,13 +226,13 @@ const ProductList = () => {
       }
     } else {
       const temp = checkedOption.filter(
-        (el) => el.H_CODE === optSelected[0]
+        (el) => `${el.CAT_CODE}-${el.H_CODE}` === `${optSelected[0]}-${optSelected[1]}`
       )[0];
       if (temp.D_CODE.length > 1) {
         setCheckedOption(
           checkedOption.map((el) =>
-            el.H_CODE === optSelected[0]
-              ? { ...el, D_CODE: el.D_CODE.filter((x) => x !== optSelected[1]) }
+          `${el.CAT_CODE}-${el.H_CODE}` === `${optSelected[0]}-${optSelected[1]}`
+              ? { ...el, D_CODE: el.D_CODE.filter((x) => x !== optSelected[2]) }
               : el
           )
         );
@@ -243,17 +248,18 @@ const ProductList = () => {
     setProducts([])
     setCheckedOption([])
   }
-  const cancelOption = ( hcode, dcode) => {
+  const cancelOption = (dcode) => {
     // setCheckedOption(checkedOption.filter(x => x !== value))
     setProducts([])
-    $(`#${hcode}-${dcode}`).prop("checked", false);
-    const temp = checkedOption.filter((el) => el.H_CODE === String(hcode))[0];
+    console.log(dcode);
+    $(`#${dcode}`).prop("checked", false);
+    const temp = checkedOption.filter((el) => el.H_CODE === dcode.split("_")[1])[0];
     if (temp.D_CODE.length > 1) {
       setCheckedOption(
         checkedOption.map((el) =>{
           return(
-          el.H_CODE === String(hcode)
-            ? { ...el, D_CODE: el.D_CODE.filter((x) => x !== String(dcode)) }
+          el.H_CODE === dcode.split("_")[1]
+            ? { ...el, D_CODE: el.D_CODE.filter((x) => x !== dcode.split("_")[2]) }
             : el
           )
         }
@@ -270,12 +276,20 @@ const ProductList = () => {
 
 
   useEffect(() => {
-    setProductsLoaded(products.length);
+    products?setProductsLoaded(products.length):null;
   }, [products]);
 
 
 useEffect(()=>{
-setCheckedOption([])},[cat_code])
+  var prop = checkedOption.map(x => {
+    var temp = `&prop[${x.CAT_CODE}_${x.H_CODE}]=${x.D_CODE.map(y => `${x.CAT_CODE}_${x.H_CODE}_${y}`)}`
+    return temp.replaceAll(',','^')
+  });
+  var props = String(prop).replaceAll(',','')
+  props = encodeURI(props).replaceAll('%26','&')
+  history.pushState(null, null, `/shop/product/product_lists?cat_code=${cat_code}${props}`);
+  setProps(props)
+},[checkedOption])
 
   useEffect(() => {
     setHasMore(true);
@@ -283,33 +297,13 @@ setCheckedOption([])},[cat_code])
 
     const fetchData = async () => {
       try {
-        if (checkedOption.length > 0) {
-          const { data } = await api({
-            url: `/shop/app/product/code/props/and`,
-            method: "POST",
-            data: {
-              props: checkedOption,
-              page: curPage,
-              CAT_CODE: cat_code,
-            },
-          });
+          const { data } = await api.get(`/shop/app/filter/product_lists?CAT_CODE=${cat_code}${props?props:""}&page=${curPage}`);
           if (data.response.length == 0 && curPage > 2) {
             setHasMore(false);
           } else {
             setProducts(data.response);
           }
           
-        } else {
-          const data = await api({
-            url: `/shop/app/product/category/all`,
-            method: "GET",
-            params: {
-              CAT_CODE: cat_code,
-              page: curPage,
-            },
-          });
-          setProducts(data.data.response);
-        }
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -317,40 +311,22 @@ setCheckedOption([])},[cat_code])
     };
 
     fetchData();
-  }, [curPage, checkedOption,cat_code]);
+  }, [curPage, props,cat_code]);
 
+  useEffect(() => {
+    setLoading1(true);
+    const fetchData = async () => {
+      try {
+          const { data } = await api.get(`/shop/app/count/filter/product_lists?CAT_CODE=${cat_code}${props?props:""}`);
+            setpageCount(data.response[0].CNT)   
+            setLoading1(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  
-  useEffect(()=>{
-    if(checkedOption.length > 0) {
-      const fetchData = async () => {
-        const data = await api({
-          url: `/shop/app/count/product/code/props/and`,
-          method: "POST",
-                data: {
-                  props: checkedOption,
-                  CAT_CODE: cat_code,
-                },
-        });
-        setpageCount(data.data.response.countProductFilter);
-      };
-      fetchData();
-    }
-    else{
-      const fetchData = async () => {
-        const data = await api({
-          url: `/shop/app/count/product/category/all`,
-          method: "GET",
-          params: {
-            CAT_CODE: cat_code
-          },
-        });
-        setpageCount(data.data.response.countProductCatAll)
-      };
-      fetchData();
-    }
-    
-  },[checkedOption,cat_code])
+    fetchData();
+  }, [props,cat_code]);
   
 
   function findCategory (cat_code,categories){
@@ -385,7 +361,7 @@ setCheckedOption([])},[cat_code])
    useEffect(()=>{
     $(".prop").css("border-color","rgb(124, 124, 124)")
     checkedOption.map(opt => {
-      $(`.h-${opt.H_CODE}`).css("border-color","#c8877a")
+      $(`.h-${opt.CAT_CODE}_${opt.H_CODE}`).css("border-color","#c8877a")
     })
    },[checkedOption])
 
@@ -440,13 +416,13 @@ setCheckedOption([])},[cat_code])
   });
 
 
-  useEffect(() => {
-    if (loading) {
-      $(".loading-overlay").fadeIn("fast");
-    } else {
-      $(".loading-overlay").fadeOut("fast");
-    }
-  }, [loading]);
+  // useEffect(() => {
+  //   if (loading) {
+  //     $(".loading-overlay").fadeIn("fast");
+  //   } else {
+  //     $(".loading-overlay").fadeOut("fast");
+  //   }
+  // }, [loading]);
 
   return (
     <>
@@ -473,12 +449,12 @@ setCheckedOption([])},[cat_code])
             : ""
         }`}
       >
-        <div className="loading-overlay">
+        {/* <div className="loading-overlay">
           <div className="loading-container">
             <img src="/images/login_logo.png" alt="" />
             <LoadingBox />
           </div>
-        </div>
+        </div> */}
         <div className="prop-outside"></div>
         {/* <PageNavigate
           cateData={cate}
@@ -595,13 +571,13 @@ setCheckedOption([])},[cat_code])
                                       <input
                                         className="option_checkbox"
                                         type="checkbox"
-                                        id={`${h_code.H_CODE}-${d_code.D_CODE}`}
-                                        value={`${h_code.H_CODE}|${d_code.D_CODE}|${cat_code}`}
+                                        id={`${d_code.D_CODE}`}
+                                        value={`${d_code.D_CODE}`}
                                         onClick={handleCheckOption}
                                       />
                                       <label
                                         className="opt-text"
-                                        htmlFor={`${h_code.H_CODE}-${d_code.D_CODE}`}
+                                        htmlFor={`${d_code.D_CODE}`}
                                       >
                                         {d_code.D_NAME}
                                       </label>
@@ -628,24 +604,25 @@ setCheckedOption([])},[cat_code])
               </ul>
               
             )}
+           {loading1?<Skeleton width={120} height={25} />:
            
-           <div className="page-count">{`총 ${pageCount?pageCount:0} 개`}</div>
+           <div className="page-count">{`총 ${pageCount?formatNumber(pageCount):0} 개`}</div>
+           }
             <div>
               {checkedOption.length > 0 ? (
                 <div className="props-container">
                   <ul className="total-props">
                   {checkedOption.flatMap((value, i) => {
-                    var hcode = Hcode.filter((x) => x.H_CODE === Number(value.H_CODE))[0];
+                    var hcode = Hcode.filter((x) => x.H_CODE === `${value.CAT_CODE}_${value.H_CODE}`)[0];
                     return value.D_CODE.map((vl, index) => {
-                      var dcode = hcode.DETAILED.filter((x) => x.D_CODE === Number(vl))[0];
+                      var dcode = hcode.DETAILED.filter((x) => x.D_CODE === `${value.CAT_CODE}_${value.H_CODE}_${vl}`)[0];
                       var dname = dcode.D_NAME;
-                
                       return (
                         <div
                           key={`${i}-${index}`}
                           className="selected-prop"
                           onClick={() => {
-                            cancelOption(hcode.H_CODE, dcode.D_CODE);
+                            cancelOption(dcode.D_CODE);
                           }}
                         >
                           <li>{dname}</li>
@@ -671,19 +648,29 @@ setCheckedOption([])},[cat_code])
           /> */}
 
             <div className="prd_list">
+              {loading||loading1? <ul id="product_ul">
+                {products.map(x => <li>
+                <Skeleton variant="rounded" height={250}  />
+                <Skeleton variant="rounded" height={30} />
+                <Skeleton variant="rounded" width={150} />
+                <Skeleton variant="rounded" width={120} />
+              </li>)}
+             
+              </ul>:
               <ul id="product_ul">
-                {products?.length > 0 ? (
-                  products.map((product, index) =>
-                    index + 1 === products.length ? (
-                      <Item key={index} item={product} lastRef={lastRef} />
-                    ) : (
-                      <Item key={index} item={product} />
-                    )
+              {products?.length > 0 ? (
+                products.map((product, index) =>
+                  index + 1 === products.length ? (
+                    <Item key={index} item={product} lastRef={lastRef} />
+                  ) : (
+                    <Item key={index} item={product} />
                   )
-                ) : (
-                  <li className="nodata">등록된 상품이 없습니다.</li>
-                )}
-              </ul>
+                )
+              ) : (
+                <li className="nodata">등록된 상품이 없습니다.</li>
+              )}
+            </ul>}
+              
               {/* <ul id="product_ul">
               {products.data?.length > 0 ? (
                 products.data.map((product, index) =>

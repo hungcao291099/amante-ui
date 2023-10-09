@@ -4,6 +4,7 @@ import { formatNumber, likeProduct } from '@utils/functions';
 import parse from 'html-react-parser';
 import { CdnContext } from '@contexts/cdnContext';
 import { useContext } from 'react';
+import { AiFillStar } from "react-icons/ai";
 
 const Item = ({ item, product, codes, lastRef, cust_seq, navigate }) => {
   const { baseUrl } = useContext(CdnContext);
@@ -36,7 +37,7 @@ const Item = ({ item, product, codes, lastRef, cust_seq, navigate }) => {
                     />
                     {/* mb이미지 */}
                     {/*[if IE 9]></video><![endif]*/}
-                    {item.file?.length >0 ? <img src={baseUrl + `/uploads/product/285/${item.file[0].file_nm}`} alt="" />:<img src="/asset/images/shop/product/pro_in_img.jpg" alt="" loading="lazy" />}
+                    {item.file_nm ? <img src={baseUrl + `/uploads/product/285/${item.file_nm}`} alt="" />:<img src="/asset/images/shop/product/pro_in_img.jpg" alt="" loading="lazy" />}
                     
                     {/* pc이미지 */}
                   </picture>
@@ -85,12 +86,15 @@ const Item = ({ item, product, codes, lastRef, cust_seq, navigate }) => {
           data-val={item.product_cd}
         >
           <p className="tit">{item.product_nm && parse(item.product_nm)}</p>
+          {item.option_nm?<p className='tit-opt'>{item.option_nm}</p>:null}
         </Link>
         <p className="price">
           {
           
           item.supply_price === item.sale_price ? (<ins>{formatNumber(item.supply_price)}</ins>):(
            <>
+            
+           
               <del>{formatNumber(item.supply_price)}</del>{" "}
               <span>{Math.round(((item.supply_price - item.sale_price) / item.supply_price) * 100)}%</span>
               <ins>{formatNumber(item.sale_price)}</ins>
@@ -111,6 +115,7 @@ const Item = ({ item, product, codes, lastRef, cust_seq, navigate }) => {
           <ins>{formatNumber(item.sale_price)}</ins> */}
         </p>
         <p className="review">
+        {item.point?<div className="star-point" > <AiFillStar /><p>{item.point}</p></div>:null}
           <span>리뷰 {item.review_cnt > 0 && formatNumber(item.review_cnt)}</span>
         </p>
 
