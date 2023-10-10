@@ -82,8 +82,8 @@ const ProductList = () => {
     fetchData();
   }, []);
   useEffect(() => {
-    setHasMore(true);
     setcurPage(1)
+    setHasMore(true);
     setDone(0);
     const fetchData = async () => {
       try {
@@ -158,7 +158,7 @@ const ProductList = () => {
     (node) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore && done<2) {
+        if (entries[0].isIntersecting && hasMore) {
           setcurPage((curPage) => curPage + 1);
         }
       });
@@ -182,6 +182,8 @@ const ProductList = () => {
 
   const [checkedOption, setCheckedOption] = useState([]);
   const handleCheckOption = (e) => {
+    setHasMore(true)
+    setcurPage(1)
     setProducts([]);
     const value = e.target.value;
     const optSelected = value.split("_");
@@ -252,11 +254,14 @@ const ProductList = () => {
   };
   const ClearSelectedProp = () => {
     $(".option_checkbox").prop("checked", false);
+    setcurPage(1)
     setProducts([]);
     setCheckedOption([]);
   };
   const cancelOption = (dcode) => {
+    setHasMore(true)
     // setCheckedOption(checkedOption.filter(x => x !== value))
+    setcurPage(1)
     setProducts([]);
     $(`#${dcode}`).prop("checked", false);
     const temp = checkedOption.filter(
@@ -276,6 +281,7 @@ const ProductList = () => {
     } else {
       setCheckedOption((prev) => prev.filter((x) => x.H_CODE !== temp.H_CODE));
     }
+    
   };
 
   useEffect(() => {
@@ -301,7 +307,7 @@ const ProductList = () => {
 
   useEffect(() => {
     console.log(done, hasMore, curPage);
-    if (done ===1) {
+    if (done > 0) {
       setLoading(true);
       if (hasMore) {
         const fetchData = async () => {
@@ -313,9 +319,9 @@ const ProductList = () => {
             );
             if (
               (data.response.length == 0 && curPage > 1) ||
-              data.response.length === products.length
+              data.response.length === products.length ||
+              pageCount < 13
             ) {
-              setDone(2)
               setHasMore(false);
             }
 
@@ -331,6 +337,7 @@ const ProductList = () => {
   }, [curPage, props, cat_code, done]);
 
   useEffect(() => {
+    
     setLoading1(true);
     const fetchData = async () => {
       try {
@@ -340,6 +347,7 @@ const ProductList = () => {
           }`
         );
         setpageCount(data.response[0].CNT);
+        setHasMore(true);
         setLoading1(false);
       } catch (error) {
         console.log(error);
@@ -501,7 +509,7 @@ const ProductList = () => {
                   {categories?.map((cate, index) => {
                     return (
                       <li key={index}>
-                        <div className="space">
+                        <div className={`space`}>
                           {cate.cate_list_2.length > 0 ? (
                             <div className="arrow">
                               <AiOutlineDown />
@@ -522,7 +530,7 @@ const ProductList = () => {
                               <div className="cate-list-2">
                                 {cate.cate_list_2?.map((cate2, index) => (
                                   <li key={index}>
-                                    <div className="space">
+                                    <div className={`space`}>
                                       {cate2.cate_list_3.length > 0 ? (
                                         <div className="arrow2">
                                           <AiOutlineDown />
@@ -545,7 +553,7 @@ const ProductList = () => {
                                       <ul className="depth-3">
                                         {cate2.cate_list_3?.map(
                                           (cate3, index) => (
-                                            <li key={index}>
+                                            <li key={index} >
                                               <Link
                                                 to={`/shop/product/product_lists?cat_code=${cate3.CAT_CODE}`}
                                               >

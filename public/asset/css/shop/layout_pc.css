@@ -635,7 +635,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	color: #222;
 	font-weight: 300 ;
 }
-.space h5{
+.depth-3 li h5{
 	font-size: 14px;
 	color: #222;
 	font-weight: 200 ;
@@ -734,7 +734,7 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
   .wrap .sidebar .depth-1 li .depth-2 .depth-3 li{
 	text-align: left;
 	width: 100%;
-	padding: 3px 0 3px 10px;
+	padding: 3px 0 3px 20px;
 	margin-right: 10px;
   }
   
@@ -919,7 +919,7 @@ color: #c8877a
 .cate2 h4:hover{
 color: #c8877a
 }
-.cate2 h5:hover{
+.depth-3 h5:hover{
 color: #c8877a
 }
 .prop-active{
