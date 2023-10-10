@@ -20,9 +20,9 @@ import React from "react";
 import LoadingBox from "@components/LoadingBox";
 import { stringify } from "uuid";
 import { Login } from "@mui/icons-material";
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { formatNumber } from '@utils/functions';
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { formatNumber } from "@utils/functions";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -56,37 +56,35 @@ const ProductList = () => {
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
   const [pageCount, setpageCount] = useState([]);
-  const [ParentCate, setParentCate ] = useState([]);
-  const [props, setProps ] = useState([]);
-  const [done, setDone ] = useState(0);
+  const [ParentCate, setParentCate] = useState([]);
+  const [props, setProps] = useState([]);
+  const [done, setDone] = useState(0);
 
   let cat_code = Number(urlParams.get("cat_code")) || "";
   const [cat_name, setCatName] = useState();
   useEffect(() => {
-    setDone(0)
+    setDone(0);
     const fetchData = async () => {
-
       try {
         const { data } = await api({
           url: `/shop/product/category/newlist`,
           method: "GET",
         });
-    
+
         // data.data.map(cate => {
         //   setParentCate(prev => [...prev, cate.CAT_CODE])
         // })
         setCategories(data.data);
-
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-
   }, []);
   useEffect(() => {
-    setHasMore(true)
-    setDone(0)
+    setHasMore(true);
+    setcurPage(1)
+    setDone(0);
     const fetchData = async () => {
       try {
         const { data } = await api({
@@ -96,17 +94,15 @@ const ProductList = () => {
             CAT_CODE: cat_code,
           },
         });
-        
+
         setHcode(data.response);
-        setDone(x=> x+1)
+        setDone((x) => x + 1);
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-    
   }, [cat_code]);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -162,7 +158,7 @@ const ProductList = () => {
     (node) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        if (entries[0].isIntersecting && hasMore && done<2) {
           setcurPage((curPage) => curPage + 1);
         }
       });
@@ -186,14 +182,13 @@ const ProductList = () => {
 
   const [checkedOption, setCheckedOption] = useState([]);
   const handleCheckOption = (e) => {
-    setProducts([])
+    setProducts([]);
     const value = e.target.value;
     const optSelected = value.split("_");
     if (checkedOption.length == 0) {
       setProducts([]), setHasMore(true);
-      
     }
-        
+
     // if(e.target.checked) {
     //   const obj = checkedOption.filter(el => el.split("|")[0] === optSelected[0])[0]
     //   if(obj) {
@@ -208,19 +203,22 @@ const ProductList = () => {
     //   setCheckedOption(checkedOption.map(el => el.split("|")[0] === optSelected[0] ? `${el.replace(`.${optSelected[1]}`, "")}` :  el ))
     // }
 
-
-
     var checkedOpt = {
       CAT_CODE: optSelected[0],
-      H_CODE : optSelected[1],
+      H_CODE: optSelected[1],
       D_CODE: [optSelected[2]],
     };
     if (e.target.checked) {
-      const obj = checkedOption.filter((el) => `${el.CAT_CODE}-${el.H_CODE}` === `${optSelected[0]}-${optSelected[1]}`)[0];
+      const obj = checkedOption.filter(
+        (el) =>
+          `${el.CAT_CODE}-${el.H_CODE}` ===
+          `${optSelected[0]}-${optSelected[1]}`
+      )[0];
       if (obj) {
         setCheckedOption(
           checkedOption.map((el) =>
-          `${el.CAT_CODE}-${el.H_CODE}` === `${optSelected[0]}-${optSelected[1]}`
+            `${el.CAT_CODE}-${el.H_CODE}` ===
+            `${optSelected[0]}-${optSelected[1]}`
               ? { ...el, D_CODE: [...el.D_CODE, optSelected[2]] }
               : el
           )
@@ -232,12 +230,15 @@ const ProductList = () => {
       }
     } else {
       const temp = checkedOption.filter(
-        (el) => `${el.CAT_CODE}-${el.H_CODE}` === `${optSelected[0]}-${optSelected[1]}`
+        (el) =>
+          `${el.CAT_CODE}-${el.H_CODE}` ===
+          `${optSelected[0]}-${optSelected[1]}`
       )[0];
       if (temp.D_CODE.length > 1) {
         setCheckedOption(
           checkedOption.map((el) =>
-          `${el.CAT_CODE}-${el.H_CODE}` === `${optSelected[0]}-${optSelected[1]}`
+            `${el.CAT_CODE}-${el.H_CODE}` ===
+            `${optSelected[0]}-${optSelected[1]}`
               ? { ...el, D_CODE: el.D_CODE.filter((x) => x !== optSelected[2]) }
               : el
           )
@@ -249,139 +250,158 @@ const ProductList = () => {
       }
     }
   };
-  const ClearSelectedProp =() =>{
+  const ClearSelectedProp = () => {
     $(".option_checkbox").prop("checked", false);
-    setProducts([])
-    setCheckedOption([])
-  }
+    setProducts([]);
+    setCheckedOption([]);
+  };
   const cancelOption = (dcode) => {
     // setCheckedOption(checkedOption.filter(x => x !== value))
-    setProducts([])
+    setProducts([]);
     $(`#${dcode}`).prop("checked", false);
-    const temp = checkedOption.filter((el) => el.H_CODE === dcode.split("_")[1])[0];
+    const temp = checkedOption.filter(
+      (el) => el.H_CODE === dcode.split("_")[1]
+    )[0];
     if (temp.D_CODE.length > 1) {
       setCheckedOption(
-        checkedOption.map((el) =>{
-          return(
-          el.H_CODE === dcode.split("_")[1]
-            ? { ...el, D_CODE: el.D_CODE.filter((x) => x !== dcode.split("_")[2]) }
-            : el
-          )
-        }
-        )
-      )
+        checkedOption.map((el) => {
+          return el.H_CODE === dcode.split("_")[1]
+            ? {
+                ...el,
+                D_CODE: el.D_CODE.filter((x) => x !== dcode.split("_")[2]),
+              }
+            : el;
+        })
+      );
     } else {
       setCheckedOption((prev) => prev.filter((x) => x.H_CODE !== temp.H_CODE));
     }
-
-    
   };
 
-
-
   useEffect(() => {
-    products?setProductsLoaded(products.length):null;
+    products ? setProductsLoaded(products.length) : null;
   }, [products]);
 
-
-useEffect(()=>{
-  var prop = checkedOption.map(x => {
-    var temp = `&prop[${x.CAT_CODE}_${x.H_CODE}]=${x.D_CODE.map(y => `${x.CAT_CODE}_${x.H_CODE}_${y}`)}`
-    return temp.replaceAll(',','^')
-  });
-  var props = String(prop).replaceAll(',','')
-  props = encodeURI(props).replaceAll('%26','&')
-  history.pushState(null, null, `/shop/product/product_lists?cat_code=${cat_code}${props}`);
-  setProps(props)
-},[checkedOption])
+  useEffect(() => {
+    var prop = checkedOption.map((x) => {
+      var temp = `&prop[${x.CAT_CODE}_${x.H_CODE}]=${x.D_CODE.map(
+        (y) => `${x.CAT_CODE}_${x.H_CODE}_${y}`
+      )}`;
+      return temp.replaceAll(",", "^");
+    });
+    var props = String(prop).replaceAll(",", "");
+    props = encodeURI(props).replaceAll("%26", "&");
+    history.pushState(
+      null,
+      null,
+      `/shop/product/product_lists?cat_code=${cat_code}${props}`
+    );
+    setProps(props);
+  }, [checkedOption]);
 
   useEffect(() => {
-    console.log(done,hasMore);
-    if(done > 0){setLoading(true);
-      if(hasMore){
+    console.log(done, hasMore, curPage);
+    if (done ===1) {
+      setLoading(true);
+      if (hasMore) {
         const fetchData = async () => {
           try {
-              const { data } = await api.get(`/shop/app/filter/product_lists?CAT_CODE=${cat_code}${props?props:""}&page=${curPage}`);
-              if ((data.response.length == 0 && curPage > 2) ||data.response.length === products.length) {
-                setHasMore(false);
-              } 
-              
-              setProducts(data.response);
+            const { data } = await api.get(
+              `/shop/app/filter/product_lists?CAT_CODE=${cat_code}${
+                props ? props : ""
+              }&page=${curPage}`
+            );
+            if (
+              (data.response.length == 0 && curPage > 1) ||
+              data.response.length === products.length
+            ) {
+              setDone(2)
+              setHasMore(false);
+            }
+
+            setProducts(data.response);
             setLoading(false);
           } catch (error) {
             console.log(error);
           }
         };
-     fetchData();
-      }}
-    
-  }, [curPage, props,cat_code,done]);
+        fetchData();
+      }
+    }
+  }, [curPage, props, cat_code, done]);
 
   useEffect(() => {
     setLoading1(true);
     const fetchData = async () => {
       try {
-          const { data } = await api.get(`/shop/app/count/filter/product_lists?CAT_CODE=${cat_code}${props?props:""}`);
-            setpageCount(data.response[0].CNT)   
-            setLoading1(false);
+        const { data } = await api.get(
+          `/shop/app/count/filter/product_lists?CAT_CODE=${cat_code}${
+            props ? props : ""
+          }`
+        );
+        setpageCount(data.response[0].CNT);
+        setLoading1(false);
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchData();
-  }, [props,cat_code]);
-  
+  }, [props, cat_code]);
 
-  function findCategory (cat_code,categories){
-    
-    var category = categories.filter(x => x.CAT_CODE === cat_code)[0]
-    if(category){setCatName(category.CAT_NAME)}
-    else{
-       categories.map(cate2 =>{
-
-         let category2 = cate2.cate_list_2.filter(x => x.CAT_CODE === cat_code)[0]
-        if(category2){setCatName(category2.CAT_NAME)}
-        else{
-          cate2.cate_list_2.map(cate3 =>{
-            let category =cate3.cate_list_3.filter(x => x.CAT_CODE=== cat_code)[0]
-            if(category){setCatName(category.CAT_NAME)}
-           
-          })
+  function findCategory(cat_code, categories) {
+    var category = categories.filter((x) => x.CAT_CODE === cat_code)[0];
+    if (category) {
+      setCatName(category.CAT_NAME);
+    } else {
+      categories.map((cate2) => {
+        let category2 = cate2.cate_list_2.filter(
+          (x) => x.CAT_CODE === cat_code
+        )[0];
+        if (category2) {
+          setCatName(category2.CAT_NAME);
+        } else {
+          cate2.cate_list_2.map((cate3) => {
+            let category = cate3.cate_list_3.filter(
+              (x) => x.CAT_CODE === cat_code
+            )[0];
+            if (category) {
+              setCatName(category.CAT_NAME);
+            }
+          });
         }
-       })
+      });
     }
   }
 
-  useEffect(() => {setCheckedOption([]),
-    $(".option_checkbox").prop("checked", false);
-    if(cat_code && categories)
-      findCategory(cat_code,categories)
-      else{
-        setCatName("");
-      }
-   },[cat_code,categories])
+  useEffect(() => {
+    setCheckedOption([]), $(".option_checkbox").prop("checked", false);
+    if (cat_code && categories) findCategory(cat_code, categories);
+    else {
+      setCatName("");
+    }
+  }, [cat_code, categories]);
 
-   useEffect(()=>{
-    $(".prop").css("border-color","rgb(124, 124, 124)")
-    checkedOption.map(opt => {
-      $(`.h-${opt.CAT_CODE}_${opt.H_CODE}`).css("border-color","#c8877a")
-    })
-   },[checkedOption])
+  useEffect(() => {
+    $(".prop").css("border-color", "rgb(124, 124, 124)");
+    checkedOption.map((opt) => {
+      $(`.h-${opt.CAT_CODE}_${opt.H_CODE}`).css("border-color", "#c8877a");
+    });
+  }, [checkedOption]);
 
-   function showMoreOpt(){
-    $(".option-container").css("max-height","fit-content");
+  function showMoreOpt() {
+    $(".option-container").css("max-height", "fit-content");
     $(".more-subs").hide();
-   }
-   function hideOpt(){
-    $(".option-container").css("max-height","175px");
+  }
+  function hideOpt() {
+    $(".option-container").css("max-height", "175px");
     $(".more-subs").show();
-     }
+  }
   $(document).ready(function () {
     $(".arrow")
       .unbind("click")
       .click(function () {
-        $(this).parent().find(".depth-2").slideToggle();
+        $(this).parent().parent().find(".depth-2").slideToggle();
         $(this).toggleClass("rotate");
       });
 
@@ -389,16 +409,21 @@ useEffect(()=>{
       .unbind("click")
       .click(function (e) {
         e.preventDefault();
-        $(this).parent().find(".depth-3").slideToggle();
+        $(this).parent().parent().find(".depth-3").slideToggle();
         $(this).toggleClass("rotate");
       });
+    $(".space").unbind().hover(function () {
+      $(this).parent().css("border-color","#c8877a")
+    }, function () {
+      $(this).parent().css("border-color","#5f5f5f3f")
+    })
    
     $(".prop")
       .unbind()
       .click(function () {
         $(".sub-prop").hide();
         $(this).find(".sub-prop").toggle();
-        $(this).toggleClass("prop-active")
+        $(this).toggleClass("prop-active");
         $(".prop-outside").css("visibility", "visible");
       });
     $(".prop-outside")
@@ -406,10 +431,9 @@ useEffect(()=>{
       .click(function () {
         $(".prop-outside").css("visibility", "hidden");
         $(".sub-prop").hide("fast");
-        $(".prop").removeClass("prop-active")
+        $(".prop").removeClass("prop-active");
         hideOpt();
       });
-
 
     $(".opt-text")
       .unbind()
@@ -417,7 +441,6 @@ useEffect(()=>{
         $(this).parent().find(".more-text").toggle();
       });
   });
-
 
   // useEffect(() => {
   //   if (loading) {
@@ -434,7 +457,7 @@ useEffect(()=>{
           {`아망떼 ㅣ
           ${
             cat_name
-            
+
             // ? categories.category3_nm.replace(/<[^>]+>/g, '')
             // : categories?.category2_nm
             // ? categories.category2_nm.replace(/<[^>]+>/g, '')
@@ -477,69 +500,70 @@ useEffect(()=>{
                 <div className="cate-panel">
                   {categories?.map((cate, index) => {
                     return (
-                      <li key={index} >
+                      <li key={index}>
                         <div className="space">
+                          {cate.cate_list_2.length > 0 ? (
+                            <div className="arrow">
+                              <AiOutlineDown />
+                            </div>
+                          ) : (
+                            <div className="arrow"></div>
+                          )}
                           <Link
                             className="cate2"
                             to={`/shop/product/product_lists?cat_code=${cate.CAT_CODE}`}
-                            
                           >
                             <h3>{cate.CAT_NAME && parse(cate.CAT_NAME)}</h3>
-                            {cate.cate_list_2.length > 0 ? (
-                              <div className="depth-2">
-                                <ul>
-                                  <div className="cate-list-2">
-                                    {cate.cate_list_2?.map((cate2, index) => (
-                                      <li key={index}  >
-                                        <div className="space">
-                                          <Link
-                                          
-                                            className="cate2"
-                                            to={`/shop/product/product_lists?cat_code=${cate2.CAT_CODE}`}
-                                          >
-                                            <h4>
-                                              {cate2.CAT_NAME &&
-                                                parse(cate2.CAT_NAME)}
-                                            </h4>
-
-                                            {cate2.cate_list_3.length > 0 ? (
-                                              <ul className="depth-3">
-                                                {cate2.cate_list_3?.map(
-                                                  (cate3, index) => (
-                                                    <li key={index} >
-                                                      <div className="space">
-                                                        <Link
-                                                        
-                                                          to={`/shop/product/product_lists?cat_code=${cate3.CAT_CODE}`}
-                                                        >
-                                                          <h5>
-                                                            {cate3.CAT_NAME &&
-                                                              parse(
-                                                                cate3.CAT_NAME
-                                                              )}
-                                                          </h5>
-                                                        </Link>
-                                                      </div>
-                                                    </li>
-                                                  )
-                                                )}
-                                              </ul>
-                                            ) : null}
-                                          </Link>
-                                        </div>
-                                        {cate2.cate_list_3.length > 0 ? (
-                                          <div className="arrow2"><AiOutlineDown /></div>
-                                        ) : null}
-                                      </li>
-                                    ))}
-                                  </div>
-                                </ul>
-                              </div>
-                            ) : null}
                           </Link>
                         </div>
                         {cate.cate_list_2.length > 0 ? (
-                          <div className="arrow"><AiOutlineDown /></div>
+                          <div className="depth-2">
+                            <ul>
+                              <div className="cate-list-2">
+                                {cate.cate_list_2?.map((cate2, index) => (
+                                  <li key={index}>
+                                    <div className="space">
+                                      {cate2.cate_list_3.length > 0 ? (
+                                        <div className="arrow2">
+                                          <AiOutlineDown />
+                                        </div>
+                                      ) : (
+                                        <div className="arrow2"></div>
+                                      )}
+                                      <Link
+                                        className="cate2"
+                                        to={`/shop/product/product_lists?cat_code=${cate2.CAT_CODE}`}
+                                      >
+                                        <h4>
+                                          {cate2.CAT_NAME &&
+                                            parse(cate2.CAT_NAME)}
+                                        </h4>
+                                      </Link>
+                                    </div>
+
+                                    {cate2.cate_list_3.length > 0 ? (
+                                      <ul className="depth-3">
+                                        {cate2.cate_list_3?.map(
+                                          (cate3, index) => (
+                                            <li key={index}>
+                                              <Link
+                                                to={`/shop/product/product_lists?cat_code=${cate3.CAT_CODE}`}
+                                              >
+                                                <h5>
+                                                  {cate3.CAT_NAME &&
+                                                    parse(cate3.CAT_NAME)}
+                                                </h5>
+                                              </Link>
+                                            </li>
+                                          )
+                                        )}
+                                      </ul>
+                                    ) : null}
+                                  </li>
+                                ))}
+                              </div>
+                            </ul>
+                          </div>
                         ) : null}
                       </li>
                     );
@@ -550,9 +574,7 @@ useEffect(()=>{
           </div>
 
           <div className="right-wrap">
-            <div className="pc_prd_lnb">
-              {cat_name}
-            </div>
+            <div className="pc_prd_lnb">{cat_name}</div>
             {/* <BestList bests={bests} Item={Item} /> */}
 
             {Hcode && (
@@ -568,8 +590,7 @@ useEffect(()=>{
                             <div className={`sub-prop opt-${h_code.H_CODE}`}>
                               <div className="option-container">
                                 {h_code.DETAILED?.map((d_code, index) => {
-                              
-                                    return (
+                                  return (
                                     <div key={index} className="option">
                                       <input
                                         className="option_checkbox"
@@ -591,12 +612,19 @@ useEffect(()=>{
                                         </div>
                                       ) : null}
                                     </div>
-                                  )
+                                  );
                                 })}
                               </div>
-                              {h_code.DETAILED.length>8?<div className="more-subs"onClick={()=>{showMoreOpt()}}><p >+ 더보기</p></div>:null}
-                                
-                              
+                              {h_code.DETAILED.length > 8 ? (
+                                <div
+                                  className="more-subs"
+                                  onClick={() => {
+                                    showMoreOpt();
+                                  }}
+                                >
+                                  <p>+ 더보기</p>
+                                </div>
+                              ) : null}
                             </div>
                           ) : null}
                         </div>
@@ -605,40 +633,55 @@ useEffect(()=>{
                   );
                 })}
               </ul>
-              
             )}
-           {loading1?
-           <div className="page-count"><Skeleton width={120} height={25} /></div>
-           :
-           <div className="page-count">{`총 ${pageCount?formatNumber(pageCount):0} 개`}</div>
-           }
+            {loading1 ? (
+              <div className="page-count">
+                <Skeleton width={120} height={25} />
+              </div>
+            ) : (
+              <div className="page-count">{`총 ${
+                pageCount ? formatNumber(pageCount) : 0
+              } 개`}</div>
+            )}
             <div>
               {checkedOption.length > 0 ? (
                 <div className="props-container">
                   <ul className="total-props">
-                  {checkedOption.flatMap((value, i) => {
-                    var hcode = Hcode.filter((x) => x.H_CODE === `${value.CAT_CODE}_${value.H_CODE}`)[0];
-                    return value.D_CODE.map((vl, index) => {
-                      var dcode = hcode.DETAILED.filter((x) => x.D_CODE === `${value.CAT_CODE}_${value.H_CODE}_${vl}`)[0];
-                      var dname = dcode.D_NAME;
-                      return (
-                        <div
-                          key={`${i}-${index}`}
-                          className="selected-prop"
-                          onClick={() => {
-                            cancelOption(dcode.D_CODE);
-                          }}
-                        >
-                          <li>{dname}</li>
-                          <MdOutlineCancel />
-                        </div>
-                      );
-                    });
-                  })}
-                </ul>
-                <div className="reset-props">
-                  <div className="reset-btn" onClick={()=>{ClearSelectedProp()}}><BsArrowClockwise/></div>
-                  
+                    {checkedOption.flatMap((value, i) => {
+                      var hcode = Hcode.filter(
+                        (x) => x.H_CODE === `${value.CAT_CODE}_${value.H_CODE}`
+                      )[0];
+                      return value.D_CODE.map((vl, index) => {
+                        var dcode = hcode.DETAILED.filter(
+                          (x) =>
+                            x.D_CODE ===
+                            `${value.CAT_CODE}_${value.H_CODE}_${vl}`
+                        )[0];
+                        var dname = dcode.D_NAME;
+                        return (
+                          <div
+                            key={`${i}-${index}`}
+                            className="selected-prop"
+                            onClick={() => {
+                              cancelOption(dcode.D_CODE);
+                            }}
+                          >
+                            <li>{dname}</li>
+                            <MdOutlineCancel />
+                          </div>
+                        );
+                      });
+                    })}
+                  </ul>
+                  <div className="reset-props">
+                    <div
+                      className="reset-btn"
+                      onClick={() => {
+                        ClearSelectedProp();
+                      }}
+                    >
+                      <BsArrowClockwise />
+                    </div>
                   </div>
                 </div>
               ) : null}
@@ -652,29 +695,33 @@ useEffect(()=>{
           /> */}
 
             <div className="prd_list">
-              {loading? <ul id="product_ul">
-                {products.map(x => <li>
-                <Skeleton variant="rounded" height={250}  />
-                <Skeleton variant="rounded" height={30} />
-                <Skeleton variant="rounded" width={150} />
-                <Skeleton variant="rounded" width={120} />
-              </li>)}
-             
-              </ul>:
-              <ul id="product_ul">
-              {products?.length > 0 ? (
-                products.map((product, index) =>
-                  index + 1 === products.length ? (
-                    <Item key={index} item={product} lastRef={lastRef} />
-                  ) : (
-                    <Item key={index} item={product} />
-                  )
-                )
+              {loading  || loading1? (
+                <ul id="product_ul">
+                  {products.map((x) => (
+                    <li>
+                      <Skeleton variant="rounded" height={250} />
+                      <Skeleton variant="rounded" height={30} />
+                      <Skeleton variant="rounded" width={150} />
+                      <Skeleton variant="rounded" width={120} />
+                    </li>
+                  ))}
+                </ul>
               ) : (
-                <li className="nodata">등록된 상품이 없습니다.</li>
+                <ul id="product_ul">
+                  {products?.length > 0 ? (
+                    products.map((product, index) =>
+                      index + 1 === products.length ? (
+                        <Item key={index} item={product} lastRef={lastRef} />
+                      ) : (
+                        <Item key={index} item={product} />
+                      )
+                    )
+                  ) : (
+                    <li className="nodata">등록된 상품이 없습니다.</li>
+                  )}
+                </ul>
               )}
-            </ul>}
-              
+
               {/* <ul id="product_ul">
               {products.data?.length > 0 ? (
                 products.data.map((product, index) =>

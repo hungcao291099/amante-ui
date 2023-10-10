@@ -615,39 +615,47 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 }
 /* common style - button */
 .sidebar{
-	width: 300px;
+	width: 100%;
 	border-radius: 15px;
 
 	/* top:20%; */
 }
 .right-wrap{
-	width: 880px;
+	width: 920px;
 }
 .left-wrap{
-	width: 300px;
+	width: 250px;
 }
-.slider h3{
+.space h3{
 	font-size: 16px;
 	color: #000000;
 }
-.slider h4{
+.space h4{
 	font-size: 14px;
 	color: #222;
+	font-weight: 300 ;
 }
-.slider h5{
+.space h5{
 	font-size: 14px;
 	color: #222;
+	font-weight: 200 ;
 }
 .arrow,.arrow2{
-
+	transform: rotate(-90deg);
+	width: 16px;
 	display: block;
 	cursor: pointer;
 	transition: .3s;
 }
 .rotate {
-    transform: rotate(-180deg);
+    transform: rotate(0deg);
     /*transform: rotate(180deg);*/
     transition: .3s;
+}
+.space{
+	width: 100%;
+	display: flex;
+	gap: 10px;
 }
 .wrap .sidebar .depth-1 {
 	display: block;
@@ -657,18 +665,16 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	height: fit-content;
 	border-radius: 15px;
   }
-  .wrap .sidebar .depth-1 li:first-child{
-	border-top-left-radius: 15px;
-	border-top-right-radius: 15px;
-  }
+
   .wrap .sidebar .depth-1 li {
 	padding:5px 15px;
 	width: 100%;
 	height: fit-content;
 	text-align: left;
 	display: flex;
+	flex-direction: column;
 	align-items: flex-start;
-	justify-content: space-between;
+	gap: 10px;	
 	
   }
   .wrap .sidebar .depth-1 .cate-panel {
@@ -700,37 +706,40 @@ input[type='radio']+label,input[type='checkbox']+label{font-size:16px}
 	width: fit-content;
 	height: fit-content;
 	display: none;
-	margin-left: 20px;
   }
   .wrap .sidebar .depth-1 li .depth-2 .cate-container{
 	display: flex;
-	justify-content: space-between;
 	height: fit-content;
+	gap: 10px;
   }
 
   .wrap .sidebar .depth-1 li .depth-2 .cate-list-2{
 	width: fit-content;
-	overflow-y: scroll;
+	margin-left: 8px;
+	/* overflow-y: scroll; */
+
   }
   .wrap .sidebar .depth-1 li .depth-2 li {
 	width: 200px;
 	height: fit-content;
-	padding: 3px 0;
+	padding: 3px 0 3px 10px;
 	margin-right: 10px;
 	display: flex;
 	align-items: flex-start;
-	justify-content: space-between;
+	gap: 10px;
+	border-left:1px solid #5f5f5f3f;
+	transition: .3s;
   }
 
   .wrap .sidebar .depth-1 li .depth-2 .depth-3 li{
 	text-align: left;
 	width: 100%;
-	padding: 3px 0;
+	padding: 3px 0 3px 10px;
 	margin-right: 10px;
   }
   
   .wrap .sidebar .depth-1 li .depth-2 .depth-3 {
-	margin-left: 20px;
+	margin-left: 8px;
 	width: fit-content;
 	height: fit-content;
 	display: none;
