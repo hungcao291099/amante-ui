@@ -58,10 +58,12 @@ const ProductList = () => {
   const [pageCount, setpageCount] = useState([]);
   const [ParentCate, setParentCate ] = useState([]);
   const [props, setProps ] = useState([]);
+  const [done, setDone ] = useState(0);
 
   let cat_code = Number(urlParams.get("cat_code")) || "";
   const [cat_name, setCatName] = useState();
   useEffect(() => {
+    setDone(0)
     const fetchData = async () => {
 
       try {
@@ -80,8 +82,11 @@ const ProductList = () => {
       }
     };
     fetchData();
+
   }, []);
   useEffect(() => {
+    setHasMore(true)
+    setDone(0)
     const fetchData = async () => {
       try {
         const { data } = await api({
@@ -93,13 +98,14 @@ const ProductList = () => {
         });
         
         setHcode(data.response);
-        
+        setDone(x=> x+1)
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-  }, [ParentCate,cat_code]);
+    
+  }, [cat_code]);
 
 
   useEffect(() => {
@@ -251,7 +257,6 @@ const ProductList = () => {
   const cancelOption = (dcode) => {
     // setCheckedOption(checkedOption.filter(x => x !== value))
     setProducts([])
-    console.log(dcode);
     $(`#${dcode}`).prop("checked", false);
     const temp = checkedOption.filter((el) => el.H_CODE === dcode.split("_")[1])[0];
     if (temp.D_CODE.length > 1) {
@@ -269,7 +274,6 @@ const ProductList = () => {
       setCheckedOption((prev) => prev.filter((x) => x.H_CODE !== temp.H_CODE));
     }
 
-    
     
   };
 
@@ -292,26 +296,26 @@ useEffect(()=>{
 },[checkedOption])
 
   useEffect(() => {
-    setHasMore(true);
-    setLoading(true);
-
-    const fetchData = async () => {
-      try {
-          const { data } = await api.get(`/shop/app/filter/product_lists?CAT_CODE=${cat_code}${props?props:""}&page=${curPage}`);
-          if (data.response.length == 0 && curPage > 2) {
-            setHasMore(false);
-          } else {
-            setProducts(data.response);
+    console.log(done,hasMore);
+    if(done > 0){setLoading(true);
+      if(hasMore){
+        const fetchData = async () => {
+          try {
+              const { data } = await api.get(`/shop/app/filter/product_lists?CAT_CODE=${cat_code}${props?props:""}&page=${curPage}`);
+              if ((data.response.length == 0 && curPage > 2) ||data.response.length === products.length) {
+                setHasMore(false);
+              } 
+              
+              setProducts(data.response);
+            setLoading(false);
+          } catch (error) {
+            console.log(error);
           }
-          
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, [curPage, props,cat_code]);
+        };
+     fetchData();
+      }}
+    
+  }, [curPage, props,cat_code,done]);
 
   useEffect(() => {
     setLoading1(true);
@@ -406,7 +410,6 @@ useEffect(()=>{
         hideOpt();
       });
 
-    
 
     $(".opt-text")
       .unbind()
@@ -604,8 +607,9 @@ useEffect(()=>{
               </ul>
               
             )}
-           {loading1?<Skeleton width={120} height={25} />:
-           
+           {loading1?
+           <div className="page-count"><Skeleton width={120} height={25} /></div>
+           :
            <div className="page-count">{`총 ${pageCount?formatNumber(pageCount):0} 개`}</div>
            }
             <div>
@@ -648,7 +652,7 @@ useEffect(()=>{
           /> */}
 
             <div className="prd_list">
-              {loading||loading1? <ul id="product_ul">
+              {loading? <ul id="product_ul">
                 {products.map(x => <li>
                 <Skeleton variant="rounded" height={250}  />
                 <Skeleton variant="rounded" height={30} />
