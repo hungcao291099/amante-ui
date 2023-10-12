@@ -23,6 +23,8 @@ import { Login } from "@mui/icons-material";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { formatNumber } from "@utils/functions";
+import { Box, Slider, Stack } from "@mui/material";
+import { AiFillStar } from "react-icons/ai";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -59,9 +61,17 @@ const ProductList = () => {
   const [ParentCate, setParentCate] = useState([]);
   const [props, setProps] = useState([]);
   const [done, setDone] = useState(0);
-
-  let cat_code = Number(urlParams.get("cat_code")) || "";
+  const [checkedOption, setCheckedOption] = useState([]);
+  let cat_code = Number(urlParams.get("cat_code")) || 55;
   const [cat_name, setCatName] = useState();
+
+  const [value,setvalue] = useState([0,100])
+  const [priceRange, setPriceRange] = useState([0,0])
+  const [maxPrice,setmaxPrice] = useState()
+  const [starpoint,setstarpoint] = useState()
+  const [radio,setradio] = useState()
+
+
   useEffect(() => {
     setDone(0);
     const fetchData = async () => {
@@ -71,9 +81,6 @@ const ProductList = () => {
           method: "GET",
         });
 
-        // data.data.map(cate => {
-        //   setParentCate(prev => [...prev, cate.CAT_CODE])
-        // })
         setCategories(data.data);
       } catch (error) {
         console.log(error);
@@ -82,7 +89,8 @@ const ProductList = () => {
     fetchData();
   }, []);
   useEffect(() => {
-    setcurPage(1)
+    setcurPage(1);
+    setmaxPrice(0)
     setHasMore(true);
     setDone(0);
     const fetchData = async () => {
@@ -113,47 +121,41 @@ const ProductList = () => {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const data = await productCate(category1Cd, category2Cd, category3Cd, token);
-  //     setCateData(data.cateData);
-  //     setCateBanner(data.cateBanner);
-  //   };
 
-  //   fetchData();
-  // }, [category1Cd, category2Cd, category3Cd]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const { data } = await api.get(`/shop/product/list`, {
-  //         params: {
-  //           pageCnt: rowCount,
-  //           orderBy,
-  //           inStock,
-  //           sh_category1_cd: category1Cd,
-  //           sh_category2_cd: category2Cd,
-  //           sh_category3_cd: category3Cd,
-  //         },
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-  //       setProducts(data);
-  //       setRowCount(Number(data.pageCnt));
-  //       setHasMore(data.data.length > 0);
-  //       console.log(data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [rowCount, orderBy, inStock, category1Cd, category2Cd, category3Cd]);
+  useEffect(()=>{
+    if(maxPrice){
+        setvalue([0,100])
+        setPriceRange([0,(value[1]*maxPrice)/100])
+    }
+  },[props,maxPrice])
 
-  const getSortValue = (e) => {
-    setOrderBy(e.target.value);
-  };
+  const handleChange = (e,newVal,activeThumb) =>{
+  
+    setvalue(newVal)
+    console.log(newVal);
+    
+  }
 
+  const handleChangecommited =(e,newVal,) =>{
+    if(maxPrice > 0){
+      
+      if(newVal[0]===0){return setPriceRange([0,newVal[1]*maxPrice/100])}
+    if(newVal[1]===100){return setPriceRange([newVal[0]*maxPrice/100,maxPrice])}
+    setPriceRange([newVal[0]*maxPrice/100,newVal[1]*maxPrice/100])
+    
+
+    // $(".Mui-active").mouseup(function(){
+    //   if(newVal[0]===0){return setPriceRange([0,newVal[1]*maxPrice/100])}
+    // if(newVal[1]===100){return setPriceRange([newVal[0]*maxPrice/100,maxPrice])}
+    // setPriceRange([newVal[0]*maxPrice/100,newVal[1]*maxPrice/100])
+    // })
+  }
+  }
+ const handleStar = (value) =>{
+  setstarpoint(value);
+ }
+  
   const lastRef = useCallback(
     (node) => {
       if (observer.current) observer.current.disconnect();
@@ -167,44 +169,34 @@ const ProductList = () => {
     [hasMore]
   );
 
-  // const lastRef = useCallback(
-  //   (node) => {
-  //     if (observer.current) observer.current.disconnect();
-  //     observer.current = new IntersectionObserver((entries) => {
-  //       if (entries[0].isIntersecting && hasMore) {
-  //         setRowCount((prev) => prev + 10);
-  //       }
-  //     });
-  //     if (node) observer.current.observe(node);
-  //   },
-  //   [hasMore]
-  // );
-
-  const [checkedOption, setCheckedOption] = useState([]);
-  const handleCheckOption = (e) => {
+  const onchangeRadio =(e)=>{
+    setradio()
+    var val =e.target.value;
+    switch (val) {
+      case 'highest': setradio("sort_sale_price=DESC")
+         break;
+      case 'lowest': setradio("sort_sale_price=ASC")
+      break;
+      case 'most-view': setradio("sort_review_cnt=DESC")
+      break;
+      case 'latest': setradio("sort_reg_date=DESC")
+      break;
+      default:
+        setradio("sort_reg_date=DESC")
+        break;
+    }
     setHasMore(true)
-    setcurPage(1)
+  }
+
+  const handleCheckOption = (e) => {
+    setHasMore(true);
+    setcurPage(1);
     setProducts([]);
     const value = e.target.value;
     const optSelected = value.split("_");
     if (checkedOption.length == 0) {
       setProducts([]), setHasMore(true);
     }
-
-    // if(e.target.checked) {
-    //   const obj = checkedOption.filter(el => el.split("|")[0] === optSelected[0])[0]
-    //   if(obj) {
-    //     setCheckedOption(checkedOption.map(el => el.split("|")[0] === optSelected[0] ? `${el.split("|")[0]}|${el.split("|")[1]}.${optSelected[1]}` : el))
-    //   } else {
-    //     setCheckedOption(prev => {
-    //       return [...prev, `${value.split("|")[0]}|${value.split("|")[1]}`]
-    //     })
-    //   }
-    // } else {
-
-    //   setCheckedOption(checkedOption.map(el => el.split("|")[0] === optSelected[0] ? `${el.replace(`.${optSelected[1]}`, "")}` :  el ))
-    // }
-
     var checkedOpt = {
       CAT_CODE: optSelected[0],
       H_CODE: optSelected[1],
@@ -254,14 +246,14 @@ const ProductList = () => {
   };
   const ClearSelectedProp = () => {
     $(".option_checkbox").prop("checked", false);
-    setcurPage(1)
+    setcurPage(1);
     setProducts([]);
     setCheckedOption([]);
   };
   const cancelOption = (dcode) => {
-    setHasMore(true)
+    setHasMore(true);
     // setCheckedOption(checkedOption.filter(x => x !== value))
-    setcurPage(1)
+    setcurPage(1);
     setProducts([]);
     $(`#${dcode}`).prop("checked", false);
     const temp = checkedOption.filter(
@@ -281,7 +273,6 @@ const ProductList = () => {
     } else {
       setCheckedOption((prev) => prev.filter((x) => x.H_CODE !== temp.H_CODE));
     }
-    
   };
 
   useEffect(() => {
@@ -297,25 +288,74 @@ const ProductList = () => {
     });
     var props = String(prop).replaceAll(",", "");
     props = encodeURI(props).replaceAll("%26", "&");
+    props = `${props}${starpoint?`&point=${starpoint}`:``}`
+    
     history.pushState(
       null,
       null,
       `/shop/product/product_lists?cat_code=${cat_code}${props}`
     );
     setProps(props);
-  }, [checkedOption]);
+  }, [checkedOption,priceRange,starpoint]);
 
   useEffect(() => {
-    console.log(done, hasMore, curPage);
-    if (done > 0) {
-      setLoading(true);
+    setLoading1(true);
+    const fetchData = async () => {
+      try {
+        const { data } = await api.get(
+          `/shop/app/count/filter/product_lists?CAT_CODE=${cat_code}${
+            props ? props : ""
+          }&price_min=${priceRange[0]}&price_max=${priceRange[1]}`
+        );
+        setpageCount(data.response[0].CNT);
+        setHasMore(true);
+        
+        setLoading1(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [props, cat_code,priceRange,radio]);
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        const { data } = await api.get(
+          `/shop/app/count/filter/product_lists?CAT_CODE=${cat_code}${
+            props ? props : ""
+          }`
+        );
+        var temp =data.response[0].price_sale_max
+        var count = 0
+        while (temp %10 == 0 ) {
+          temp /= 10;
+          count++;
+          console.log(count);
+        }
+        temp= Math.ceil(temp/10) 
+        temp===null?setmaxPrice(0):
+        setmaxPrice(temp*Math.pow(10,count+1));
+        
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  },[cat_code,props]);
+
+
+  useEffect(() => {
+    
       if (hasMore) {
+        setLoading(true);
         const fetchData = async () => {
           try {
             const { data } = await api.get(
               `/shop/app/filter/product_lists?CAT_CODE=${cat_code}${
                 props ? props : ""
-              }&page=${curPage}`
+              }&page=${curPage}&price_min=${priceRange[0]}&price_max=${priceRange[1]}&${radio}`
             );
             if (
               (data.response.length == 0 && curPage > 1) ||
@@ -324,38 +364,19 @@ const ProductList = () => {
             ) {
               setHasMore(false);
             }
-
             setProducts(data.response);
             setLoading(false);
           } catch (error) {
             console.log(error);
           }
         };
-        fetchData();
+        if (done > 0 && priceRange[1] != 0 && radio) {
+        fetchData();}
       }
-    }
-  }, [curPage, props, cat_code, done]);
-
-  useEffect(() => {
     
-    setLoading1(true);
-    const fetchData = async () => {
-      try {
-        const { data } = await api.get(
-          `/shop/app/count/filter/product_lists?CAT_CODE=${cat_code}${
-            props ? props : ""
-          }`
-        );
-        setpageCount(data.response[0].CNT);
-        setHasMore(true);
-        setLoading1(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  }, [curPage, props, cat_code, done,priceRange,radio]);
 
-    fetchData();
-  }, [props, cat_code]);
+
 
   function findCategory(cat_code, categories) {
     var category = categories.filter((x) => x.CAT_CODE === cat_code)[0];
@@ -397,6 +418,10 @@ const ProductList = () => {
     });
   }, [checkedOption]);
 
+  function showMoreStar() {
+    $(".star").css("max-height", "fit-content");
+    $(".more-star").hide();
+  }
   function showMoreOpt() {
     $(".option-container").css("max-height", "fit-content");
     $(".more-subs").hide();
@@ -405,6 +430,9 @@ const ProductList = () => {
     $(".option-container").css("max-height", "175px");
     $(".more-subs").show();
   }
+
+
+  
   $(document).ready(function () {
     $(".arrow")
       .unbind("click")
@@ -420,12 +448,17 @@ const ProductList = () => {
         $(this).parent().parent().find(".depth-3").slideToggle();
         $(this).toggleClass("rotate");
       });
-    $(".space").unbind().hover(function () {
-      $(this).parent().css("border-color","#c8877a")
-    }, function () {
-      $(this).parent().css("border-color","#5f5f5f3f")
-    })
-   
+    $(".space")
+      .unbind()
+      .hover(
+        function () {
+          $(this).parent().css("border-color", "#c8877a");
+        },
+        function () {
+          $(this).parent().css("border-color", "#5f5f5f3f");
+        }
+      );
+
     $(".prop")
       .unbind()
       .click(function () {
@@ -553,7 +586,7 @@ const ProductList = () => {
                                       <ul className="depth-3">
                                         {cate2.cate_list_3?.map(
                                           (cate3, index) => (
-                                            <li key={index} >
+                                            <li key={index}>
                                               <Link
                                                 to={`/shop/product/product_lists?cat_code=${cate3.CAT_CODE}`}
                                               >
@@ -578,6 +611,85 @@ const ProductList = () => {
                   })}
                 </div>
               </ul>
+            </div>
+            <div className="sort-sidebar">
+              <hr />
+              <div className="price-range">
+                <h3>가격대</h3>
+                  <div className="container">
+                    <div className="slider-values">
+                      <div className="box">{formatNumber(priceRange[0])}</div>
+                      <span>_</span>
+                      <div className="box">{formatNumber(priceRange[1])}</div>
+                    </div>
+                    <div className="slider-track">
+                    <Slider 
+                 value={value}
+                 onChangeCommitted={handleChangecommited}
+                 onChange={handleChange}
+                 valueLabelDisplay="auto"
+                 valueLabelFormat={function Identity(x) { return formatNumber(x*maxPrice/100) ; }}
+                 sx={{color: "#c8877a",width:150}}
+                />
+                    </div>
+                  </div>
+              </div>
+              <hr />
+              <div className="star-rate">
+                <h3>평가</h3>
+                <div className="star">
+                  <div className="star-box" onClick={()=>handleStar(5)}>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-full"><AiFillStar/></div>
+                  </div>
+                  <div className="star-box"  onClick={()=>handleStar(4)}>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-outline"><AiFillStar/></div>
+                    <span>  이상</span>
+                  </div>
+                  <div className="star-box"  onClick={()=>handleStar(3)}>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-outline"><AiFillStar/></div>
+                    <div className="star-outline"><AiFillStar/></div>
+                    <span>  이상</span>
+                  </div>
+                  <div className="star-box"  onClick={()=>handleStar(2)}>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-outline"><AiFillStar/></div>
+                    <div className="star-outline"><AiFillStar/></div>
+                    <div className="star-outline"><AiFillStar/></div>
+                    <span>  이상</span>
+                  </div>
+                  <div className="star-box"  onClick={()=>handleStar(1)}>
+                    <div className="star-full"><AiFillStar/></div>
+                    <div className="star-outline"><AiFillStar/></div>
+                    <div className="star-outline"><AiFillStar/></div>
+                    <div className="star-outline"><AiFillStar/></div>
+                    <div className="star-outline"><AiFillStar/></div>
+                    <span>  이상</span>
+                  </div>
+                </div>
+                  <div className="more-star" onClick={()=>{showMoreStar()}}>+ 더보기 <AiOutlineDown /></div>
+              </div>
+              <hr />
+              <div className="sort">
+                <h3>기순</h3>
+                <div className="sort-group" >
+                  <div className="group"><input type="radio" name="sort" value={"highest"} id="sort-1" onChange={onchangeRadio}/><label htmlFor="sort-1">높은가격순</label></div>
+                  <div className="group"><input type="radio" name="sort" value={"lowest"} id="sort-2" onChange={onchangeRadio}/><label htmlFor="sort-2">낮은가격순</label></div>
+                  <div className="group"><input type="radio" name="sort" value={"most-view"} id="sort-3" onChange={onchangeRadio}/><label htmlFor="sort-3">최다 조회수</label></div>
+                  <div className="group"><input type="radio" name="sort" value={"latest"} id="sort-4" onChange={onchangeRadio}/><label htmlFor="sort-4">최신의</label></div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -703,7 +815,7 @@ const ProductList = () => {
           /> */}
 
             <div className="prd_list">
-              {loading  || loading1? (
+              {loading || loading1 ? (
                 <ul id="product_ul">
                   {products.map((x) => (
                     <li>
