@@ -317,7 +317,7 @@ const ProductList = () => {
     };
 
     fetchData();
-  }, [props, cat_code,priceRange,radio]);
+  }, [props, cat_code,priceRange]);
   useEffect(()=>{
     const fetchData = async () => {
       try {
@@ -355,7 +355,7 @@ const ProductList = () => {
             const { data } = await api.get(
               `/shop/app/filter/product_lists?CAT_CODE=${cat_code}${
                 props ? props : ""
-              }&page=${curPage}&price_min=${priceRange[0]}&price_max=${priceRange[1]}&${radio}`
+              }&page=${curPage}&price_min=${priceRange[0]}&price_max=${priceRange[1]}${radio?`&${radio}`:``}`
             );
             if (
               (data.response.length == 0 && curPage > 1) ||
@@ -370,7 +370,7 @@ const ProductList = () => {
             console.log(error);
           }
         };
-        if (done > 0 && priceRange[1] != 0 && radio) {
+        if (done > 0 && priceRange[1] != 0) {
         fetchData();}
       }
     
