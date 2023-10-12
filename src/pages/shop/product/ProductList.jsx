@@ -127,6 +127,7 @@ const ProductList = () => {
     if(maxPrice){
         setvalue([0,100])
         setPriceRange([0,(value[1]*maxPrice)/100])
+        setHasMore(true)
     }
   },[props,maxPrice])
 
@@ -138,13 +139,13 @@ const ProductList = () => {
   }
 
   const handleChangecommited =(e,newVal,) =>{
-    if(maxPrice > 0){
+    if(maxPrice){
       
       if(newVal[0]===0){return setPriceRange([0,newVal[1]*maxPrice/100])}
     if(newVal[1]===100){return setPriceRange([newVal[0]*maxPrice/100,maxPrice])}
     setPriceRange([newVal[0]*maxPrice/100,newVal[1]*maxPrice/100])
     
-
+      setHasMore(true)
     // $(".Mui-active").mouseup(function(){
     //   if(newVal[0]===0){return setPriceRange([0,newVal[1]*maxPrice/100])}
     // if(newVal[1]===100){return setPriceRange([newVal[0]*maxPrice/100,maxPrice])}
@@ -154,6 +155,7 @@ const ProductList = () => {
   }
  const handleStar = (value) =>{
   setstarpoint(value);
+  setradio("sort_point=ASC")
  }
   
   const lastRef = useCallback(
@@ -296,6 +298,7 @@ const ProductList = () => {
       `/shop/product/product_lists?cat_code=${cat_code}${props}`
     );
     setProps(props);
+    setHasMore(true)
   }, [checkedOption,priceRange,starpoint]);
 
   useEffect(() => {
@@ -331,11 +334,10 @@ const ProductList = () => {
         while (temp %10 == 0 ) {
           temp /= 10;
           count++;
-          console.log(count);
         }
         temp= Math.ceil(temp/10) 
-        temp===null?setmaxPrice(0):
-        setmaxPrice(temp*Math.pow(10,count+1));
+        temp!==null?setmaxPrice(temp*Math.pow(10,count+1)):setmaxPrice()
+        
         
       } catch (error) {
         console.log(error);
@@ -347,7 +349,7 @@ const ProductList = () => {
 
 
   useEffect(() => {
-    
+    console.log(curPage, props, cat_code, done,priceRange,radio,hasMore);
       if (hasMore) {
         setLoading(true);
         const fetchData = async () => {
@@ -359,7 +361,6 @@ const ProductList = () => {
             );
             if (
               (data.response.length == 0 && curPage > 1) ||
-              data.response.length === products.length ||
               pageCount < 13
             ) {
               setHasMore(false);
@@ -374,7 +375,7 @@ const ProductList = () => {
         fetchData();}
       }
     
-  }, [curPage, props, cat_code, done,priceRange,radio]);
+  }, [curPage, props, cat_code, done,priceRange,radio,hasMore]);
 
 
 
