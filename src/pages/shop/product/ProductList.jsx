@@ -276,7 +276,7 @@ const ProductList = () => {
       setCheckedOption((prev) => prev.filter((x) => x.H_CODE !== temp.H_CODE));
     }
   };
-
+//
   useEffect(() => {
     products ? setProductsLoaded(products.length) : null;
   }, [products]);
