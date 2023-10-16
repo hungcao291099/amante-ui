@@ -31,7 +31,7 @@ function Header() {
   const [refreshKeyword, setRefreshKeyword] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const { pathname } = useLocation();
-
+  const [imgbycat,setimgbycat] = useState()
 
 
 
@@ -118,10 +118,11 @@ function Header() {
     const fetchData = async () => {
       try {
         const { data } = await api({
-          url: `/shop/product/category/newlist`,
+          url: `/shop/product/category/newlist2`,
           method: "GET",
         });
         setCategories(data.data);
+        console.log(data.data);
       } catch (error) {
         console.log(error);
       }
@@ -129,8 +130,16 @@ function Header() {
     fetchData();
   }, []);
 
-
-  
+  const  getImagebyCate =(path)=>{
+  setimgbycat()
+  var cat1 = Number(path.split("_")[0])
+  var cat2 = Number(path.split("_")[1])
+  var cat3 = Number(path.split("_")[2])
+  cat3? setimgbycat(categories.filter(x=> x.CAT_CODE===cat1)[0].cate_list_2.filter(y => y.CAT_CODE === cat2)[0].cate_list_3.filter(z=> z.CAT_CODE===cat3)[0].file_nm[0]) :
+  cat2 ? setimgbycat(categories.filter(x=> x.CAT_CODE===cat1)[0].cate_list_2.filter(y => y.CAT_CODE === cat2)[0].file_nm[0]):
+  setimgbycat(categories.filter(x=> x.CAT_CODE===cat1)[0].file_nm[0])
+  }
+  useEffect(()=>{console.log(imgbycat)},[imgbycat])
 
   const searchProductHandler = () => {
     const searchText = $(".search-text").val();
@@ -325,7 +334,7 @@ function Header() {
                           className="cate2"
                           to={`/shop/product/product_lists?cat_code=${cate.CAT_CODE}`}
                         >
-                      <li key={index} onClick={removeList} className={`cate_cd_${cate.CAT_CODE}`}>
+                      <li key={index} onClick={removeList} className={`cate_cd_${cate.CAT_CODE}`} onMouseEnter={()=>{getImagebyCate(cate.CODE)}}>
                           
                           <div className="cate-1-container">
                             <div className="cate-1-img">
@@ -336,7 +345,7 @@ function Header() {
                                             parse(cate.CAT_NAME)}
                             </div>
                           </div>
-                          {cate.cate_list_2.length > 0 ? (
+                          {cate.cate_list_2?.length > 0 ? (
                             <div className="cate-depth-2">
                               <ul>
                                 <div className="cate-container">
@@ -346,7 +355,7 @@ function Header() {
                                       key={index}
                                           to={`/shop/product/product_lists?cat_code=${cate2.CAT_CODE}`}
                                         >
-                                      <li onClick={removeList} key={index}>
+                                      <li onClick={removeList} key={index} onMouseEnter={()=>{getImagebyCate(cate2.CODE)}}>
                                           {cate2.CAT_NAME &&
                                             parse(cate2.CAT_NAME)}
     
@@ -362,6 +371,7 @@ function Header() {
                                                     style={{ color: "#b6b6b6" }}
                                                     onClick={removeList}
                                                     key={index}
+                                                    onMouseEnter={()=>{getImagebyCate(cate3.CODE)}}
                                                   >
                                                       {cate3.CAT_NAME &&
                                                         parse(cate3.CAT_NAME)}
@@ -376,7 +386,7 @@ function Header() {
                                     ))}
                                   </div>
                                   <div className="cate-image">
-                                    {cate.file_nm?(<img src={`${baseUrl}/uploads/product/285/${cate.file_nm[0].file_nm}`} alt="" />): null}
+                                    {imgbycat?<img src={`${baseUrl}/uploads/product/285/${imgbycat.file_nm}`} alt="" />:null}
                                     {/* {console.log(`${cate.CAT_CODE}-----${cate.file_nm[0].file_nm}`)} */}
                                   </div>
                                 </div>
@@ -387,7 +397,7 @@ function Header() {
                               <div className="cate-container">
                                 <div className="cate-list-2"></div>
                                 <div className="cate-image">
-                                {cate.file_nm?(<img src={`${baseUrl}/uploads/product/285/${cate.file_nm[0].file_nm}`} alt="" />): null}
+                                {imgbycat?<img src={`${baseUrl}/uploads/product/285/${imgbycat.file_nm}`} alt="" />:null}
                                 </div>
                               </div>
   
