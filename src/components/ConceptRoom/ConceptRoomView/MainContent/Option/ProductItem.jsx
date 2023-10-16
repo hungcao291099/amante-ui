@@ -23,14 +23,16 @@ const ProductItem = ({ item }) => {
           const productOpt = $(`.product-obj-${activeView}`);
           productOpt.each(function () {
             const zIndex = $(this).data('od');
-            if ($(this).data('opt-seq') === product.options[0]?.id) {
-              $(this)[0].style.zIndex = zIndex + 1;
-              $(this)[0].style.opacity = 1;
-              $(this).addClass('active');
-            } else {
-              $(this)[0].style.zIndex = zIndex;
-              $(this)[0].style.opacity = 0;
-              $(this).removeClass('active');
+            if (activeProduct.id !== product.id) {
+              if ($(this).data('opt-seq') === product.options[0]?.id) {
+                $(this)[0].style.zIndex = zIndex + 1;
+                $(this)[0].style.opacity = 1;
+                $(this).addClass('active');
+              } else {
+                $(this)[0].style.zIndex = zIndex;
+                $(this)[0].style.opacity = 0;
+                $(this).removeClass('active');
+              }
             }
           });
         } else {

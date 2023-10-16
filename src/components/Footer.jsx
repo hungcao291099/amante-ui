@@ -1,22 +1,22 @@
-import React from 'react';
-import { Container } from 'react-bootstrap';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { Link, useLocation } from 'react-router-dom';
-import { checkDevice } from '@utils/functions';
+import React from "react";
+import { Container } from "react-bootstrap";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { Link, useLocation } from "react-router-dom";
+import { checkDevice } from "@utils/functions";
 
-function Footer() {
+function Footer({ dark }) {
   const pathName = useLocation().pathname;
-  const noNavMB = '/shop/product/product_view';
+  const noNavMB = ["/shop/product/product_view", "/shop/new_home"];
 
   const shareHandler = () => {
-    var shareTitle = '공유하기 기능 테스트';
-    var shareText = '공유하기 기능 입니다.';
-    var contentURL = '/share/shareUrl';
-    var URLPreFix = '';
-    URLPreFix = URLPreFix + '//' + location.host;
+    var shareTitle = "공유하기 기능 테스트";
+    var shareText = "공유하기 기능 입니다.";
+    var contentURL = "/share/shareUrl";
+    var URLPreFix = "";
+    URLPreFix = URLPreFix + "//" + location.host;
     var shareURL = URLPreFix + contentURL;
-    alert('공유하기');
+    alert("공유하기");
 
     var shareTitle = document.title;
     var shareText = document.title;
@@ -29,8 +29,8 @@ function Footer() {
           text: shareText,
           url: shareURL,
         })
-        .then(() => console.log('Successful share'))
-        .catch((error) => console.log('Error sharing', error));
+        .then(() => console.log("Successful share"))
+        .catch((error) => console.log("Error sharing", error));
     }
   };
 
@@ -38,9 +38,9 @@ function Footer() {
     <>
       <div
         style={{
-          display: pathName.startsWith('/shop/concept_room/concept_room_view') ? 'none' : 'block',
+          display: dark || pathName.startsWith("/shop/concept_room/concept_room_view") ? "none" : "block",
         }}
-        className={noNavMB.includes(pathName) ? 'quick prd_view' : 'quick'}
+        className={noNavMB.includes(pathName) ? "quick prd_view" : "quick"}
       >
         <>
           <button
@@ -56,14 +56,14 @@ function Footer() {
           <button
             type="button"
             className="quick_btn naver"
-            onClick={() => (window.location.href = 'https://talk.naver.com/WC376H')}
+            onClick={() => (window.location.href = "https://talk.naver.com/WC376H")}
           >
             네이버톡톡문의
           </button>
           <button
             type="button"
             className="js_top_btn"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             위로 가기
           </button>
@@ -102,12 +102,20 @@ function Footer() {
         <div className="footer-bottom">
           <div className="wrap">
             <div className="company-info-area" lg={4}>
-              <p>(주)평안 &nbsp;&nbsp;&nbsp;대표: 오희택</p><br />
-              <p>본사: 대구광역시 달서구 성서로71<span >&nbsp;/ </span></p>
-              <p>서울사업소: 서울시 강서구 마곡동로31</p><br />
-              <p>사업자등록번호: 514-81-16510<span >&nbsp;/ </span></p>
-              <p>통신판매업신고번호: 대구시42호</p><br />
-              <p>개인정보보호책임자: 정주환(webmaster@ono.co.kr)</p><br />
+              <p>(주)평안 &nbsp;&nbsp;&nbsp;대표: 오희택</p>
+              <br />
+              <p>
+                본사: 대구광역시 달서구 성서로71<span>&nbsp;/ </span>
+              </p>
+              <p>서울사업소: 서울시 강서구 마곡동로31</p>
+              <br />
+              <p>
+                사업자등록번호: 514-81-16510<span>&nbsp;/ </span>
+              </p>
+              <p>통신판매업신고번호: 대구시42호</p>
+              <br />
+              <p>개인정보보호책임자: 정주환(webmaster@ono.co.kr)</p>
+              <br />
               <p>Copyright © 아망떼 All Rights Reserved.</p>
             </div>
 
@@ -140,9 +148,10 @@ function Footer() {
       <footer
         className="footer-mb"
         style={{
-          display: pathName.startsWith('/shop/concept_room/concept_room_view')
-            ? 'none'
-            : checkDevice() !== 'desktop' && 'block',
+          marginBottom: dark ? '20px' : 0,
+          display: pathName.startsWith("/shop/concept_room/concept_room_view")
+            ? "none"
+            : checkDevice() !== "desktop" && "block",
         }}
       >
         <div className="center-info-area">

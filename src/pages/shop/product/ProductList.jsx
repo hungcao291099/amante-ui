@@ -89,6 +89,7 @@ const ProductList = () => {
     fetchData();
   }, []);
   useEffect(() => {
+    setradio(undefined)
     setcurPage(1);
     setmaxPrice(0)
     setHasMore(true);
@@ -112,22 +113,10 @@ const ProductList = () => {
     fetchData();
   }, [cat_code]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { sortList, codeList } = await product();
-      setSorts(sortList);
-      setCodes(codeList);
-    };
-    fetchData();
-  }, []);
-
-
-
   useEffect(()=>{
     if(maxPrice){
         setvalue([0,100])
         setPriceRange([0,(value[1]*maxPrice)/100])
-        setHasMore(true)
     }
   },[props,maxPrice])
 
@@ -139,18 +128,12 @@ const ProductList = () => {
   }
 
   const handleChangecommited =(e,newVal,) =>{
-    if(maxPrice){
+    if(maxPrice > 0){
       
       if(newVal[0]===0){return setPriceRange([0,newVal[1]*maxPrice/100])}
     if(newVal[1]===100){return setPriceRange([newVal[0]*maxPrice/100,maxPrice])}
     setPriceRange([newVal[0]*maxPrice/100,newVal[1]*maxPrice/100])
-    
-      setHasMore(true)
-    // $(".Mui-active").mouseup(function(){
-    //   if(newVal[0]===0){return setPriceRange([0,newVal[1]*maxPrice/100])}
-    // if(newVal[1]===100){return setPriceRange([newVal[0]*maxPrice/100,maxPrice])}
-    // setPriceRange([newVal[0]*maxPrice/100,newVal[1]*maxPrice/100])
-    // })
+  
   }
   }
  const handleStar = (value) =>{
@@ -276,7 +259,7 @@ const ProductList = () => {
       setCheckedOption((prev) => prev.filter((x) => x.H_CODE !== temp.H_CODE));
     }
   };
-//
+
   useEffect(() => {
     products ? setProductsLoaded(products.length) : null;
   }, [products]);
@@ -291,7 +274,7 @@ const ProductList = () => {
     var props = String(prop).replaceAll(",", "");
     props = encodeURI(props).replaceAll("%26", "&");
     props = `${props}${starpoint?`&point=${starpoint}`:``}`
-    
+    props = `${props}${radio?`&radio=${radio}`:``}`
     history.pushState(
       null,
       null,
@@ -299,12 +282,19 @@ const ProductList = () => {
     );
     setProps(props);
     setHasMore(true)
-  }, [checkedOption,priceRange,starpoint]);
-
+  }, [checkedOption,priceRange,starpoint,radio]);
+  useEffect(()=>{
+    if(!radio){
+      $(".sort-group .group input:radio ").prop("checked",false)
+    }
+  },[radio])
   useEffect(() => {
     setLoading1(true);
     const fetchData = async () => {
       try {
+        console.log( `/shop/app/count/filter/product_lists?CAT_CODE=${cat_code}${
+          props ? props : ""
+        }&price_min=${priceRange[0]}&price_max=${priceRange[1]}`);
         const { data } = await api.get(
           `/shop/app/count/filter/product_lists?CAT_CODE=${cat_code}${
             props ? props : ""
@@ -331,12 +321,15 @@ const ProductList = () => {
         );
         var temp =data.response[0].price_sale_max
         var count = 0
-        while (temp %10 == 0 ) {
-          temp /= 10;
-          count++;
+        if(temp>0){
+          while (temp %10 == 0 ) {
+            temp /= 10;
+            count++;
+          }
+          temp= Math.ceil(temp/10) 
+          temp===null?setmaxPrice(0):
+          setmaxPrice(temp*Math.pow(10,count+1));
         }
-        temp= Math.ceil(temp/10) 
-        temp!==null?setmaxPrice(temp*Math.pow(10,count+1)):setmaxPrice()
         
         
       } catch (error) {
@@ -345,15 +338,19 @@ const ProductList = () => {
     };
 
     fetchData();
+    setHasMore(true)
   },[cat_code,props]);
 
 
   useEffect(() => {
-    console.log(curPage, props, cat_code, done,priceRange,radio,hasMore);
+    
       if (hasMore) {
         setLoading(true);
         const fetchData = async () => {
           try {
+            console.log(`/shop/app/filter/product_lists?CAT_CODE=${cat_code}${
+              props ? props : ""
+            }&page=${curPage}&price_min=${priceRange[0]}&price_max=${priceRange[1]}${radio?`&${radio}`:``}`);
             const { data } = await api.get(
               `/shop/app/filter/product_lists?CAT_CODE=${cat_code}${
                 props ? props : ""
@@ -361,6 +358,7 @@ const ProductList = () => {
             );
             if (
               (data.response.length == 0 && curPage > 1) ||
+              data.response.length === products.length ||
               pageCount < 13
             ) {
               setHasMore(false);
@@ -372,10 +370,11 @@ const ProductList = () => {
           }
         };
         if (done > 0 && priceRange[1] != 0) {
-        fetchData();}
+        fetchData();
+      }
       }
     
-  }, [curPage, props, cat_code, done,priceRange,radio,hasMore]);
+  }, [curPage, props, cat_code, done,priceRange,radio]);
 
 
 
@@ -535,7 +534,7 @@ const ProductList = () => {
           {/* {ThisCate?(ThisCate[0].CAT_NAME):null} */}
         </div>
 
-        <div className="wrap" id="wrap">
+        <div className="pd-wrap" id="wrap">
           <div className="left-wrap">
             <div className="sidebar">
               <ul className="depth-1">

@@ -62,7 +62,6 @@ const ProductModalLink = ({ product, isMobile }) => {
     }
   });
 
-
   return (
     Object.keys(product).length > 0 && (
       <motion.div

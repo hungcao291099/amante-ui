@@ -32,6 +32,10 @@ export default ({ children }) => {
       });
     }
 
+    if(pathname.includes("manager")) {
+        document.getElementById("root").style.overflow = "unset"
+    }
+
     $('.nav-mb').css('display', 'block');
   }, [pathname]);
 

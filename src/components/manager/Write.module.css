@@ -376,8 +376,8 @@ button:focus {
 
 .thumb__config {
   position: absolute;
-  width: 600px;
-  height: 580px;
+  width: 562px;
+  height: max-content;
   left: 5%;
   top: -230px;
   background: #ffffff;

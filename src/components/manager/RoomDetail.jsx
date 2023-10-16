@@ -17,7 +17,11 @@ export default ({ data, mode, selectedView }) => {
         thumbnail_img: "",
         option_nm: "",
         option_file_nm: "",
-        product: []
+        product: [],
+        out_url: "",
+        out_product_nm: "",
+        out_price: "",
+        out_thumbnail: ""
     }
     const [viewData, setViewData] = useState(data)
     const [selected, setSelected] = useState({ id: "", options: [] })
@@ -31,7 +35,7 @@ export default ({ data, mode, selectedView }) => {
             ...initTemp,
             child_obj: [],
             width: mode == "L" ? "770" : "100",
-            height: mode == "L" ? "680" : "100",
+            height: mode == "L" ? "680" : "100"
         })
     const [isEditObj, setIsEditObj] = useState(false)
     const [editProductObj, setEditProductObj] = useState({})
@@ -46,7 +50,9 @@ export default ({ data, mode, selectedView }) => {
         x: "00.00",
         y: "00.00",
         product_nm: "",
-        url: ""
+        url: "",
+        thumbnail_img: "",
+        price: ""
     })
 
     useEffect(() => {
@@ -177,6 +183,22 @@ export default ({ data, mode, selectedView }) => {
                         setTempThumb({ ...tempThumb, thumbnail_img: oThumbRes.response })
                     }
                     break
+                case "out_pro":
+                    const proForm = new FormData()
+                    proForm.append("concept_room_file", e.target.files[0])
+                    const proRes = await uploadSingle(proForm, "concept_room")
+                    if (proRes.status == "ok") {
+                        setTempObj({...tempObj, out_thumbnail: proRes.response})
+                    }
+                    break
+                case "out_prd":
+                    const out = new FormData()
+                    out.append("concept_room_file", e.target.files[0])
+                    const outPrd = await uploadSingle(out, "concept_room")
+                    if (outPrd.status == "ok") {
+                        setOutProduct({ ...outProduct, thumbnail_img: outPrd.response })
+                    }
+                    break
             }
             e.target.value = null
         } catch (error) {
@@ -195,7 +217,7 @@ export default ({ data, mode, selectedView }) => {
         top = top <= 0 ? 0 : top
 
 
-        if (imageCoordEnable && selected.options.length) {
+        if (imageCoordEnable) {
             setTempIcon({ ...tempIcon, x: left, y: top })
         } else {
             setImageCoordEnable(false)
@@ -360,7 +382,14 @@ export default ({ data, mode, selectedView }) => {
             setViewData({
                 ...viewData,
                 room_object: viewData.room_object
-                    .map(el => el.id == selected.id ? { ...el, options: selected.options } : el)
+                    .map(el => el.id == selected.id ? {
+                        ...el,
+                        options: selected.options,
+                        out_url: el.url || el.out_url,
+                        out_product_nm: el.product_nm || el.out_product_nm,
+                        out_price: el.out_price || el.price,
+                        out_thumbnail: el.out_thumbnail
+                    } : el)
             })
         }
     }, [selected])
@@ -389,7 +418,12 @@ export default ({ data, mode, selectedView }) => {
         if (item) {
             item.style.zIndex = dt.od
         }
-        setTempThumb({ ...initTemp, child_obj: [], width: mode == "L" ? "770" : "100", height: "100", })
+        setTempThumb({
+            ...initTemp,
+            child_obj: [],
+            width: mode == "L" ? "770" : "100",
+            height: "100",
+        })
         setTempIcon(initTemp)
         setImageObjEnable(false)
         setIsEditCoord(false)
@@ -442,7 +476,11 @@ export default ({ data, mode, selectedView }) => {
                         custom_nm: tempThumb.custom_nm,
                         coord_x: tempIcon.x,
                         coord_y: tempIcon.y,
-                        od: tempThumb.od || viewData.room_object.length
+                        od: tempThumb.od || viewData.room_object.length,
+                        out_url: tempThumb.out_url,
+                        out_product_nm: tempThumb.out_product_nm,
+                        out_thumbnail: tempThumb.out_thumbnail,
+                        out_price: tempThumb.out_price
                     } : el),
             })
         } else {
@@ -459,7 +497,11 @@ export default ({ data, mode, selectedView }) => {
                 object_pos_y: tempThumb.y,
                 product_cd: tempThumb.product_cd,
                 custom_nm: tempThumb.custom_nm,
-                od: viewData.room_object.length
+                od: viewData.room_object.length,
+                out_url: tempThumb.out_url,
+                out_product_nm: tempThumb.out_product_nm,
+                out_thumbnail: tempThumb.out_thumbnail,
+                out_price: tempThumb.out_price
             }
             setViewData({ ...viewData, room_object: [...viewData.room_object, thumb] })
         }
@@ -469,6 +511,10 @@ export default ({ data, mode, selectedView }) => {
             child_obj: [],
             width: mode == "L" ? "770" : "100",
             height: mode == "L" ? "680" : "100",
+            out_url: "",
+            out_product_nm: "",
+            out_thumbnail: "",
+            out_price: "",
         })
         alert("성공")
         setTempIcon(initTemp)
@@ -580,10 +626,6 @@ export default ({ data, mode, selectedView }) => {
                 )
             }
         }
-    }
-
-    const handleDeleteSlide = () => {
-
     }
 
 
@@ -846,6 +888,42 @@ export default ({ data, mode, selectedView }) => {
                                             <input type="text" readOnly value={tempObj.option_file_nm} className={styles.file__txt} />
                                         </div>
                                     </div>
+                                    <div className={styles.room__input__group2}>
+                                        <label className={styles.label}>URL: </label>
+                                        <input
+                                            value={tempObj.out_url}
+                                            onChange={(e) => setTempObj({ ...tempObj, out_url: e.target.value })}
+                                            type="text" className={styles.input} />
+                                    </div>
+                                    <div className={styles.room__input__group2}>
+                                        <label className={styles.label}>상품명: </label>
+                                        <input
+                                            value={tempObj.out_product_nm}
+                                            onChange={(e) => setTempObj({ ...tempObj, out_product_nm: e.target.value })}
+                                            type="text" className={styles.input} />
+                                    </div>
+                                    <div className={styles.room__input__group}>
+                                        <label className={styles.label}>제품 이미지 </label>
+                                        <input className={styles.input} value={tempObj.out_thumbnail} readOnly={true} />
+                                        <label>
+                                            <span
+                                                style={{
+                                                    height: "36px",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    marginLeft: "5px",
+                                                }}
+                                                className={styles2.save__btn}>찾아보기</span>
+                                            <input onChange={(e) => handleUploadPreviewImg("out_pro", e)} className={styles2.file__input} type="file" />
+                                        </label>
+                                    </div>
+                                    <div className={styles.room__input__group2}>
+                                        <label className={styles.label}>가격: </label>
+                                        <input
+                                            value={tempObj.out_price}
+                                            onChange={(e) => setTempObj({...tempObj, out_price: e.target.value})}
+                                            type="text" className={styles.input} />
+                                    </div>
                                     <div className={styles.button__coord__grp}>
                                         <button onClick={handleCancelObj} className={styles.button__cancel}>취소</button>
                                         <button onClick={handleSaveObj} className={styles.button__save}>저장</button>
@@ -873,6 +951,24 @@ export default ({ data, mode, selectedView }) => {
                                     <input
                                         onChange={(e) => setOutProduct({ ...outProduct, url: e.target.value })}
                                         value={outProduct.url}
+                                        type="text"
+                                        className={styles.input} />
+                                </div>
+                                <div className="d-flex align-items-center gap-3">
+                                    <div className={styles.room__input__group}>
+                                        <label className={styles.label}>영상: </label>
+                                        <input readOnly value={outProduct.thumbnail_img} placeholder="파일선택" type="text" className={styles.input} />
+                                    </div>
+                                    <label className={styles2.file__label}>
+                                        <input onChange={(e) => handleUploadPreviewImg("out_prd", e)} className={styles2.file__input} type="file" />
+                                        <span className={styles2.save__btn}>찾아보기</span>
+                                    </label>
+                                </div>
+                                <div className={styles.room__input__group2}>
+                                    <label className={styles.label}>가격: </label>
+                                    <input
+                                        onChange={(e) => setOutProduct({ ...outProduct, price: e.target.value })}
+                                        value={outProduct.price}
                                         type="text"
                                         className={styles.input} />
                                 </div>

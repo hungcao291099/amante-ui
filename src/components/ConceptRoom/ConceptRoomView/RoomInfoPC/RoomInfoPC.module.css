@@ -1,0 +1,131 @@
+/**
+ * @author khaituong
+ * @email [khaituong2909@mail.com]
+ * @create date 2023-10-06 08:40:10
+ * @modify date 2023-10-06 08:45:02
+ * @desc This is styles of RoomInfoPC.jsx
+ */
+
+.room_info__pc {
+  display: none;
+  flex-direction: column;
+  gap: 4rem;
+  padding: 4rem 0;
+}
+
+.room_info__pc .info_name__pc {
+  font-weight: 500;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  text-align: center;
+  color: var(--txt-black);
+}
+
+.room_info__pc .info_content__pc {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.room_info__pc .info_content__pc .content_author__pc {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.room_info__pc .info_content__pc .content_author__pc .author_name__pc {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--txt-black-2);
+}
+
+.room_info__pc .info_content__pc .content_author__pc .author_created__pc {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--txt-gray);
+}
+
+.room_info__pc .info_content__pc .content_interactive__pc {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.room_info__pc
+  .info_content__pc
+  .content_interactive__pc
+  .interactive_item__pc {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--txt-gray);
+}
+
+.room_info__pc .info_styles__pc {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  row-gap: 3rem;
+}
+
+.room_info__pc .info_styles__pc .style_item__pc {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.room_info__pc .info_styles__pc .style_item__pc .item_icon__pc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.room_info__pc .info_styles__pc .style_item__pc .item_icon__pc .icon_image__pc {
+  width: 32px;
+  height: 32px;
+}
+
+.room_info__pc .info_styles__pc .style_item__pc .item_icon__pc .icon_name__pc {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--txt-gray);
+}
+
+.room_info__pc .info_styles__pc .style_item__pc .item_line__pc {
+  height: 40px;
+  width: 2px;
+  border-radius: var(--rounded);
+  background-color: var(--border-gray);
+}
+
+.room_info__pc .info_styles__pc .style_item__pc .item_tags__pc {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  max-width: 60%;
+}
+
+.room_info__pc .info_styles__pc .style_item__pc .item_tags__pc .tag_item__pc {
+  padding: 0.5rem 1rem;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  letter-spacing: -0.05em;
+  flex: 0 0 auto;
+  min-width: fit-content;
+  border-radius: var(--rounded-2xl);
+  background: var(--bg-orange);
+  color: var(--orange);
+}
+
+@media (min-width: 768px) {
+  .room_info__pc {
+    display: flex;
+  }
+}

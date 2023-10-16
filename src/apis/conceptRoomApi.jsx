@@ -77,3 +77,20 @@ export const postUpdate = async (seq, data) => {
     const response = await api.post("/room/concept/modify/post", { seq, ...data })
     return response.data
 }
+
+export const getRecom = async (seq) => {
+    const response = await api.get(`/room/manager/recom/list?concept_room_seq=${seq}`)
+    return response.data
+}
+
+export const getDelRoom = async () => {
+    try {
+        const res = await api({
+            method: "GET",
+            url: "/room/manager/del"
+        })
+        return res.data
+    } catch (error) {
+        return error.response.data
+    }
+}

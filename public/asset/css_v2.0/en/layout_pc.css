@@ -30,7 +30,7 @@ textarea{padding:10px;font-size:14px}
 .date_area>span{width:30px}
 .date_area .date_form{float:left;width:250px;height:35px;line-height:35px}
 .date_area .date_form input{height:33px;line-height:33px}
-/* .date_area .date_form .icon span{;background:url("/asset/images/kr/mypage/pc_ico_date.png") 50% 50% no-repeat;background-size:19px} */
+.date_area .date_form .icon span{;background:url(/asset/images/kr/mypage/pc_ico_date.png) 50% 50% no-repeat;background-size:19px}
 /* header */
 #header{border-bottom:1px solid #888}
 #header>div{width:1200px;margin:0 auto}

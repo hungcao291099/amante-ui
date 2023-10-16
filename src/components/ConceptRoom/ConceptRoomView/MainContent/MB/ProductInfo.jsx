@@ -2,6 +2,7 @@ import ScrollContainer from 'react-indiana-drag-scroll';
 import ProductCard from '../../Popup/ProductCard';
 
 const ProductInfo = ({ productInfo, mainWebURL, custSeq, baseUrl, setShowFormOption, setShow3dProduct }) => {
+
   return (
     <>
       <div className="product-form-mb">
@@ -9,8 +10,8 @@ const ProductInfo = ({ productInfo, mainWebURL, custSeq, baseUrl, setShowFormOpt
         {/* Render PRODUCT item */}
 
         <ScrollContainer className="d-flex gap-3 product-info-slide">
-          {productInfo.product?.length > 0 &&
-            productInfo.product.map((product, index) => (
+          {productInfo.productCard?.length > 0 &&
+            productInfo.productCard.map((product, index) => (
               <ProductCard
                 key={index}
                 baseUrl={baseUrl}
@@ -22,6 +23,7 @@ const ProductInfo = ({ productInfo, mainWebURL, custSeq, baseUrl, setShowFormOpt
                 height="162px"
                 setShow3dProduct={setShow3dProduct}
                 product3d={productInfo?.product3d}
+                outside={productInfo.detectOutside}
               />
             ))}
         </ScrollContainer>

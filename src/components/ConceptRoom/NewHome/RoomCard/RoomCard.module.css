@@ -1,0 +1,90 @@
+/**
+ * @author khaituong
+ * @email [khaituong2909@mail.com]
+ * @create date 2023-10-02 15:18:52
+ * @modify date 2023-10-03 16:48:44
+ * @desc This is styles of RoomCard.jsx
+ */
+
+@font-face {
+  font-family: "Pretendard-Semibold";
+  src: url(../../../../public/asset/font/Pretendard-SemiBold.otf);
+}
+
+.room_card .card_image {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  margin-bottom: 0.625rem;
+  overflow: hidden;
+}
+
+.room_card .card_image .image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.room_card .card_image .icon {
+  position: absolute;
+  z-index: 1;
+  top: 0.625rem;
+  left: 0.625rem;
+  fill: var(--white);
+  cursor: pointer;
+}
+
+.room_card .card_image .icon:hover {
+  opacity: 75%;
+}
+
+.room_card .card_image .icon.icon__fill {
+  fill: var(--border-gray);
+}
+
+.room_card .card_image .icon.icon__fill.icon__active {
+  fill: var(--green);
+}
+
+.room_card .detail .name {
+  font-family: Pretendard-Semibold;
+  font-weight: 600;
+  color: var(--txt-black);
+  font-size: 16px;
+  line-height: 24px;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  word-wrap: break-word;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.room_card .detail .styles {
+  color: var(--txt-gray-2);
+  font-size: 14px;
+  line-height: 20px;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  word-wrap: break-word;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.room_card .detail .info_interact {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--txt-gray-2);
+  margin-top: 0.625rem;
+}
+
+.room_card .detail .info_interact .view,
+.room_card .detail .info_interact .like {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}

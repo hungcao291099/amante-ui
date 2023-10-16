@@ -73,11 +73,6 @@ const MainContent = ({ custSeq, room, baseUrl }) => {
 
   return (
     <section className="main-content">
-      <div className="concept-room-container">
-        <VideoArea isMobile={isMobile} room={room} device="mb"/>
-      </div>
-
-      <div className="content-line-mb" />
 
       <MiddleArea
         downloadScreenshot={downloadScreenshot}

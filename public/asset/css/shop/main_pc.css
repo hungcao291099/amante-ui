@@ -106,7 +106,7 @@
 .house_area.hw_tip .info p{margin-right:15px}
 
 .box_area.sale_lists_page.product_lists_page .must_buy_this .prd_list .pc_slide{white-space:normal;overflow-x:initial}
-.box_area.sale_lists_page.product_lists_page .must_buy_this .prd_list .slick-slide{width:304px !important;margin:0;padding:0 20px 6px;height: 600px;}
+.box_area.sale_lists_page.product_lists_page .must_buy_this .prd_list .slick-slide{width:304px !important;margin:0;padding:0 20px 6px}
 .box_area.sale_lists_page.product_lists_page .must_buy_this .prd_list .slick-slide .img{height:378px}
 .box_area.sale_lists_page.product_lists_page .must_buy_this .prd_list .slick-slide .box .price{margin:22px 0 10px}
 .box_area.sale_lists_page.product_lists_page .must_buy_this .prd_list .slick-slide .box .tit{height:2.4em;margin-bottom:10px}

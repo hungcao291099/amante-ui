@@ -1,10 +1,11 @@
-import {useState, useEffect, useContext} from "react";
-import {getStyles, getBrand, changeMethod} from "@apis/conceptRoomApi";
-import {RoomInfoContext} from "@contexts/Write/RoomInfoContext";
-import {RoomDetailContext} from "@contexts/Write/RoomDetailContext";
-import {useParams} from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { getStyles, getBrand, changeMethod, getRecom } from "@apis/conceptRoomApi";
+import { RoomInfoContext } from "@contexts/Write/RoomInfoContext";
+import { RoomDetailContext } from "@contexts/Write/RoomDetailContext";
+import { useParams } from "react-router-dom";
 import styles from "@components/manager/Write.module.css";
-import {WriteContext} from "@contexts/Write/WriteContext";
+import { WriteContext } from "@contexts/Write/WriteContext";
+import Select from "react-select";
 
 export default () => {
     const { roomInfo, setRoomInfo } = useContext(RoomInfoContext)
@@ -12,17 +13,19 @@ export default () => {
     const [styleData, setStyleData] = useState([])
     const [inputData, setInputData] = useState(roomInfo)
     const [brandList, setBrandList] = useState([])
+    const [recomRoom, setRecomRoom] = useState([]);
     const isEdit = JSON.parse(window.localStorage.getItem("isEdit"))
     const mode = window.localStorage.getItem("mode")
     const params = useParams()
 
     const fetch = async () => {
-        const [style, brand] = await Promise.all([
-            getStyles(), getBrand()
+        const [style, brand, rcmroom] = await Promise.all([
+            getStyles(), getBrand(), getRecom()
         ])
         setStyleData(style)
         setBrandList(brand)
-        return () => {}
+        setRecomRoom(rcmroom.list)
+        return () => { }
     }
 
     useEffect(() => {
@@ -34,48 +37,50 @@ export default () => {
     }, [inputData])
 
     const handleInput = async (type, e) => {
-        const value = e.target.value;
+        const value = e.target ? e.target.value : e;
         switch (type) {
             case "name":
-                setInputData({...inputData, concept_room_nm: value });
+                setInputData({ ...inputData, concept_room_nm: value });
                 break;
             case "brand":
-                setInputData({...inputData, brand: value });
+                setInputData({ ...inputData, brand: value });
                 break;
             case "state":
-                setInputData({...inputData, state: value });
+                setInputData({ ...inputData, state: value });
                 break;
             case "styles":
                 if (e.target.checked) {
-                    setInputData({...inputData, styles: [...inputData.styles, value] });
+                    setInputData({ ...inputData, styles: [...inputData.styles, value] });
                 } else {
-                    setInputData({...inputData, styles: inputData.styles.filter((el) => el!== value) });
+                    setInputData({ ...inputData, styles: inputData.styles.filter((el) => el !== value) });
                 }
                 break;
             case "use":
-                setInputData({...inputData, use_yn: value });
+                setInputData({ ...inputData, use_yn: value });
                 break;
             case "sort":
-                setInputData({...inputData, sort: value });
+                setInputData({ ...inputData, sort: value });
                 break;
             case "mode":
-                if (isEdit && e.target.value!== mode) {
+                if (isEdit && e.target.value !== mode) {
                     const confirm = window.confirm("Change?");
                     if (confirm) {
                         const res = await changeMethod(params.seq, e.target.value);
                         if (res.status === "ok") {
-                            setData({...roomInfo, view: res.response });
+                            setData({ ...roomInfo, view: res.response });
                         }
                         window.localStorage.setItem("mode", e.target.value);
-                        setInputData({...inputData, upload_method: e.target.value });
+                        setInputData({ ...inputData, upload_method: e.target.value });
                     }
                 } else {
-                    setInputData({...inputData, upload_method: value });
+                    setInputData({ ...inputData, upload_method: value });
                 }
+                break;
+            case "recom":
+                setInputData({...inputData, related_room: e})
                 break;
         }
     };
-
 
     return (
         <div className={styles.room__info__container}>
@@ -173,6 +178,12 @@ export default () => {
                         <span className={styles.checkmark}></span>
                     </label>
                 </div>
+            </div>
+            <div className={styles.room__input__group2}>
+                <label className={styles.label}>관련실</label>
+                <Select value={inputData.related_room} onChange={(e) => handleInput("recom", e)} placeholder="" className={`${styles.input} border-0`} isMulti options={recomRoom && recomRoom.map(el => {
+                    return { value: el.concept_room_seq, label: `[${el.concept_room_seq}] ${el.concept_room_nm}` }
+                })} />
             </div>
         </div>
     )

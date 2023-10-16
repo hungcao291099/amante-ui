@@ -1,0 +1,61 @@
+/**
+ * @author khaituong
+ * @email [khaituong2909@mail.com]
+ * @create date 2023-10-06 08:29:23
+ * @modify date 2023-10-06 08:46:07
+ * @desc This is styles of RoomInfo.jsx
+ */
+
+.room_info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem 0 4rem;
+}
+
+.room_info .info_name {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.04em;
+  color: var(--txt-black);
+}
+
+.room_info .info_title {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--txt-black-2);
+}
+
+.room_info .info_title .title_number {
+  font-weight: 500;
+  margin-left: 0.5rem;
+  color: var(--orange);
+}
+
+.room_info .info_tags {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.room_info .info_tags .tag {
+  padding: 0.5rem 1rem;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  letter-spacing: -0.05em;
+  flex: 0 0 auto;
+  min-width: fit-content;
+  border-radius: var(--rounded-2xl);
+  background: var(--bg-orange);
+  color: var(--orange);
+}
+
+@media (min-width: 768px) {
+  .room_info {
+    display: none;
+  }
+}
