@@ -153,7 +153,7 @@ const NavbarMB = ({ data, state }) => {
                   >
                     <img src={`${baseUrl}/uploads/category/${cate.file_nm1}`} alt="" />
                     <span>
-                      {cate.category_nm.includes('<') ? parse(cate.category_nm) : cate.category_nm}
+                      {cate.CAT_NAME?.includes('<') ? parse(cate.CAT_NAME) : cate.CAT_NAME}
                     </span>
                   </Link>
                 </li>

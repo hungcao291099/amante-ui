@@ -944,7 +944,7 @@ nav.nav-mb ul li a span {
   left: 0;
   z-index: 9999;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   overflow-y: auto;
   background-color: #fff;
 }
