@@ -96,6 +96,13 @@ export default () => {
         }
     }
 
+    const handleRestore = () => {
+        const height = window.screen.availHeight;
+        const width = window.screen.availWidth;
+        const popup = window.open(`/manager/concept-room/restore`, '_blank', `height=${height},width=${width}`)
+        popup.document.title = "아망떼 | 관리자 페이지"
+    }
+
     return (
         <ManagerLayout>
             <div className={styles.container}>
@@ -131,7 +138,10 @@ export default () => {
                         </div>
                     </div>
                     <div className={styles.table__container}>
-                        <div className="d-flex justify-content-end">
+                        <div className="d-flex gap-2 justify-content-end">
+                            <button onClick={handleRestore} className={styles.active__btn}>
+                                <i className="fa-solid fa-trash" style={{color: "#ffffff"}}></i>
+                            </button>
                             <button onClick={handleNew} className={styles.active__btn}>등록</button>
                         </div>
                         <span className={styles.status}>검색결과 {rooms && rooms.total} 건 ({rooms && rooms.currentPage} Page / {rooms && rooms.totalPage})</span>

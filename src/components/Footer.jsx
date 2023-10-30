@@ -149,9 +149,7 @@ function Footer({ dark }) {
         className="footer-mb"
         style={{
           marginBottom: dark ? '20px' : 0,
-          display: pathName.startsWith("/shop/concept_room/concept_room_view")
-            ? "none"
-            : checkDevice() !== "desktop" && "block",
+          display:  checkDevice() !== "desktop" && "block",
         }}
       >
         <div className="center-info-area">

@@ -149,7 +149,7 @@ const NavbarMB = ({ data, state }) => {
                 <li key={index}>
                   <Link
                     onClick={hideNavbar}
-                    to={`/shop/product/product_lists?sh_category1_cd=${cate.category_cd}`}
+                    to={`/shop/product/product_lists?cat_code=${cate.CAT_CODE}`}
                   >
                     <img src={`${baseUrl}/uploads/category/${cate.file_nm1}`} alt="" />
                     <span>

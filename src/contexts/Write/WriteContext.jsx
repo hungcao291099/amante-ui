@@ -25,6 +25,7 @@ export const WriteProvider = ({ children }) => {
         view: [],
         upload_method: 'L',
         admin_id: userdata.login_id,
+        related_room: []
     }
 
     const set = exists == null ? initData : exists

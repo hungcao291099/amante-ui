@@ -1,0 +1,20 @@
+/**
+ * @author khaituong
+ * @email [khaituong2909@mail.com]
+ * @create date 2023-10-26 10:26:20
+ * @modify date 2023-10-26 12:54:58
+ * @desc This is styles of RoomSuggest.jsx
+ */
+
+.room_suggest .suggest_title {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;;
+  margin-bottom: 1rem;
+  color: var(--txt-black);
+}
+
+.room_suggest .suggest_item {
+  width: 200px;
+}
+

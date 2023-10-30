@@ -21,7 +21,7 @@ export default () => {
 
     const handleDelete = async () => {
         if(window.confirm("삭제하시겠습니까?")) {
-            await deleteImg()
+            deleteImg()
         }
     }
 
@@ -31,7 +31,6 @@ export default () => {
             const data = JSON.parse(window.localStorage.getItem("project_write"))
             if (
                 data.concept_room_nm != "" &&
-                data.bg_url != "" &&
                 data.thumbnail_img != "" &&
                 data.state != "" &&
                 data.brand != "" &&
@@ -43,42 +42,28 @@ export default () => {
                     alert("성공")
                     window.localStorage.removeItem("project_write")
                     navigate("/manager/concept-room/list")
+                } else {
+                    setIsLoading(false)
+                    alert("err")
                 }
             } else {
+                setIsLoading(false)
                 alert("다시 확인해 주세요.")
             }
         } catch (error) {
             console.log(error)
+            setIsLoading(false)
             alert("err")
         }
     }
 
     const handleList = async () => {
         if(window.confirm("다시 목록으로?")) {
-            await deleteImg()
+            deleteImg()
         }
     }
 
-    const deleteImg = async () => {
-        const data = JSON.parse(window.localStorage.getItem("project_write"))
-        const arr = []
-        const arr2 = []
-        if (data) {
-            data.thumbnail_img != "" && arr.push(data.thumbnail_img)
-            data.view && data.view.map(el => {
-                el.file_nm != "" && arr.push(el.file_nm)
-                el.room_object && el.room_object.map(el2 => {
-                    el2.thumbnail_img != "" && arr.push(el2.thumbnail_img)
-                    el2.options && el2.options.map(el3 => {
-                        el3.thumbnail_img != "" && arr.push(el3.thumbnail_img)
-                        el3.option_file_nm != "" && arr2.push(el3.option_file_nm)
-                    })
-                })
-            })
-        }
-        const promise_1 = deleteMultiple({ folder: "concept_room", files: JSON.stringify(arr) })
-        const promise_2 = deleteMultiple({ folder: "concept_room/object", files: JSON.stringify(arr2) })
-        await Promise.all([promise_1, promise_2])
+    const deleteImg = () => {
         window.localStorage.removeItem("project_write")
         window.localStorage.removeItem("current_img")
         navigate("/manager/concept-room/list")

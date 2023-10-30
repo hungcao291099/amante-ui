@@ -1,0 +1,46 @@
+/**
+ * @author khaituong
+ * @email [khaituong2909@mail.com]
+ * @create date 2023-10-25 15:24:47
+ * @modify date 2023-10-26 10:03:52
+ * @desc This is styles of ProductItem.jsx
+ */
+
+.product_item {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: var(--rounded-2xl);
+}
+
+.product_item::before {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  inset: 0;
+  border: 1px solid var(--border-gray-solid);
+  transition: var(--transition);
+}
+
+.product_item.product_item__active::before {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  inset: 0;
+  z-index: 10;
+  border: 2px solid var(--border-orange-solid);
+}
+
+.product_item .item_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product_item.product_item__active .item_image {
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out 0s;
+}

@@ -28,6 +28,7 @@ export default () => {
                 window.localStorage.removeItem("mode")
                 window.location.href = "/manager/concept-room/list"
             } else {
+                setIsLoading(false)
                 alert("나중에 다시 시도 해주십시오.")
             }
         }
@@ -39,7 +40,6 @@ export default () => {
                 const data = JSON.parse(window.localStorage.getItem("project_write"))
                 if (
                     data.concept_room_nm != "" &&
-                    data.bg_url != "" &&
                     data.thumbnail_img != "" &&
                     data.state != "" &&
                     data.brand != "" &&
@@ -53,12 +53,17 @@ export default () => {
                         window.localStorage.removeItem("isEdit")
                         window.localStorage.removeItem("mode")
                         window.location.href = "/manager/concept-room/list"
+                    } else {
+                        setIsLoading(false)
+                        alert("error")
                     }
                 } else {
+                    setIsLoading(false)
                     alert("다시 확인해 주세요.")
                 }
             }
         } catch (error) {
+            setIsLoading(false)
             alert("err")
         }
     }

@@ -16,7 +16,8 @@ export const RoomInfoProvider = ({ children }) => {
         brand: data ? data.brand : "",
         sort: data ? data.sort : "",
         state: data ? data.state : "",
-        upload_method: data ? data.upload_method : 'L'
+        upload_method: data ? data.upload_method : 'L',
+        related_room: data ? data.related_room : []
     }
 
     const [roomInfo, setRoomInfo] = useState(setRoom)

@@ -243,16 +243,16 @@ button:focus {
 }
 
 .preview__container {
-  width: 770px;
-  height: 680px;
+  width: 786px;
+  height: auto;
   min-width: 230px;
   min-height: 380px;
   position: relative;
 }
 
 .preview__container2{
-    width: 770px;
-    height: 680px;
+    width: 786px;
+    height: auto;
     min-width: 230px;
     min-height: 380px;
     position: relative;

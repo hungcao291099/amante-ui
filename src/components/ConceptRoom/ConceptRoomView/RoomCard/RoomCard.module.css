@@ -1,0 +1,54 @@
+/**
+ * @author khaituong
+ * @email [khaituong2909@mail.com]
+ * @create date 2023-10-26 10:33:41
+ * @modify date 2023-10-26 11:23:47
+ * @desc This is styles of RoomCard.jsx
+ */
+
+.room_card {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.room_card .card_image {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: var(--rounded);
+  border: 1px solid var(--border-gray-solid);
+}
+
+.room_card .card_name {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: -0.055em;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--txt-black-2);
+}
+
+.room_card .card_info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.room_card .card_info .info_item {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  color: var(--txt-gray);
+}
+
+
+.room_card .card_info .info_item .item_count {
+  font-size: 14px;
+  line-height: 20px;
+}

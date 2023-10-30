@@ -1,47 +1,123 @@
 /**
  * @author khaituong
  * @email [khaituong2909@mail.com]
- * @create date 2023-10-06 08:29:23
- * @modify date 2023-10-06 08:46:07
- * @desc This is styles of RoomInfo.jsx
+ * @create date 2023-10-06 08:40:10
+ * @modify date 2023-10-24 08:15:48
+ * @desc This is styles of RoomInfoPC.jsx
  */
 
 .room_info {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 2rem 0 4rem;
+  gap: 2rem;
 }
 
 .room_info .info_name {
   font-weight: 500;
   font-size: 24px;
   line-height: 32px;
-  letter-spacing: -0.04em;
+  text-align: center;
   color: var(--txt-black);
 }
 
-.room_info .info_title {
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 400;
+.room_info .info_content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.room_info .info_content .content_author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.room_info .info_content .content_author .author_name {
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5rem;
   color: var(--txt-black-2);
 }
 
-.room_info .info_title .title_number {
-  font-weight: 500;
-  margin-left: 0.5rem;
-  color: var(--orange);
+.room_info .info_content .content_author .author_created {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--txt-gray);
 }
 
-.room_info .info_tags {
+.room_info .info_content .content_interactive {
   display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.room_info .info_content .content_interactive .interactive_item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--txt-gray);
+}
+
+.room_info .info_styles {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  row-gap: 1.5rem;
+}
+
+.room_info .info_styles .style_item {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.room_info .info_styles .style_item .item_block {
+  width: 80px;
+  display: flex;
+}
+
+.room_info .info_styles .style_item .block_icon {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.room_info .info_styles .style_item .block_icon .icon_image {
+  width: 24px;
+  height: 24px;
+}
+
+.room_info .info_styles .style_item .block_icon .icon_name {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--txt-gray);
+}
+
+.room_info .info_styles .style_item .item_line {
+  display: flex;
+  align-items: center;
+}
+
+.room_info .info_styles .style_item .item_line .line_border {
+  height: 30px;
+  width: 2px;
+  border-radius: var(--rounded);
+  background-color: var(--border-gray);
+}
+
+.room_info .info_styles .style_item .item_tags {
+  display: flex;
+  align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+  max-width: 60%;
 }
 
-.room_info .info_tags .tag {
-  padding: 0.5rem 1rem;
+.room_info .info_styles .style_item .item_tags .tag_item {
+  padding: 6px 12px;
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
@@ -54,8 +130,59 @@
   color: var(--orange);
 }
 
-@media (min-width: 768px) {
+@media screen and (min-width: 640px) {
   .room_info {
-    display: none;
+    gap: 4rem;
+  }
+
+  .room_info .info_name {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+
+  .room_info .info_content .content_author {
+    gap: 2rem;
+  }
+
+  .room_info .info_content .content_author .author_name {
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  .room_info .info_content .content_author .author_created {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .room_info .info_content .content_interactive {
+    gap: 2rem;
+  }
+
+  .room_info .info_content .content_interactive .interactive_item {
+    gap: 0.5rem;
+  }
+
+  .room_info .info_styles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    row-gap: 3rem;
+  }
+
+  .room_info .info_styles .style_item .item_block {
+    width: 100px;
+  }
+
+  .room_info .info_styles .style_item .block_icon .icon_image {
+    width: 28px;
+    height: 28px;
+  }
+
+  .room_info .info_styles .style_item .item_line .line_border {
+    height: 40px;
+  }
+  
+  .room_info .info_styles .style_item .item_tags .tag_item {
+    font-size: 14px;
+    line-height: 20px;
   }
 }

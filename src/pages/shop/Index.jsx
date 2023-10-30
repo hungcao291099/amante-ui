@@ -214,7 +214,6 @@ export default () => {
             {data ? (
                 <>
                     <div className="content main_page">
-                    
                         <Slider {...keyvisual}>
                             {data.mainTopBanner.length > 0 && data.mainTopBanner.map((banner, idx) => (
                                 <div key={idx} className="slide">
@@ -292,24 +291,21 @@ export default () => {
                             </>
                         )}
 
-                      <div className={`box_area category_area ${hideCategory ? "" : "on"}`}>
+                        <div className={`box_area category_area ${hideCategory ? "" : "on"}`}>
                             <div className="tit_wrap">
-                                <h3 className="mb_hidden">상위 카테고리</h3>
+                                <h3 className="mb_hidden">카테고리별 상품 찾기</h3>
                             </div>
-                            
                             {width > 768 ? (
-                                 
                                 <>
                                     <Slider {...settings}>
-                                      
-                                        {data.bestMenuTab.length > 0 && data.bestMenuTab.map((cate, idx) => (
+                                        {data.category.length > 0 && data.category.map((cate, idx) => (
                                             <div key={idx} className="slide">
                                                 <Link to={`/shop/product/product_lists?sh_category1_cd=${cate.category_cd}`}>
                                                     <picture>
-                                                         {/* <!--[if IE 9]><video style="display: none;"><![endif]-->  */}
+                                                        {/* <!--[if IE 9]><video style="display: none;"><![endif]--> */}
                                                         <source srcSet={`${baseUrl}/uploads/category/${cate.file_nm1}`} media="(min-width:768px)"></source>
                                                         <source srcSet={`${baseUrl}/uploads/category/${cate.file_nm1}`} media="(max-width:767px)"></source>
-                                                         {/* <!--[if IE 9]></video><![endif]-->  */}
+                                                        {/* <!--[if IE 9]></video><![endif]--> */}
                                                         <img src={`${baseUrl}/uploads/category/${cate.file_nm1}`} alt=""></img>
                                                     </picture>
                                                     <span dangerouslySetInnerHTML={{
@@ -333,10 +329,10 @@ export default () => {
                                             <div key={idx} className="slide">
                                                 <Link to={`/shop/product/product_lists?sh_category1_cd=${cate.category_cd}`}>
                                                     <picture>
-                                                         {/* <!--[if IE 9]><video style="display: none;"><![endif]-->  */}
+                                                        {/* <!--[if IE 9]><video style="display: none;"><![endif]--> */}
                                                         <source srcSet={`${baseUrl}/uploads/category/${cate.file_nm1}`} media="(min-width:768px)"></source>
                                                         <source srcSet={`${baseUrl}/uploads/category/${cate.file_nm1}`} media="(max-width:767px)"></source>
-                                                         {/* <!--[if IE 9]></video><![endif]-->  */}
+                                                        {/* <!--[if IE 9]></video><![endif]--> */}
                                                         <img src={`${baseUrl}/uploads/category/${cate.file_nm1}`} alt=""></img>
                                                     </picture>
                                                     <span dangerouslySetInnerHTML={{
@@ -355,17 +351,16 @@ export default () => {
                             )}
 
                         </div>
-  
+
                         <div className="box_area new_area new_area2">
                             <h3>신상품</h3>
                             <ul className="prd_tab" id="new">
                                 {data.newMenuTab.length > 0 && data.newMenuTab.map((mainCate1Row, idx) => (
                                     <li key={idx} className={`${mainCate1Row.category_cd} ${selectedNew == mainCate1Row.category_cd ? "on" : ""}`}>
                                         <Link
-                                            
                                             onClick={(e) => {
                                                 setSelectedNew(mainCate1Row.category_cd)
-                                                // e.preventDefault()
+                                                e.preventDefault()
                                             }}
                                             to={`#!`}
                                             className={mainCate1Row.category_cd}

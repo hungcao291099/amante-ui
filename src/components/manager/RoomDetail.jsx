@@ -12,7 +12,7 @@ import Select from "react-select"
 export default ({ data, mode, selectedView }) => {
     const { setView, view } = useContext(RoomDetailContext)
     const isEdit = JSON.parse(window.localStorage.getItem("isEdit"))
-    const initTemp = { x: "00.00", y: "00.00", product_cd: "", product_nm: "" }
+    const initTemp = { x: "00.00", y: "00.00" }
     const initObj = {
         thumbnail_img: "",
         option_nm: "",
@@ -21,7 +21,8 @@ export default ({ data, mode, selectedView }) => {
         out_url: "",
         out_product_nm: "",
         out_price: "",
-        out_thumbnail: ""
+        out_thumbnail: "",
+
     }
     const [viewData, setViewData] = useState(data)
     const [selected, setSelected] = useState({ id: "", options: [] })
@@ -35,7 +36,14 @@ export default ({ data, mode, selectedView }) => {
             ...initTemp,
             child_obj: [],
             width: mode == "L" ? "770" : "100",
-            height: mode == "L" ? "680" : "100"
+            height: mode == "L" ? "680" : "100",
+            product: {},
+            out_url: "",
+            out_product_nm: "",
+            out_price: "",
+            out_thumbnail: "",
+            url_3d: ""
+
         })
     const [isEditObj, setIsEditObj] = useState(false)
     const [editProductObj, setEditProductObj] = useState({})
@@ -44,6 +52,7 @@ export default ({ data, mode, selectedView }) => {
     const [isEditCoord, setIsEditCoord] = useState(false)
     const [openThirdParty, setOpenThirdParty] = useState(false)
     const [thirdPartyCoord, setThirdPartyCoord] = useState(false)
+    const [productArr, setProductArr] = useState([])
     const [isModify, setIsModify] = useState(false)
     const [outProduct, setOutProduct] = useState({
         id: "",
@@ -82,6 +91,7 @@ export default ({ data, mode, selectedView }) => {
 
     const fetchProduct = async () => {
         const result = await getProduct();
+        setProductArr(result.response)
         setProducts(productOptions(result.response))
         return () => { }
     }
@@ -158,52 +168,48 @@ export default ({ data, mode, selectedView }) => {
     }
 
     const handleUploadPreviewImg = async (type, e) => {
-        try {
-            switch (type) {
-                case "p_light":
-                    if (viewData.file_nm != "") {
-                        await deleteSingle({ folder: "concept_room", file_nm: viewData.file_nm_l })
-                        setViewData({ ...viewData, file_nm: "" })
-                    }
-                    const formPLight = new FormData()
-                    formPLight.append("concept_room_file", e.target.files[0])
-                    const pLightRes = await uploadSingle(formPLight, "concept_room")
-                    if (pLightRes.status == "ok") {
-                        setViewData({ ...viewData, file_nm: pLightRes.response })
-                    }
-                    break
-                case "o_thumb":
-                    const formOThumb = new FormData()
-                    formOThumb.append("concept_room_file", e.target.files[0])
-                    const oThumbRes = await uploadSingle(formOThumb, "concept_room")
-                    if (tempThumb.thumbnail_img != "") {
-                        window.localStorage.setItem("temp", oThumbRes.response)
-                    }
-                    if (oThumbRes.status == "ok") {
-                        setTempThumb({ ...tempThumb, thumbnail_img: oThumbRes.response })
-                    }
-                    break
-                case "out_pro":
-                    const proForm = new FormData()
-                    proForm.append("concept_room_file", e.target.files[0])
-                    const proRes = await uploadSingle(proForm, "concept_room")
-                    if (proRes.status == "ok") {
-                        setTempObj({...tempObj, out_thumbnail: proRes.response})
-                    }
-                    break
-                case "out_prd":
-                    const out = new FormData()
-                    out.append("concept_room_file", e.target.files[0])
-                    const outPrd = await uploadSingle(out, "concept_room")
-                    if (outPrd.status == "ok") {
-                        setOutProduct({ ...outProduct, thumbnail_img: outPrd.response })
-                    }
-                    break
-            }
-            e.target.value = null
-        } catch (error) {
-            alert("Not accept this file type")
+        switch (type) {
+            case "p_light":
+                if (viewData.file_nm != "") {
+                    await deleteSingle({ folder: "concept_room", file_nm: viewData.file_nm_l })
+                    setViewData({ ...viewData, file_nm: "" })
+                }
+                const formPLight = new FormData()
+                formPLight.append("concept_room_file", e.target.files[0])
+                const pLightRes = await uploadSingle(formPLight, "concept_room")
+                if (pLightRes.status == "ok") {
+                    setViewData({ ...viewData, file_nm: pLightRes.response })
+                }
+                break
+            case "o_thumb":
+                const formOThumb = new FormData()
+                formOThumb.append("concept_room_file", e.target.files[0])
+                const oThumbRes = await uploadSingle(formOThumb, "concept_room")
+                if (tempThumb.thumbnail_img != "") {
+                    window.localStorage.setItem("temp", oThumbRes.response)
+                }
+                if (oThumbRes.status == "ok") {
+                    setTempThumb({ ...tempThumb, thumbnail_img: oThumbRes.response })
+                }
+                break
+            case "out_pro":
+                const proForm = new FormData()
+                proForm.append("concept_room_file", e.target.files[0])
+                const proRes = await uploadSingle(proForm, "concept_room")
+                if (proRes.status == "ok") {
+                    setTempThumb({ ...tempThumb, out_thumbnail: proRes.response })
+                }
+                break
+            case "out_prd":
+                const out = new FormData()
+                out.append("concept_room_file", e.target.files[0])
+                const outPrd = await uploadSingle(out, "concept_room")
+                if (outPrd.status == "ok") {
+                    setOutProduct({ ...outProduct, thumbnail_img: outPrd.response })
+                }
+                break
         }
+        e.target.value = null
     }
 
     const handleSetCoord = (e) => {
@@ -372,7 +378,7 @@ export default ({ data, mode, selectedView }) => {
                 setTempObj({ ...tempObj, product_cd: e.value, product_nm: e.label })
                 break
             case "multi_obj":
-                setTempObj({ ...tempObj, product: e })
+                setTempThumb({ ...tempThumb, product: e, thumbnail_img: productArr.filter(x => x.product_cd == e.value)[0].file_nm })
                 break
         }
     }
@@ -388,7 +394,9 @@ export default ({ data, mode, selectedView }) => {
                         out_url: el.url || el.out_url,
                         out_product_nm: el.product_nm || el.out_product_nm,
                         out_price: el.out_price || el.price,
-                        out_thumbnail: el.out_thumbnail
+                        out_thumbnail: el.out_thumbnail,
+                        url_3d: el.url_3d,
+                        product: el.product
                     } : el)
             })
         }
@@ -466,11 +474,10 @@ export default ({ data, mode, selectedView }) => {
                 room_object: viewData.room_object.map(el => el.id == selected.id ?
                     {
                         ...el,
-                        thumbnail_img: tempThumb.thumbnail_img,
+                        thumbnail_img: tempThumb.out_thumbnail != "" ? `${baseImageUrl}/concept_room/${tempThumb.out_thumbnail}` : `https://www.amante.co.kr/uploads/product/${tempThumb.thumbnail_img}`,
                         child_obj: tempThumb.child_obj,
                         object_pos_x: mode == "L" ? "00.00" : tempThumb.x,
                         object_pos_y: mode == "L" ? "00.00" : tempThumb.y,
-                        product_cd: tempThumb.product_cd,
                         width: mode == "L" ? "770" : tempThumb.width,
                         height: mode == "L" ? "680" : tempThumb.height,
                         custom_nm: tempThumb.custom_nm,
@@ -480,13 +487,15 @@ export default ({ data, mode, selectedView }) => {
                         out_url: tempThumb.out_url,
                         out_product_nm: tempThumb.out_product_nm,
                         out_thumbnail: tempThumb.out_thumbnail,
-                        out_price: tempThumb.out_price
+                        out_price: tempThumb.out_price,
+                        url_3d: tempThumb.url_3d,
+                        product: tempThumb.product
                     } : el),
             })
         } else {
             let thumb = {
                 id: uuid(),
-                thumbnail_img: tempThumb.thumbnail_img,
+                thumbnail_img: tempThumb.out_thumbnail != "" ? `${baseImageUrl}/concept_room/${tempThumb.out_thumbnail}` : `https://www.amante.co.kr/uploads/product/${tempThumb.thumbnail_img}`,
                 options: [],
                 child_obj: [],
                 width: mode == "L" ? "770" : "100",
@@ -495,13 +504,14 @@ export default ({ data, mode, selectedView }) => {
                 coord_y: tempIcon.y,
                 object_pos_x: tempThumb.x,
                 object_pos_y: tempThumb.y,
-                product_cd: tempThumb.product_cd,
                 custom_nm: tempThumb.custom_nm,
                 od: viewData.room_object.length,
                 out_url: tempThumb.out_url,
                 out_product_nm: tempThumb.out_product_nm,
                 out_thumbnail: tempThumb.out_thumbnail,
-                out_price: tempThumb.out_price
+                out_price: tempThumb.out_price,
+                url_3d: tempThumb.url_3d,
+                product: tempThumb.product
             }
             setViewData({ ...viewData, room_object: [...viewData.room_object, thumb] })
         }
@@ -742,11 +752,11 @@ export default ({ data, mode, selectedView }) => {
                         <div style={{ position: "relative" }} className="d-flex gap-3 align-items-center">
                             {viewData?.room_object && viewData.room_object.map((el, idx) => (
                                 <span key={idx} className={el.id == selected.id ? styles.img__item__active : styles.img__item}>
-                                    <img onClick={() => handleSelectThumb(el.options, el.id, el)} className={styles.img} src={`${baseImageUrl}/concept_room/${el.thumbnail_img}`} />
+                                    <img onClick={() => handleSelectThumb(el.options, el.id, el)} className={styles.img} src={el.thumbnail_img} />
                                     <img onClick={() => handleDelete(el.id, el.thumbnail_img, el.options)} className={styles.xmark} src="/images/xmark.svg" />
                                 </span>
                             ))}
-                            {(viewData?.room_object && viewData.room_object.length < 6) ? (
+                            {(viewData?.room_object && viewData.room_object.length < 12) ? (
                                 <label className={styles2.file__label}>
                                     <img onClick={(e) => { setOpenThumbConfig(true) }} src="/images/add_icon.png" />
                                 </label>
@@ -754,7 +764,7 @@ export default ({ data, mode, selectedView }) => {
 
                             {openThumbConfig && (<div className={styles.thumb__config}>
                                 <h3 className={styles.label}>{isModify ? "컨셉룸 오브젝트 수정" : "컨셉룸 오브젝트 추가"}</h3>
-                                <div className={styles.room__input__group}>
+                                {/* <div className={styles.room__input__group}>
                                     <label className={styles.label}>썸네일 이미지 </label>
                                     <input className={styles.input} value={tempThumb.thumbnail_img} readOnly={true} />
                                     <label>
@@ -768,19 +778,19 @@ export default ({ data, mode, selectedView }) => {
                                             className={styles2.save__btn}>찾아보기</span>
                                         <input onChange={(e) => handleUploadPreviewImg("o_thumb", e)} className={styles2.file__input} type="file" />
                                     </label>
-                                </div>
-                                <div className={styles.input__coord__grp}>
-                                    <label className={styles.label}>좌표</label>
-                                    <div className={styles.room__input__group3}>
-                                        <label style={{ minWidth: "30px" }} className={styles.label}>X: </label>
-                                        <input value={tempThumb.x} onChange={(e) => handleInputConfig("x", e)} style={{ maxWidth: "85px", textAlign: "center" }} className={styles.input} type="text" />
-                                    </div>
-                                    <div className={styles.room__input__group3}>
-                                        <label style={{ minWidth: "35px" }} className={styles.label}>Y: </label>
-                                        <input value={tempThumb.y} onChange={(e) => handleInputConfig("y", e)} style={{ maxWidth: "85px", textAlign: "center" }} className={styles.input} type="text" />
-                                    </div>
-                                    <button onClick={handleEnableObj} className={styles.object__option}>클릭 하여 좌표 추가</button>
-                                </div>
+                                </div> */}
+                                {/*<div className={styles.input__coord__grp}>*/}
+                                {/*    <label className={styles.label}>좌표</label>*/}
+                                {/*    <div className={styles.room__input__group3}>*/}
+                                {/*        <label style={{ minWidth: "30px" }} className={styles.label}>X: </label>*/}
+                                {/*        <input value={tempThumb.x} onChange={(e) => handleInputConfig("x", e)} style={{ maxWidth: "85px", textAlign: "center" }} className={styles.input} type="text" />*/}
+                                {/*    </div>*/}
+                                {/*    <div className={styles.room__input__group3}>*/}
+                                {/*        <label style={{ minWidth: "35px" }} className={styles.label}>Y: </label>*/}
+                                {/*        <input value={tempThumb.y} onChange={(e) => handleInputConfig("y", e)} style={{ maxWidth: "85px", textAlign: "center" }} className={styles.input} type="text" />*/}
+                                {/*    </div>*/}
+                                {/*    <button onClick={handleEnableObj} className={styles.object__option}>클릭 하여 좌표 추가</button>*/}
+                                {/*</div>*/}
                                 <div className={styles.input__coord__grp}>
                                     <label className={styles.label}>상품 소개 좌표</label>
                                     <div className={styles.room__input__group4} style={{ maxWidth: "117px" }}>
@@ -793,44 +803,96 @@ export default ({ data, mode, selectedView }) => {
                                     </div>
                                     <button onClick={handleEnableCoord} className={styles.object__option}>클릭 하여 좌표 추가</button>
                                 </div>
-                                <div className={styles.dimension}>
-                                    <label className={styles.dimen__label}>이미지 크기</label>
-                                    <div className={styles.room__input__group3}>
-                                        <label style={{ minWidth: "50px" }} className={styles.label}>Width:</label>
-                                        <input disabled={mode == "L"} onChange={(e) => setTempThumb({ ...tempThumb, width: e.target.value })} value={tempThumb.width} className={styles.input} type="text" />
-                                    </div>
-                                    <div className={styles.room__input__group3}>
-                                        <label style={{ minWidth: "50px" }} className={styles.label}>Height:</label>
-                                        <input disabled={mode == "L"} onChange={(e) => setTempThumb({ ...tempThumb, height: e.target.value })} value={tempThumb.height} className={styles.input} type="text" />
-                                    </div>
+                                <div className={styles.room__input__group2}>
+                                    <label className={styles.label}>제품명</label>
+                                    <Select
+                                        placeholder=""
+                                        className="w-100"
+                                        value={tempThumb.product}
+                                        onChange={(data) => handleObjectInput("multi_obj", data)}
+                                        classNamePrefix={styles.react__select} options={products} />
                                 </div>
-                                <div className={styles.child__obj}>
-                                    <h3 className={styles.label}>부모 오브젝트 설정</h3>
-                                    <div className={styles.child__obj__container}>
-                                        {viewData?.room_object && viewData.room_object.map((el, idx) => {
-                                            const render = []
-                                            if (el.id !== selected.id) {
-                                                render.push(
-                                                    <div key={idx} className={styles.group__check}>
-                                                        <label className={styles.check__container}>
-                                                            <input
-                                                                onChange={(e) => handleInputConfig("r_obj", e)}
-                                                                value={el.id}
-                                                                checked={tempThumb.child_obj && tempThumb.child_obj.includes(el.id)}
-                                                                type="checkbox"
-                                                                className={styles.checkbox} name="styles" />
-                                                            <span className={styles.checkmark__checkbox}></span>
-                                                            <div className={styles.child__img}>
-                                                                <img className={styles.img} src={`${baseImageUrl}/concept_room/${el.thumbnail_img}`} />
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                )
-                                            }
-                                            return render
-                                        })}
-                                    </div>
+                                {/*<div className={styles.dimension}>*/}
+                                {/*    <label className={styles.dimen__label}>이미지 크기</label>*/}
+                                {/*    <div className={styles.room__input__group3}>*/}
+                                {/*        <label style={{ minWidth: "50px" }} className={styles.label}>Width:</label>*/}
+                                {/*        <input disabled={mode == "L"} onChange={(e) => setTempThumb({ ...tempThumb, width: e.target.value })} value={tempThumb.width} className={styles.input} type="text" />*/}
+                                {/*    </div>*/}
+                                {/*    <div className={styles.room__input__group3}>*/}
+                                {/*        <label style={{ minWidth: "50px" }} className={styles.label}>Height:</label>*/}
+                                {/*        <input disabled={mode == "L"} onChange={(e) => setTempThumb({ ...tempThumb, height: e.target.value })} value={tempThumb.height} className={styles.input} type="text" />*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
+                                <div className={styles.room__input__group2}>
+                                    <label className={styles.label}>개체 3D URL: </label>
+                                    <input type="text" value={tempThumb.url_3d} style={{ height: "30px" }}
+                                        className={styles.input}
+                                        onChange={(e) => setTempThumb({ ...tempThumb, url_3d: e.target.value })} />
                                 </div>
+                                <div className={styles.room__input__group2}>
+                                    <label className={styles.label}>URL: </label>
+                                    <input
+                                        value={tempThumb.out_url}
+                                        onChange={(e) => setTempThumb({ ...tempThumb, out_url: e.target.value })}
+                                        type="text" className={styles.input} />
+                                </div>
+                                <div className={styles.room__input__group2}>
+                                    <label className={styles.label}>상품명: </label>
+                                    <input
+                                        value={tempThumb.out_product_nm}
+                                        onChange={(e) => setTempThumb({ ...tempThumb, out_product_nm: e.target.value })}
+                                        type="text" className={styles.input} />
+                                </div>
+                                <div className={styles.room__input__group2}>
+                                    <label className={styles.label}>가격: </label>
+                                    <input
+                                        value={tempThumb.out_price}
+                                        onChange={(e) => setTempThumb({ ...tempThumb, out_price: e.target.value })}
+                                        type="text" className={styles.input} />
+                                </div>
+                                <div className={styles.room__input__group}>
+                                    <label className={styles.label}>제품 이미지 </label>
+                                    <input className={styles.input} value={tempThumb.out_thumbnail} readOnly={true} />
+                                    <label>
+                                        <span
+                                            style={{
+                                                height: "36px",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                marginLeft: "5px",
+                                            }}
+                                            className={styles2.save__btn}>찾아보기</span>
+                                        <input onChange={(e) => handleUploadPreviewImg("out_pro", e)}
+                                            className={styles2.file__input} type="file" />
+                                    </label>
+                                </div>
+                                {/*<div className={styles.child__obj}>*/}
+                                {/*    <h3 className={styles.label}>부모 오브젝트 설정</h3>*/}
+                                {/*    <div className={styles.child__obj__container}>*/}
+                                {/*        {viewData?.room_object && viewData.room_object.map((el, idx) => {*/}
+                                {/*            const render = []*/}
+                                {/*            if (el.id !== selected.id) {*/}
+                                {/*                render.push(*/}
+                                {/*                    <div key={idx} className={styles.group__check}>*/}
+                                {/*                        <label className={styles.check__container}>*/}
+                                {/*                            <input*/}
+                                {/*                                onChange={(e) => handleInputConfig("r_obj", e)}*/}
+                                {/*                                value={el.id}*/}
+                                {/*                                checked={tempThumb.child_obj && tempThumb.child_obj.includes(el.id)}*/}
+                                {/*                                type="checkbox"*/}
+                                {/*                                className={styles.checkbox} name="styles" />*/}
+                                {/*                            <span className={styles.checkmark__checkbox}></span>*/}
+                                {/*                            <div className={styles.child__img}>*/}
+                                {/*                                <img className={styles.img} src={`${baseImageUrl}/concept_room/${el.thumbnail_img}`} />*/}
+                                {/*                            </div>*/}
+                                {/*                        </label>*/}
+                                {/*                    </div>*/}
+                                {/*                )*/}
+                                {/*            }*/}
+                                {/*            return render*/}
+                                {/*        })}*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
                                 <div className={styles.button__coord__grp}>
                                     <button onClick={handleCancelConfig} className={styles.button__cancel}>취소</button>
                                     <button onClick={handleSaveConfig} className={styles.button__save}>저장</button>
@@ -838,161 +900,161 @@ export default ({ data, mode, selectedView }) => {
                             </div>)}
 
                         </div>
-                        <hr />
-                        <div className={`d-flex gap-3 align-items-center ${styles.options__container}`}>
-                            {selected.options && selected.options.map((el, idx) => (
-                                <span key={idx} className={styles.img__item}>
-                                    <img onClick={() => handleEditObj(el, idx)} className={styles.img} src={`${baseImageUrl}/concept_room/${el.thumbnail_img}`} />
-                                    <img onClick={() => handleDeleteObj(el, idx)} className={styles.xmark} src="/images/xmark.svg" />
-                                </span>
-                            ))}
+                        {/*<hr />*/}
+                        {/*<div className={`d-flex gap-3 align-items-center ${styles.options__container}`}>*/}
+                        {/*    {selected.options && selected.options.map((el, idx) => (*/}
+                        {/*        <span key={idx} className={styles.img__item}>*/}
+                        {/*            <img onClick={() => handleEditObj(el, idx)} className={styles.img} src={`${baseImageUrl}/concept_room/${el.thumbnail_img}`} />*/}
+                        {/*            <img onClick={() => handleDeleteObj(el, idx)} className={styles.xmark} src="/images/xmark.svg" />*/}
+                        {/*        </span>*/}
+                        {/*    ))}*/}
 
-                            <label className={styles2.file__label}>
-                                <img onClick={handleOpenObject} src="/images/add_icon.png" />
-                            </label>
-                            {
-                                openObjCard &&
-                                (<div className={styles.object__card}>
-                                    <h3 className={styles.title}>컨셉룸 오브젝트 종류 추가</h3>
-                                    <div className={styles.room__input__group2}>
-                                        <label className={styles.label}>개체 3D URL: </label>
-                                        <input type="text" value={tempObj.option_nm} style={{ height: "30px" }} className={styles.input} onChange={(e) => setTempObj({ ...tempObj, option_nm: e.target.value })} />
-                                    </div>
-                                    <div className={styles.room__input__group}>
-                                        <label className={styles.label}>제품명</label>
-                                        <Select
-                                            isMulti={true}
-                                            placeholder=""
-                                            className="w-100"
-                                            value={tempObj.product}
-                                            onChange={(data) => handleObjectInput("multi_obj", data)}
-                                            classNamePrefix={styles.react__select} options={products} />
-                                    </div>
-                                    <div className={styles.input__wrapper}>
-                                        <label className={styles.label}>종류 표지 이미지</label>
-                                        <div className={styles.label__container}>
-                                            <label className={`${styles2.file__label} ${styles.file__label}`}>
-                                                <input onChange={(e) => handleObjectInput("c_img", e)} className={styles2.file__input} type="file" />
-                                                <span className={styles2.file__label}>파일 선택</span>
-                                            </label>
-                                            <input readOnly value={tempObj.thumbnail_img} type="text" className={styles.file__txt} />
-                                        </div>
-                                    </div>
-                                    <div className={styles.input__wrapper}>
-                                        <label className={styles.label}>오브젝트 이미지</label>
-                                        <div className={styles.label__container}>
-                                            <label className={`${styles2.file__label} ${styles.file__label}`}>
-                                                <input onChange={(e) => handleObjectInput("o_img_l", e)} className={styles2.file__input} type="file" />
-                                                <span className={styles2.file__label}>파일 선택</span>
-                                            </label>
-                                            <input type="text" readOnly value={tempObj.option_file_nm} className={styles.file__txt} />
-                                        </div>
-                                    </div>
-                                    <div className={styles.room__input__group2}>
-                                        <label className={styles.label}>URL: </label>
-                                        <input
-                                            value={tempObj.out_url}
-                                            onChange={(e) => setTempObj({ ...tempObj, out_url: e.target.value })}
-                                            type="text" className={styles.input} />
-                                    </div>
-                                    <div className={styles.room__input__group2}>
-                                        <label className={styles.label}>상품명: </label>
-                                        <input
-                                            value={tempObj.out_product_nm}
-                                            onChange={(e) => setTempObj({ ...tempObj, out_product_nm: e.target.value })}
-                                            type="text" className={styles.input} />
-                                    </div>
-                                    <div className={styles.room__input__group}>
-                                        <label className={styles.label}>제품 이미지 </label>
-                                        <input className={styles.input} value={tempObj.out_thumbnail} readOnly={true} />
-                                        <label>
-                                            <span
-                                                style={{
-                                                    height: "36px",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    marginLeft: "5px",
-                                                }}
-                                                className={styles2.save__btn}>찾아보기</span>
-                                            <input onChange={(e) => handleUploadPreviewImg("out_pro", e)} className={styles2.file__input} type="file" />
-                                        </label>
-                                    </div>
-                                    <div className={styles.room__input__group2}>
-                                        <label className={styles.label}>가격: </label>
-                                        <input
-                                            value={tempObj.out_price}
-                                            onChange={(e) => setTempObj({...tempObj, out_price: e.target.value})}
-                                            type="text" className={styles.input} />
-                                    </div>
-                                    <div className={styles.button__coord__grp}>
-                                        <button onClick={handleCancelObj} className={styles.button__cancel}>취소</button>
-                                        <button onClick={handleSaveObj} className={styles.button__save}>저장</button>
-                                    </div>
-                                </div>)
-                            }
-                        </div>
+                        {/*    <label className={styles2.file__label}>*/}
+                        {/*        <img onClick={handleOpenObject} src="/images/add_icon.png" />*/}
+                        {/*    </label>*/}
+                        {/*    {*/}
+                        {/*        openObjCard &&*/}
+                        {/*        (<div className={styles.object__card}>*/}
+                        {/*            <h3 className={styles.title}>컨셉룸 오브젝트 종류 추가</h3>*/}
+                        {/*            <div className={styles.room__input__group2}>*/}
+                        {/*                <label className={styles.label}>개체 3D URL: </label>*/}
+                        {/*                <input type="text" value={tempObj.option_nm} style={{ height: "30px" }} className={styles.input} onChange={(e) => setTempObj({ ...tempObj, option_nm: e.target.value })} />*/}
+                        {/*            </div>*/}
+                        {/*            <div className={styles.room__input__group}>*/}
+                        {/*                <label className={styles.label}>제품명</label>*/}
+                        {/*                <Select*/}
+                        {/*                    isMulti={true}*/}
+                        {/*                    placeholder=""*/}
+                        {/*                    className="w-100"*/}
+                        {/*                    value={tempObj.product}*/}
+                        {/*                    onChange={(data) => handleObjectInput("multi_obj", data)}*/}
+                        {/*                    classNamePrefix={styles.react__select} options={products} />*/}
+                        {/*            </div>*/}
+                        {/*            <div className={styles.input__wrapper}>*/}
+                        {/*                <label className={styles.label}>종류 표지 이미지</label>*/}
+                        {/*                <div className={styles.label__container}>*/}
+                        {/*                    <label className={`${styles2.file__label} ${styles.file__label}`}>*/}
+                        {/*                        <input onChange={(e) => handleObjectInput("c_img", e)} className={styles2.file__input} type="file" />*/}
+                        {/*                        <span className={styles2.file__label}>파일 선택</span>*/}
+                        {/*                    </label>*/}
+                        {/*                    <input readOnly value={tempObj.thumbnail_img} type="text" className={styles.file__txt} />*/}
+                        {/*                </div>*/}
+                        {/*            </div>*/}
+                        {/*            <div className={styles.input__wrapper}>*/}
+                        {/*                <label className={styles.label}>오브젝트 이미지</label>*/}
+                        {/*                <div className={styles.label__container}>*/}
+                        {/*                    <label className={`${styles2.file__label} ${styles.file__label}`}>*/}
+                        {/*                        <input onChange={(e) => handleObjectInput("o_img_l", e)} className={styles2.file__input} type="file" />*/}
+                        {/*                        <span className={styles2.file__label}>파일 선택</span>*/}
+                        {/*                    </label>*/}
+                        {/*                    <input type="text" readOnly value={tempObj.option_file_nm} className={styles.file__txt} />*/}
+                        {/*                </div>*/}
+                        {/*            </div>*/}
+                        {/*            <div className={styles.room__input__group2}>*/}
+                        {/*                <label className={styles.label}>URL: </label>*/}
+                        {/*                <input*/}
+                        {/*                    value={tempObj.out_url}*/}
+                        {/*                    onChange={(e) => setTempObj({ ...tempObj, out_url: e.target.value })}*/}
+                        {/*                    type="text" className={styles.input} />*/}
+                        {/*            </div>*/}
+                        {/*            <div className={styles.room__input__group2}>*/}
+                        {/*                <label className={styles.label}>상품명: </label>*/}
+                        {/*                <input*/}
+                        {/*                    value={tempObj.out_product_nm}*/}
+                        {/*                    onChange={(e) => setTempObj({ ...tempObj, out_product_nm: e.target.value })}*/}
+                        {/*                    type="text" className={styles.input} />*/}
+                        {/*            </div>*/}
+                        {/*            <div className={styles.room__input__group}>*/}
+                        {/*                <label className={styles.label}>제품 이미지 </label>*/}
+                        {/*                <input className={styles.input} value={tempObj.out_thumbnail} readOnly={true} />*/}
+                        {/*                <label>*/}
+                        {/*                    <span*/}
+                        {/*                        style={{*/}
+                        {/*                            height: "36px",*/}
+                        {/*                            display: "flex",*/}
+                        {/*                            alignItems: "center",*/}
+                        {/*                            marginLeft: "5px",*/}
+                        {/*                        }}*/}
+                        {/*                        className={styles2.save__btn}>찾아보기</span>*/}
+                        {/*                    <input onChange={(e) => handleUploadPreviewImg("out_pro", e)} className={styles2.file__input} type="file" />*/}
+                        {/*                </label>*/}
+                        {/*            </div>*/}
+                        {/*            <div className={styles.room__input__group2}>*/}
+                        {/*                <label className={styles.label}>가격: </label>*/}
+                        {/*                <input*/}
+                        {/*                    value={tempObj.out_price}*/}
+                        {/*                    onChange={(e) => setTempObj({...tempObj, out_price: e.target.value})}*/}
+                        {/*                    type="text" className={styles.input} />*/}
+                        {/*            </div>*/}
+                        {/*            <div className={styles.button__coord__grp}>*/}
+                        {/*                <button onClick={handleCancelObj} className={styles.button__cancel}>취소</button>*/}
+                        {/*                <button onClick={handleSaveObj} className={styles.button__save}>저장</button>*/}
+                        {/*            </div>*/}
+                        {/*        </div>)*/}
+                        {/*    }*/}
+                        {/*</div>*/}
                     </div>
                 </div>
-                <div className={styles.object__coord}>
-                    <button onClick={handleOpenThirdPartyConfig} className={styles.object__option}>제품 정보 추가</button>
-                    {openThirdParty && (
-                        <div>
-                            <div className={styles.coord__card}>
-                                <h3 className={styles.label}>컨셉룸 오브젝트 수정</h3>
-                                <div className={styles.room__input__group2}>
-                                    <label className={styles.label}>제품명: </label>
-                                    <input
-                                        value={outProduct.product_nm}
-                                        onChange={(e) => setOutProduct({ ...outProduct, product_nm: e.target.value })}
-                                        type="text" className={styles.input} />
-                                </div>
-                                <div className={styles.room__input__group2}>
-                                    <label className={styles.label}>제품 URL: </label>
-                                    <input
-                                        onChange={(e) => setOutProduct({ ...outProduct, url: e.target.value })}
-                                        value={outProduct.url}
-                                        type="text"
-                                        className={styles.input} />
-                                </div>
-                                <div className="d-flex align-items-center gap-3">
-                                    <div className={styles.room__input__group}>
-                                        <label className={styles.label}>영상: </label>
-                                        <input readOnly value={outProduct.thumbnail_img} placeholder="파일선택" type="text" className={styles.input} />
-                                    </div>
-                                    <label className={styles2.file__label}>
-                                        <input onChange={(e) => handleUploadPreviewImg("out_prd", e)} className={styles2.file__input} type="file" />
-                                        <span className={styles2.save__btn}>찾아보기</span>
-                                    </label>
-                                </div>
-                                <div className={styles.room__input__group2}>
-                                    <label className={styles.label}>가격: </label>
-                                    <input
-                                        onChange={(e) => setOutProduct({ ...outProduct, price: e.target.value })}
-                                        value={outProduct.price}
-                                        type="text"
-                                        className={styles.input} />
-                                </div>
-                                <div className={styles.input__coord__grp}>
-                                    <label className={styles.label}>상품 소개 좌표</label>
-                                    <div className={styles.room__input__group4} style={{ maxWidth: "110px" }}>
-                                        <label style={{ minWidth: "20px" }} className={styles.label}>X: </label>
-                                        <input onChange={(e) => setOutProduct({ ...outProduct, x: e.target.value })} value={outProduct.x} type="text" className={styles.input} />
-                                    </div>
-                                    <div className={styles.room__input__group4} style={{ maxWidth: "110px" }}>
-                                        <label style={{ minWidth: "20px" }} className={styles.label}>Y: </label>
-                                        <input onChange={(e) => setOutProduct({ ...outProduct, y: e.target.value })} value={outProduct.y} type="text" className={styles.input} />
-                                    </div>
-                                    <button onClick={handleEnableThirdPartyCoord} className={styles.object__option}>클릭 하여 좌표 추가</button>
-                                </div>
-                                <div className={styles.button__coord__grp}>
-                                    <button onClick={handleCancelThirdPartyCoord} className={styles.button__cancel}>취소</button>
-                                    <button onClick={handleSaveThirdPartyCoord} className={styles.button__save}>저장</button>
-                                    {outProduct.id !== "" && <button onClick={handleDeleteThirdPartyCoord} className={styles.button__cancel}>삭제</button>}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                {/*<div className={styles.object__coord}>*/}
+                {/*    <button onClick={handleOpenThirdPartyConfig} className={styles.object__option}>제품 정보 추가</button>*/}
+                {/*    {openThirdParty && (*/}
+                {/*        <div>*/}
+                {/*            <div className={styles.coord__card}>*/}
+                {/*                <h3 className={styles.label}>컨셉룸 오브젝트 수정</h3>*/}
+                {/*                <div className={styles.room__input__group2}>*/}
+                {/*                    <label className={styles.label}>제품명: </label>*/}
+                {/*                    <input*/}
+                {/*                        value={outProduct.product_nm}*/}
+                {/*                        onChange={(e) => setOutProduct({ ...outProduct, product_nm: e.target.value })}*/}
+                {/*                        type="text" className={styles.input} />*/}
+                {/*                </div>*/}
+                {/*                <div className={styles.room__input__group2}>*/}
+                {/*                    <label className={styles.label}>제품 URL: </label>*/}
+                {/*                    <input*/}
+                {/*                        onChange={(e) => setOutProduct({ ...outProduct, url: e.target.value })}*/}
+                {/*                        value={outProduct.url}*/}
+                {/*                        type="text"*/}
+                {/*                        className={styles.input} />*/}
+                {/*                </div>*/}
+                {/*                <div className="d-flex align-items-center gap-3">*/}
+                {/*                    <div className={styles.room__input__group}>*/}
+                {/*                        <label className={styles.label}>영상: </label>*/}
+                {/*                        <input readOnly value={outProduct.thumbnail_img} placeholder="파일선택" type="text" className={styles.input} />*/}
+                {/*                    </div>*/}
+                {/*                    <label className={styles2.file__label}>*/}
+                {/*                        <input onChange={(e) => handleUploadPreviewImg("out_prd", e)} className={styles2.file__input} type="file" />*/}
+                {/*                        <span className={styles2.save__btn}>찾아보기</span>*/}
+                {/*                    </label>*/}
+                {/*                </div>*/}
+                {/*                <div className={styles.room__input__group2}>*/}
+                {/*                    <label className={styles.label}>가격: </label>*/}
+                {/*                    <input*/}
+                {/*                        onChange={(e) => setOutProduct({ ...outProduct, price: e.target.value })}*/}
+                {/*                        value={outProduct.price}*/}
+                {/*                        type="text"*/}
+                {/*                        className={styles.input} />*/}
+                {/*                </div>*/}
+                {/*                <div className={styles.input__coord__grp}>*/}
+                {/*                    <label className={styles.label}>상품 소개 좌표</label>*/}
+                {/*                    <div className={styles.room__input__group4} style={{ maxWidth: "110px" }}>*/}
+                {/*                        <label style={{ minWidth: "20px" }} className={styles.label}>X: </label>*/}
+                {/*                        <input onChange={(e) => setOutProduct({ ...outProduct, x: e.target.value })} value={outProduct.x} type="text" className={styles.input} />*/}
+                {/*                    </div>*/}
+                {/*                    <div className={styles.room__input__group4} style={{ maxWidth: "110px" }}>*/}
+                {/*                        <label style={{ minWidth: "20px" }} className={styles.label}>Y: </label>*/}
+                {/*                        <input onChange={(e) => setOutProduct({ ...outProduct, y: e.target.value })} value={outProduct.y} type="text" className={styles.input} />*/}
+                {/*                    </div>*/}
+                {/*                    <button onClick={handleEnableThirdPartyCoord} className={styles.object__option}>클릭 하여 좌표 추가</button>*/}
+                {/*                </div>*/}
+                {/*                <div className={styles.button__coord__grp}>*/}
+                {/*                    <button onClick={handleCancelThirdPartyCoord} className={styles.button__cancel}>취소</button>*/}
+                {/*                    <button onClick={handleSaveThirdPartyCoord} className={styles.button__save}>저장</button>*/}
+                {/*                    {outProduct.id !== "" && <button onClick={handleDeleteThirdPartyCoord} className={styles.button__cancel}>삭제</button>}*/}
+                {/*                </div>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*    )}*/}
+                {/*</div>*/}
                 <div className="d-flex gap-2">
                     <div className={styles.order__box}>
                         {viewData?.room_object && viewData.room_object.sort((a, b) => a.od > b.od ? -1 : 1).map((el, idx) => (
@@ -1001,7 +1063,7 @@ export default ({ data, mode, selectedView }) => {
                                 <img
                                     onClick={() => handleSelectThumb(el.options, el.id)}
                                     className={`${styles.order__image} ${selected.id == el.id ? styles.active__od : ""}`}
-                                    src={`${baseImageUrl}/concept_room/${el.thumbnail_img}`} />
+                                    src={el.thumbnail_img} />
                             </div>
                         ))}
                     </div>

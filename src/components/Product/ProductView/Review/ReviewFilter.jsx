@@ -1,8 +1,8 @@
 import ReviewWidget from './ReviewWidget'
-import { useConceptRoomContext } from '@contexts/ConceptRoomContext'
+import { checkDevice } from '@utils/functions'
 
 const ReviewFilter = ({setReviewPage, setReviewSort, setReviewPhoto, productView, baseUrl, navigate, like_con, del_like}) => {
-  const {isMobile} = useConceptRoomContext()
+  const isMobile = checkDevice() === "mobile";
 
   return (
     <div className="review_filter" style={{overflow: !isMobile ? 'visible' : 'hidden'}}>

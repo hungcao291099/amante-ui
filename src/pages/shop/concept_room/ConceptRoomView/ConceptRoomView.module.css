@@ -1,0 +1,67 @@
+/**
+ * @author khaituong
+ * @email [khaituong2909@mail.com]
+ * @create date 2023-10-04 14:27:54
+ * @modify date 2023-10-26 12:39:32
+ * @desc This is styles of ConceptRoomView.jsx
+ */
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 1rem;
+  max-width: var(--max-w-small);
+}
+
+.room_view {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  padding: 1rem 0 4rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.room_view .divider {
+  width: 100%;
+  height: 1px;
+  background-color: #dbdbdb;
+  margin: 4rem 0;
+}
+
+/* -- Back button --  */
+.room_view .view_back {
+  padding: 0.5rem;
+  margin: -0.5rem;
+  width: fit-content;
+  color: var(--txt-black-2);
+  cursor: pointer;
+}
+
+.room_view .room_image__wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .room_view {
+    padding: 2rem 0 6rem;
+    gap: 8rem;
+  }
+  .room_view .view_back {
+    display: none;
+  }
+
+  .room_view .divider {
+    width: 100%;
+    margin: 4rem auto;
+    max-width: var(--max-w);
+  }
+
+  .room_view .room_image__wrap {
+    gap: 4rem;
+  }
+}

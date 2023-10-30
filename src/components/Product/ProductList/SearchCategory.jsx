@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useConceptRoomContext } from '@contexts/ConceptRoomContext';
+import { checkDevice } from '@utils/functions'
 
 const SearchCategory = ({ categoryTotal, keyword, shCate1Cd, shCate2Cd, parse }) => {
-  const {isMobile} = useConceptRoomContext()
+  const isMobile = checkDevice() === "mobile";
+
   const handleMoreClick = () => {
     const srchCategory = document.querySelector('.srch_category');
     srchCategory.classList.toggle('on');
