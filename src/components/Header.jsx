@@ -378,7 +378,7 @@ function Header() {
                                     ))}
                                   </div>
                                   <div className="cate-image">
-                                    {cate.file_nm?(<img src={`${baseUrl}/uploads/product/285/${cate.file_nm[0].file_nm}`} alt="" />): null}
+                                    {cate.file_nm?(<img src={`${baseUrl}/uploads/product/285/${cate.file_nm[0]?.file_nm}`} alt="" />): null}
                                     {/* {console.log(`${cate.CAT_CODE}-----${cate.file_nm[0].file_nm}`)} */}
                                   </div>
                                 </div>
@@ -389,7 +389,7 @@ function Header() {
                               <div className="cate-container">
                                 <div className="cate-list-2"></div>
                                 <div className="cate-image">
-                                {cate.file_nm?(<img src={`${baseUrl}/uploads/product/285/${cate.file_nm[0].file_nm}`} alt="" />): null}
+                                {cate.file_nm?(<img src={`${baseUrl}/uploads/product/285/${cate.file_nm[0]?.file_nm}`} alt="" />): null}
                                 </div>
                               </div>
   
