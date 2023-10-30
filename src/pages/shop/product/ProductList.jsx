@@ -77,7 +77,7 @@ const ProductList = () => {
     const fetchData = async () => {
       try {
         const { data } = await api({
-          url: `/shop/product/category/newlist`,
+          url: `/shop/product/category/newlist2`,
           method: "GET",
         });
 

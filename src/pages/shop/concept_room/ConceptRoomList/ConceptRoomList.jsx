@@ -65,9 +65,9 @@ const FilterStyleList = ({ filter, setFilter, data }) => {
           key={style.h_code}
           label={style.h_name}
           data={style.detailed}
-          icon={
-            checkActive(style.h_code) ? style.file_nm_enb : style.file_nm_dis
-          }
+          // icon={
+          //   checkActive(style.h_code) ? style.file_nm_enb : style.file_nm_dis
+          // }
           active={checkActive(style.h_code)}
           filter={filter}
           onActive={(e) => handleClick(e, style.h_code)}

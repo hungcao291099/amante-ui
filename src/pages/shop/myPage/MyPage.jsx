@@ -1,0 +1,1 @@
+import styles from "./MyPage.module.css";

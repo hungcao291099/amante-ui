@@ -25,6 +25,7 @@ export default defineConfig(async ({ command, mode }) => {
                 '@contexts': "/src/contexts",
                 '@apis': "/src/apis",
                 '@styles': "/src/styles",
+                '@hooks': "/src/hooks",
                 '@pages': "/src/pages"
             }
         },

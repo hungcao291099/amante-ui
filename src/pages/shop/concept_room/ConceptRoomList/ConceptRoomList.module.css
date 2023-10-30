@@ -105,11 +105,11 @@
 }
 
 .filter_block .filter_area .filter .filter_label:hover {
-  color: var(--orange);
+  color: #0d685b
 }
 
 .filter_block .filter_area .filter .filter_label.filter_label__active {
-  color: var(--orange);
+  color: #0d685b;
 }
 
 .filter_block .filter_area .filter .filter_label .label_text {
@@ -143,8 +143,8 @@
 }
 
 .filter_block .filter_area .filter_list .filter_item:hover {
-  background-color: var(--bg-orange);
-  color: var(--orange);
+  background-color: #d7e4e2;
+  color: #0d685b;
 }
 
 .filter_block .filter_area .filter_list .filter_item .item_name {
@@ -157,7 +157,7 @@
 }
 
 .filter_block .filter_area .filter_list .filter_item.filter_item__active {
-  color: var(--orange);
+  color: #0d685b;
 }
 
 .filter_block .filter_area .filter_list .filter_item.filter_item__active .item_icon {

@@ -48,7 +48,7 @@
   flex: 0 0 auto;
   min-width: fit-content;
   background: var(--bg-orange);
-  color: var(--orange);
+  color: #009c85;
 }
 
 .room_card .card_image {
