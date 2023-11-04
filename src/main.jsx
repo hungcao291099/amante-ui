@@ -57,6 +57,7 @@ import RoomLookUp from "@pages/manager/RoomLookUp";
 import { ManagerProvider } from "@contexts/ManagerContext";
 import RoomRestore from "@pages/manager/RoomRestore";
 import NewHome from "./pages/shop/newHome/NewHome";
+import MyPage from "./pages/shop/myPage/MyPage";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -102,6 +103,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             />
             <Route path="/shop/join/join" element={<Join />} />
             <Route path="/shop/login/login" element={<Login />} />
+            <Route path="/shop/mypage" element={<MyPage />} />
             <Route
               path="/shop/community/inquiry/inquiry"
               element={<CommunityInquiry />}

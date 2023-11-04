@@ -141,7 +141,7 @@ function Header() {
   };
 
   const enterSearchHandler = (e) => {
-    if (e.keyCode === 13) {
+    if (e.keycode === 13) {
       searchProductHandler();
     }
   };
@@ -297,7 +297,7 @@ function Header() {
                 </li>
                 <li>
                   {isLogin ? (
-                    <Link to={`/shop/mypage/account/mypage_index`}>
+                    <Link to={`/shop/mypage`}>
                       마이페이지
                     </Link>
                   ) : (

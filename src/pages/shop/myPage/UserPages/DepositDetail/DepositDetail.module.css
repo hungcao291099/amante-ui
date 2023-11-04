@@ -1,0 +1,36 @@
+.wrap{
+    width: 100%;
+    height: calc(100% -90px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.info{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-around;
+}
+.info h3{
+    font-size: 18px;
+    font-weight: 700;
+}
+.info p{
+    color: #555;
+    font-weight: 300;
+}
+.info span{
+    color: #0D685B;
+}
+.history_container{
+    display: flex;
+    width: 100%;
+    min-height: 300px;
+    align-items: center;
+    justify-content: center;
+}
+.history_container p{
+    color: #555;
+    font-weight: 300;
+}

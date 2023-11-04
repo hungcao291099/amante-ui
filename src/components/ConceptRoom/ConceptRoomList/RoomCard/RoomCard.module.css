@@ -47,7 +47,7 @@
   letter-spacing: -0.05em;
   flex: 0 0 auto;
   min-width: fit-content;
-  background: var(--bg-orange);
+  background: var(--bg-default);
   color: #009c85;
 }
 

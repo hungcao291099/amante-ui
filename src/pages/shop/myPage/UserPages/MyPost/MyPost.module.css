@@ -1,0 +1,14 @@
+.wrap{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 50px;
+}
+.wrap .table_mypost thead,th,tr,td{
+    border: none !important;
+    text-align: center;
+    padding: 5px;
+}
+.wrap td{
+    color: #999;
+}

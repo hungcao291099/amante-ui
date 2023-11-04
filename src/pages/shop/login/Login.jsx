@@ -13,6 +13,7 @@ export default () => {
     const params = new URLSearchParams(search);
     const tokenSocial = params.get('token');
     const user_id_sns = params.get('user_id');
+    
     if(tokenSocial){
         debugger
         const ONE_DAY = 84600;
@@ -74,6 +75,7 @@ export default () => {
             window.localStorage.setItem("auto_login", input.auto_login)
             window.localStorage.setItem("save_id", input.save_yn)
             window.localStorage.setItem("userdata", JSON.stringify(rest))
+            console.log(result,cookies);
             if (input.save_yn == "Y") {
                 window.localStorage.setItem("user_id", rest.user_id)
             } else {
@@ -84,6 +86,7 @@ export default () => {
         } else {
             alert(result.message)
         }
+        
     }
 
     const handlePress = async (e) => {

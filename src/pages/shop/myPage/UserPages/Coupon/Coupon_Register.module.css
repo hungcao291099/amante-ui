@@ -1,0 +1,18 @@
+.wrap,.container{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container{
+    gap: 20px;
+}
+.container input[type="text"]{
+    border-radius: 5px;
+    width: 300px;
+}
+.container input[type="button"]{
+    border-radius: 5px;
+    background-color: #d7e4e2 ;
+    padding: 5px 10px;
+}
