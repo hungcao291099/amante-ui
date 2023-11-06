@@ -1,43 +1,38 @@
-/**
- * @author khaituong
- * @email [khaituong2909@mail.com]
- * @create date 2023-09-25 15:17:36
- * @modify date 2023-10-03 12:29:34
- * @desc This is new home page for design at home
- */
-
-import jwt_decode from "jwt-decode";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { AiFillWarning, AiOutlineSearch } from "react-icons/ai";
-import { BiSolidUserRectangle } from "react-icons/bi";
-import { BsCart3 } from "react-icons/bs";
-import { FaShoppingCart } from "react-icons/fa";
-import {
-  IoIosArrowDown,
-  IoIosArrowForward,
-  IoIosArrowUp,
-} from "react-icons/io";
-import { IoSunnyOutline } from "react-icons/io5";
-import { LiaTimesSolid } from "react-icons/lia";
-import { MdManageSearch } from "react-icons/md";
-import { RiHome5Fill } from "react-icons/ri";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Cookies from "universal-cookie";
+import styles from "./NewConceptRoom.module.css";
 import { Helmet } from "react-helmet";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import api from "@utils/api/api";
+import Cookies from "universal-cookie";
 
-import Dropdown from "@components/ConceptRoom/Dropdown/Dropdown";
 import RoomCard from "@components/ConceptRoom/NewHome/RoomCard/RoomCard";
 import Footer from "@components/Footer";
-import useOutsideClick from "@hooks/useOutsideClick"
-import api from "@utils/api/api";
-import { mainWebImageURL } from "@utils/constants";
+import Header from "@components/Header";
+import { conceptRoomImageURL } from "@utils/constants";
 import { getCookie, getDayAndMonth, removeHtmlTags } from "@utils/functions";
-import styles from "./NewHome.module.css";
+
+import { AiOutlineLeft, AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import {
+  RxChevronDown,
+  RxChevronLeft,
+  RxChevronRight,
+  RxChevronUp,
+} from "react-icons/rx";
+
+import { BsXCircle } from "react-icons/bs";
+import { AiOutlineSearch } from "react-icons/ai";
+import { RiHome5Line } from "react-icons/ri";
+import { MdManageSearch } from "react-icons/md";
+import { BiLoader } from "react-icons/bi";
+import { HiOutlineShoppingCart } from "react-icons/hi2";
+import { PiUserSquareThin } from "react-icons/pi";
+import { LiaTimesSolid } from "react-icons/lia";
+
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const tabData = [
   {
     name: "홈",
-    icon: <RiHome5Fill size={22} />,
+    icon: <RiHome5Line size={22} />,
     path: "/shop/new_home",
   },
   {
@@ -47,101 +42,33 @@ const tabData = [
   },
   {
     name: "큐레이션",
-    icon: <IoSunnyOutline size={22} />,
+    icon: <BiLoader size={22} />,
     path: "/shop/concept_room/concept_room_lists",
   },
   {
     name: "스토어",
-    icon: <FaShoppingCart size={22} />,
+    icon: <HiOutlineShoppingCart size={22} />,
     path: "/shop/cart/cart_lists",
   },
   {
     name: "마이페이지",
-    icon: <BiSolidUserRectangle size={22} />,
+    icon: <PiUserSquareThin size={22} />,
     path: "/shop/mypage/account/mypage_index",
   },
 ];
 
-const Event = () => {
-  const [event, setEvent] = useState({});
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await api({
-          url: `/concept_room/banner`,
-          method: "GET",
-        });
-        setEvent(data.result[0]);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const handleRedirect = (path) => {
-    navigate(path);
-  };
-
-  const rangeDate =
-    getDayAndMonth(event.display_Sdate) +
-    " - " +
-    getDayAndMonth(event.display_Edate);
-
+const TitleLabel = () => {
   return (
-    <div className={styles.event}>
-      <div className={styles.detail}>
-        <img
-          className={styles.image}
-          src={`${mainWebImageURL}/banner/${event.file_nm2}`}
-          alt="Event"
-        />
-
-        <div className={styles.overlay}></div>
-
-        <div className={styles.content}>
-          <div className={styles.navbar}>
-            <img src={`/images/svg/dah.svg`} alt="" />
-            <div className={styles.right}>
-              <AiOutlineSearch
-                onClick={() =>
-                  handleRedirect("/shop/search_product/search_product_lists")
-                }
-                size={22}
-                className={styles.item}
-              />
-              <BsCart3
-                onClick={() => handleRedirect("/shop/cart/cart_lists")}
-                size={20}
-                className={styles.item}
-              />
-            </div>
-          </div>
-
-          <div className={styles.info}>
-            <h5 className={styles.range_date}>{rangeDate}</h5>
-            <h2 className={styles.title}>{removeHtmlTags(event.banner_nm)}</h2>
-            <h4 className={styles.subtitle}>
-              {removeHtmlTags(event.content_text2)}
-            </h4>
-          </div>
-        </div>
+    <div className={styles.label_Menu}>
+      <div className={styles.arows}>{<AiOutlineLeft size={20} />}</div>
+      <div className={styles.label}>
+        <h1>카테고리</h1>
       </div>
-
-      <Link to={event.link} className={styles.view_more}>
-        <div className={styles.inner}>
-          <h2 className={styles.title}>디자인앳홈 멤버십 REWARD</h2>
-          <IoIosArrowForward size={24} className={styles.icon} />
-        </div>
-      </Link>
     </div>
   );
 };
 
-const FilterAndSearch = ({
+const SearchBox = ({
   filter,
   keyword,
   onChange,
@@ -151,8 +78,85 @@ const FilterAndSearch = ({
 }) => {
   const [activeFilter, setActiveFilter] = useState(false);
   const [activeSearchBar, setActiveSearchBar] = useState(false);
-  const [styleList, setStyleList] = useState([]);
 
+
+
+  const handleFocusInput = () => {
+    setActiveSearchBar(true);
+  };
+
+  const handleBlurInput = () => {
+    setActiveSearchBar(false);
+  };
+
+
+
+  return (
+    <div className={styles.search_area}>
+      <div className={styles.search_Box}>
+        <div
+          onClick={onShowLayer}
+          className={`${styles.search_Input} ${
+            activeSearchBar ? styles.search_bar__active : ""
+          }`}
+        >
+          <input
+            type="text"
+            placeholder="찾으시는 공간이나 제품을 입력해주세요"
+            readOnly
+            className={styles.search_input}
+            onFocus={handleFocusInput}
+            onBlur={handleBlurInput}
+            value={keyword}
+          />
+          
+
+          {keyword ? 
+          <div className={styles.search_Icon}>
+            <LiaTimesSolid
+              onClick={onRemoveKeyword}
+              className={styles.times_icon}
+              size={20}
+            />
+            </div>
+            :
+            <div className={styles.search_Icon}>
+              <AiOutlineSearch size={26} />
+            </div>
+          }
+        </div>
+      </div>
+
+      {/* {activeFilter && (
+        <FilterList filter={filter} setFilter={onChange} data={styleList} />
+      )} */}
+    </div>
+  );
+};
+
+const BtnFilter = () => {
+  const [action, setAction] = useState(true);
+  const [styleList, setStyleList] = useState([]);
+  const [brandList, setBrandList] = useState([]);
+  const listLetter = [
+    // "ㄱ",
+    // "ㄴ",
+    // "ㄷ",
+    // "ㄹ",
+    // "ㅁ",
+    // "ㅂ",
+    // "ㅅ",
+    // "ㅇ",
+    // "ㅈ",
+    // "ㅊ",
+    // "ㅋ",
+    // "ㅌ",
+    // "ㅍ",
+    // "ㅎ",
+    // "A",
+    // "B",
+    // "C",
+  ];
   useEffect(() => {
     const fetchStyle = async () => {
       try {
@@ -165,112 +169,140 @@ const FilterAndSearch = ({
         console.log(error);
       }
     };
-
     fetchStyle();
   }, []);
 
-  const handleActiveFilter = () => {
-    setActiveFilter((prev) => !prev);
+  useEffect(() => {
+    const fetchBrand = async () => {
+      try {
+        const { data } = await api({
+          url: "shop/code2/list?code1=900",
+          method: "GET",
+        });
+        setBrandList(data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBrand();
+  }, []);
+
+  const handleDetailAction = (value) => {
+    $(`#detail-${value}`).slideToggle("fast");
+    $(`#icon-${value}`).toggleClass("rotate");
+
+    if ($(`#icon-${value}`).css("transform") === "none") {
+      $(`#icon-${value}`).css("transform", "rotate(180deg)");
+    } else {
+      $(`#icon-${value}`).css("transform", "none");
+    }
   };
 
-  const handleFocusInput = () => {
-    setActiveSearchBar(true);
-  };
-
-  const handleBlurInput = () => {
-    setActiveSearchBar(false);
-  };
+  const handleFilterBarnd = (value) => {
+    
+  }
 
   return (
-    <>
-      <div ref={scrollToRef} className={styles.filter_and_search}>
-        <button
-          onClick={handleActiveFilter}
-          className={`${styles.filter} ${
-            activeFilter ? styles.filter__active : ""
-          }`}
-        >
-          <h4>필터</h4>
-          {activeFilter ? (
-            <IoIosArrowUp size={20} />
-          ) : (
-            <IoIosArrowDown size={20} />
-          )}
-        </button>
-
+    <React.Fragment>
+      <div className={styles.BtnFilter}>
         <div
-          onClick={onShowLayer}
-          className={`${styles.search_bar} ${
-            activeSearchBar ? styles.search_bar__active : ""
-          }`}
+          className={`${styles.brand} ${action ? styles.brand__action : ""}`}
+          onClick={() => {
+            setAction(true);
+          }}
         >
-          <AiOutlineSearch className={styles.search_icon} size={24} />
-          <input
-            readOnly
-            value={keyword}
-            onFocus={handleFocusInput}
-            onBlur={handleBlurInput}
-            className={styles.search_input}
-            type="text"
-            placeholder="어떤 인테리어를 찾고 계신가요?"
-          />
-
-          {keyword && (
-            <LiaTimesSolid
-              onClick={onRemoveKeyword}
-              className={styles.times_icon}
-              size={20}
-            />
-          )}
+          <h1>브랜드</h1>
+        </div>
+        <div
+          className={`${styles.concept} ${
+            action == false ? styles.concept__action : ""
+          }`}
+          onClick={() => {
+            setAction(false);
+          }}
+        >
+          <h1>룸투어</h1>
         </div>
       </div>
 
-      {activeFilter && (
-        <FilterList filter={filter} setFilter={onChange} data={styleList} />
+      {action ? (
+        <div className={styles.list_brand_container}>
+          <div className={styles.list_brand}>
+            {brandList?.map((brand) => {
+              return (
+                <div className={styles.list_img} 
+                    key= {brand.code_cd2}
+                    onClick={() => { handleFilterBarnd(brand.code_cd2) }}
+                >
+                  <img
+                    className={styles.image}
+                    src="/asset/images/shop/product/Group 22588.png"
+                    alt="Brand image"
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div className={styles.list_letter}>
+            {listLetter?.map((letter, index) => {
+              return (
+                <div className={styles.letter} key={index}>
+                  {letter}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        styleList?.map((header) => {
+          console.log(styleList);
+
+          return (
+            <div className={styles.content_Container} key={header.h_code}>
+              <div className={styles.content_Concept}>
+                <div className={styles.header_Concept}>{header.h_name}</div>
+                <div
+                  id={`icon-${header.h_code}`}
+                  onClick={() => {
+                    handleDetailAction(header.h_code);
+                  }}
+                >
+                  {<RxChevronDown size={20} />}
+                </div>
+              </div>
+              <div id={`detail-${header.h_code}`} style={{ display: "none" }}>
+                <div className={styles.room_list}>
+                  {header.detailed?.map((detail) => {
+                    return (
+                      <div
+                        key={detail.d_code}
+                        className={styles.detail_Concept}
+                      >
+                        <div className={styles.detail_img}>
+                          <img
+                            className={styles.image}
+                            // src = {`${conceptRoomImageURL}/${conceptRoomImageURL}`}
+                            src="/asset/images/shop/product/mb_review_widget_thumb01.png"
+                            alt="Furniture image"
+                          />
+                        </div>
+                        <div className={styles.detail_name}>
+                          {detail.d_name}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        })
       )}
-    </>
+    </React.Fragment>
   );
 };
 
-// Component inside FilterAndSearch
-const FilterList = ({ filter, setFilter, data }) => {
-  const [active, setActive] = useState(null);
-  const filterRef = useRef(null);
 
-  const handleClick = (e, id) => {
-    e.stopPropagation();
-
-    setActive((prev) => (prev === id ? null : id));
-  };
-
-  const checkActive = useCallback(
-    (id) => {
-      return id === active;
-    },
-    [active]
-  );
-
-  useOutsideClick(filterRef, () => {
-    setActive(null);
-  });
-
-  return (
-    <div className={styles.filter_list}>
-      {data?.map((style) => (
-        <Dropdown
-          refElement={filterRef}
-          key={style.h_code}
-          label={style.h_name}
-          data={style.detailed}
-          active={checkActive(style.h_code)}
-          filter={filter}
-          onActive={(e) => handleClick(e, style.h_code)}
-          onChange={setFilter}
-        />
-      ))}
-    </div>
-  );
-};
 
 const RoomList = ({ data, count, refElement, currentUser }) => {
   const hasInfinityScroll = (index) => {
@@ -310,35 +342,14 @@ const RoomList = ({ data, count, refElement, currentUser }) => {
   );
 };
 
-const TabBar = () => {
-  const pathname = useLocation().pathname;
-  const navigate = useNavigate();
 
-  const activeTab = (path) => {
-    return pathname.endsWith(path);
-  };
 
-  const handleClick = (path) => {
-    navigate(path);
-  };
 
-  return (
-    <div className={styles.tab_bar}>
-      {tabData?.map((tab) => (
-        <div
-          key={tab.name}
-          onClick={() => handleClick(tab.path)}
-          className={`${styles.tab_item} ${
-            activeTab(tab.path) ? styles.tab_item__active : ""
-          }`}
-        >
-          {tab.icon}
-          <h4 className={styles.tab_name}>{tab.name}</h4>
-        </div>
-      ))}
-    </div>
-  );
-};
+
+
+
+
+
 
 const SearchLayer = ({
   active,
@@ -346,6 +357,7 @@ const SearchLayer = ({
   scrollToRef,
   currentUser,
   refresh,
+  onRemoveKeyword,
 }) => {
   const [keywordRecommendList, setKeywordRecommendList] = useState([]);
   const [keywordTrendingList, setKeywordTrendingList] = useState([]);
@@ -437,15 +449,21 @@ const SearchLayer = ({
             onChange={(e) => setKeyword(e.target.value)}
             className={styles.input}
             type="text"
-            placeholder="어떤 인테리어를 찾고 계신가요?"
+            placeholder="찾으시는 공간이나 제품을 입력해주세요"
           />
         </div>
+        {keyword?
         <button
           onClick={() => handleClick(keyword)}
           className={styles.search_button}
         >
           취소
-        </button>
+        </button> 
+        : 
+        <BsXCircle size={22}
+        onClick={onRemoveKeyword}
+        />
+        }
       </div>
 
       <div className={styles.keyword_history}>
@@ -516,7 +534,9 @@ const SearchLayer = ({
         <h2 className={styles.title}>인기 인테리어 스타일</h2>
         <div
           className={`${styles.furniture_list} ${
-            popularFurnitureList.length === 0 ? styles.furniture_list__empty : ""
+            popularFurnitureList.length === 0
+              ? styles.furniture_list__empty
+              : ""
           }`}
         >
           {popularFurnitureList.length > 0 ? (
@@ -555,35 +575,37 @@ const SearchLayer = ({
   );
 };
 
-const NotificationLayer = () => {
-  const [show, setShow] = useState(true);
+const TabBar = () => {
+  const pathname = useLocation().pathname;
+  const navigate = useNavigate();
+
+  const activeTab = (path) => {
+    return pathname.endsWith(path);
+  };
+
+  const handleClick = (path) => {
+    navigate(path);
+  };
+
   return (
-    <div
-      className={`${styles.notification_layer} ${
-        show ? styles.notification_layer__active : ""
-      }`}
-    >
-      <div className={styles.layer_box}>
-        <div className={styles.box_close}>
-          <LiaTimesSolid   
-            onClick={() => setShow(false)}
-            className={styles.icon}
-            size={22}
-          />
+    <div className={styles.tab_bar}>
+      {tabData?.map((tab) => (
+        <div
+          key={tab.name}
+          onClick={() => handleClick(tab.path)}
+          className={`${styles.tab_item} ${
+            activeTab(tab.path) ? styles.tab_item__active : ""
+          }`}
+        >
+          {tab.icon}
+          <h4 className={styles.tab_name}>{tab.name}</h4>
         </div>
-        <div className={styles.box_title}>
-          <h2 className={styles.title_name}>알림</h2>
-          <AiFillWarning size={22} />
-        </div>
-        <h4 className={styles.box_description}>
-          더 나은 경험을 위해 휴대폰 사이즈를 이용하여 방문해보세요!
-        </h4>
-      </div>
+      ))}
     </div>
   );
 };
 
-const NewHome = () => {
+const NewConceptRoom = () => {
   const [dataFilter, setDataFilter] = useState([]);
   const [roomCount, setRoomCount] = useState(0);
   const [rooms, setRooms] = useState([]);
@@ -599,7 +621,6 @@ const NewHome = () => {
 
   const token = cookies.get("member_access_token");
   const currentUser = token ? jwt_decode(token) : null;
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -625,7 +646,6 @@ const NewHome = () => {
         console.log(error);
       }
     };
-
     fetchData();
   }, [dataFilter, rowCount, keyword]);
 
@@ -653,43 +673,53 @@ const NewHome = () => {
   };
 
   const handleShowLayer = () => {
-    if (!keyword) {
+    // if (!keyword) {
       setShowSearchLayer(true);
-    }
+    // }
   };
-  console.log(rooms)
+
+
   return (
-    <div className={styles.new_home}>
+    <div className={styles.new_Concept_Room}>
+      {/* <Header/> */}
       <Helmet>
         <title>아망떼 ㅣ컨셉룸</title>
       </Helmet>
-      <Event />
-      <FilterAndSearch
-        filter={dataFilter}
-        keyword={keyword}
-        onRemoveKeyword={handleRemoveKeyword}
-        onChange={setDataFilter}
-        onShowLayer={handleShowLayer}
-        scrollToRef={scrollToRef}
+      
+      <TitleLabel />
+      <SearchBox 
+                filter={dataFilter}
+                keyword={keyword}
+                onRemoveKeyword={handleRemoveKeyword}
+                onChange={setDataFilter}
+                onShowLayer={handleShowLayer}
+                scrollToRef={scrollToRef}
       />
+      <BtnFilter/>
+
       <RoomList
         data={rooms}
         count={roomCount}
         refElement={lastRef}
         currentUser={currentUser}
       />
+
+      <div className={styles.line_page}> </div>
+
       <Footer dark />
+
       <TabBar />
+
       <SearchLayer
         active={showSearchLayer}
         onClick={handleSearch}
         scrollToRef={scrollToRef}
         currentUser={currentUser}
         refresh={refreshKeywordHistory}
+        onRemoveKeyword={handleRemoveKeyword}
       />
-      <NotificationLayer />
     </div>
   );
 };
 
-export default NewHome;
+export default NewConceptRoom;

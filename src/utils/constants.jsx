@@ -13,6 +13,7 @@ export const noLayoutPath = [
   "/shop/join/join",
   "/shop/login/login",
   "/shop/new_home",
+  "/shop/newConceptRoom",
   "/manager/login",
   "/manager/concept-room/list",
   "/manager/styles/list",
