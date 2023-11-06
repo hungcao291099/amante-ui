@@ -18,7 +18,7 @@ import RecentViewProduct from "./UserPages/RecentViewProduct";
 import { useEffect } from "react";
 import UserInfo from "./UserPages/UserInfo/UserInfo";
 const MyPage = () => {
-    const [Pages, setPages] = useState(1)
+    const [Pages, setPages] = useState(0)
     const cookies = new Cookies()
     const token = cookies.get("member_access_token")
     const [userData,setUserData] = useState()
@@ -83,7 +83,7 @@ const MyPage = () => {
                 case 10: return <FavoriteProduct />
                 case 11: return <RecentViewProduct />
     
-                default: return <UpdateUSerInfo />
+                default: return <UserInfo userData={userData}/>
             }
         }
        

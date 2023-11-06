@@ -39,6 +39,7 @@ const Banner = () => (
 const FilterStyleList = ({ filter, setFilter, data, setkeyword, brandData ,setBrandSelected, BrandSelected }) => {
   const [active, setActive] = useState(null);
   const filterRef = useRef(null);
+  const ref = useRef(null);
   const [dropdownActive,setDropdownActive] = useState(false)
   const handleClick = (e, id) => {
     e.stopPropagation();
@@ -63,9 +64,9 @@ const FilterStyleList = ({ filter, setFilter, data, setkeyword, brandData ,setBr
     setActive(null);
     setDropdownActive(false)
   });
-  const handleBrandDropdown =() =>{
-    if(dropdownActive === true){setDropdownActive(false)}
-    else{setDropdownActive(true)}
+  const handleBrandDropdown =(e) =>{
+    e.stopPropagation();
+   dropdownActive===false?setDropdownActive(true):setDropdownActive(false)
   }
   const handleBrandItemClick =(opt)=>{
     
@@ -94,8 +95,11 @@ const FilterStyleList = ({ filter, setFilter, data, setkeyword, brandData ,setBr
           onChange={setFilter}
         />
       ))}
-      <div className={styles.dropdown_block} ref={filterRef}>
-      <div className={`${styles.dropdown_label} ${dropdownActive ?styles.dropdown_label_active:""}`} onClick={()=>handleBrandDropdown()}>
+      <div className={styles.dropdown_block} 
+      ref={ref}
+      onClick={(e)=>handleBrandDropdown(e)}
+      >
+      <div className={`${styles.dropdown_label} ${dropdownActive ?styles.dropdown_label_active:""}`} >
         <h4>Brand</h4>
         {dropdownActive ? (
           <IoIosArrowUp className={styles.arrow_icon} size={18} />
@@ -311,7 +315,6 @@ const ConceptRoomList = () => {
     };
 
     fetchData();
-    console.log(BrandSelected);
   }, [dataFilter, rowCount, filter,keyword, BrandSelected]);
 
   return (
