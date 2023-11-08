@@ -52,12 +52,12 @@ const tabData = [
   {
     name: "스토어",
     icon: <HiOutlineShoppingCart size={22} />,
-    path: "/shop/cart/cart_lists",
+    path: "/shop/NewConceptRoom",
   },
   {
     name: "마이페이지",
     icon: <PiUserSquareThin size={22} />,
-    path: "/shop/mypage/account/mypage_index",
+    path: "/shop/NewConceptRoom",
   },
 ];
 

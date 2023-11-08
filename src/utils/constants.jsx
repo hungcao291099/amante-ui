@@ -14,6 +14,7 @@ export const noLayoutPath = [
   "/shop/login/login",
   "/shop/new_home",
   "/shop/newConceptRoom",
+  "/shop/mypagemb",
   "/manager/login",
   "/manager/concept-room/list",
   "/manager/styles/list",

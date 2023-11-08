@@ -58,6 +58,7 @@ import { ManagerProvider } from "@contexts/ManagerContext";
 import RoomRestore from "@pages/manager/RoomRestore";
 import NewHome from "./pages/shop/newHome/NewHome";
 import NewConceptRoom from "./pages/shop/newConceptRoom/newConceptRoom";
+import MyPageMb from "./pages/shop/myPageMb/MyPageMB";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -148,6 +149,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route path="/shop/order/order_write" element={<OrderWrite />} />
             <Route path="/shop/new_home" element={<NewHome />} />
             <Route path="shop/newConceptRoom" element={<NewConceptRoom/>}/>
+            <Route path="/shop/mypageMb" element={<MyPageMb/>}/>
             <Route
               path="/manager"
               element={<Navigate to="/manager/login" replace={true} />}
@@ -180,6 +182,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               path="/manager/concept-room/restore"
               element={<RoomRestore />}
             />
+
             
             <Route path="*" element={<Navigate to="/shop/main" />} />
           </Routes>

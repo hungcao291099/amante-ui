@@ -1,0 +1,127 @@
+.container_title{
+    background-color: #0D685B;
+    width: 414px;
+    height: 368px;
+    flex-shrink: 0;
+}
+
+.logo_container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+    
+}
+.logo_container_center{
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+.letterD{
+    color: var(--white);
+    text-align: center;
+    font-family: New York;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 496;
+    line-height: 30px; /* 136.364% */
+}
+
+.lettera{
+    color: var(--white);
+    font-family: Futura Std;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 30px;
+}
+
+.letterH{
+    color: var(--white);
+    font-family: Montserrat;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 30px;
+}
+
+.search_shopping{
+    color:#FFF;
+    display: flex;
+    gap: 0.8rem;
+
+}
+
+.search{
+
+
+}
+
+.user_container{
+
+}
+
+.user_location{
+
+}
+
+.user_avatar_edit{
+    width: 5rem;
+    height: 5rem;
+
+}
+.user_avatar{
+    position: relative;
+    display: inline-block;
+}
+
+.classimage1{
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+
+.user_edit{
+    position: absolute;
+    color: #FFF;
+    left: 6%;
+    top: 77%;
+}
+
+.classimage {
+    width: 62.368px;
+    height: 18px;
+    flex-shrink: 0;
+    border-radius: 0;
+}
+
+.user_edit h1{
+    position: absolute;
+    color: #FFF;
+    text-align: center;
+    font-family: Pretendard;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    top: 5%;
+    left: 35%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.container_title .info_container{
+
+}
