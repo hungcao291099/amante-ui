@@ -17,7 +17,10 @@ import {
   RxChevronRight,
   RxChevronUp,
 } from "react-icons/rx";
-
+GrRefresh
+import { GoCircle, GoCheckCircleFill } from "react-icons/go";
+import { GrRefresh } from "react-icons/gr";
+import { VscPassFilled, VscDebugRestart } from "react-icons/vsc";
 import { BsXCircle } from "react-icons/bs";
 import { AiOutlineSearch } from "react-icons/ai";
 import { RiHome5Line } from "react-icons/ri";
@@ -28,6 +31,7 @@ import { PiUserSquareThin } from "react-icons/pi";
 import { LiaTimesSolid } from "react-icons/lia";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Padding } from "@mui/icons-material";
 
 const tabData = [
   {
@@ -68,18 +72,8 @@ const TitleLabel = () => {
   );
 };
 
-const SearchBox = ({
-  filter,
-  keyword,
-  onChange,
-  onShowLayer,
-  scrollToRef,
-  onRemoveKeyword,
-}) => {
-  const [activeFilter, setActiveFilter] = useState(false);
+const SearchBox = ({ keyword, onShowLayer, onRemoveKeyword }) => {
   const [activeSearchBar, setActiveSearchBar] = useState(false);
-
-
 
   const handleFocusInput = () => {
     setActiveSearchBar(true);
@@ -89,14 +83,12 @@ const SearchBox = ({
     setActiveSearchBar(false);
   };
 
-
-
   return (
     <div className={styles.search_area}>
       <div className={styles.search_Box}>
         <div
           onClick={onShowLayer}
-          className={`${styles.search_Input} ${
+          className={`${styles.search_input_action} ${
             activeSearchBar ? styles.search_bar__active : ""
           }`}
         >
@@ -109,21 +101,20 @@ const SearchBox = ({
             onBlur={handleBlurInput}
             value={keyword}
           />
-          
 
-          {keyword ? 
-          <div className={styles.search_Icon}>
-            <LiaTimesSolid
-              onClick={onRemoveKeyword}
-              className={styles.times_icon}
-              size={20}
-            />
+          {keyword ? (
+            <div className={styles.search_Icon}>
+              <LiaTimesSolid
+                onClick={onRemoveKeyword}
+                className={styles.times_icon}
+                size={20}
+              />
             </div>
-            :
+          ) : (
             <div className={styles.search_Icon}>
               <AiOutlineSearch size={26} />
             </div>
-          }
+          )}
         </div>
       </div>
 
@@ -134,28 +125,28 @@ const SearchBox = ({
   );
 };
 
-const BtnFilter = () => {
+const BtnFilter = ({ onGetBrandCode, onGetStyleCode, checkFilter, checkBrand, checkBrandStyles, onGetActionBrandStyles }) => {
   const [action, setAction] = useState(true);
   const [styleList, setStyleList] = useState([]);
   const [brandList, setBrandList] = useState([]);
   const listLetter = [
-    // "ㄱ",
-    // "ㄴ",
-    // "ㄷ",
-    // "ㄹ",
-    // "ㅁ",
-    // "ㅂ",
-    // "ㅅ",
-    // "ㅇ",
-    // "ㅈ",
-    // "ㅊ",
-    // "ㅋ",
-    // "ㅌ",
-    // "ㅍ",
-    // "ㅎ",
-    // "A",
-    // "B",
-    // "C",
+    "ㄱ",
+    "ㄴ",
+    "ㄷ",
+    "ㄹ",
+    "ㅁ",
+    "ㅂ",
+    "ㅅ",
+    "ㅇ",
+    "ㅈ",
+    "ㅊ",
+    "ㅋ",
+    "ㅌ",
+    "ㅍ",
+    "ㅎ",
+    "A",
+    "B",
+    "C",
   ];
   useEffect(() => {
     const fetchStyle = async () => {
@@ -188,51 +179,51 @@ const BtnFilter = () => {
   }, []);
 
   const handleDetailAction = (value) => {
+    // $(`.${styles.filter_data}`).slideUp("fast")
     $(`#detail-${value}`).slideToggle("fast");
-    $(`#icon-${value}`).toggleClass("rotate");
-
     if ($(`#icon-${value}`).css("transform") === "none") {
-      $(`#icon-${value}`).css("transform", "rotate(180deg)");
+      $(`#icon-${value}`).css("transform", "rotate(-180deg)");
     } else {
       $(`#icon-${value}`).css("transform", "none");
     }
   };
-
-  const handleFilterBarnd = (value) => {
-    
-  }
-
+  const checkActive = (option) => {
+    return checkFilter?.includes(`${option.h_code}|${option.d_code}`);
+  };
+  console.log(checkBrand);
+  console.log(action);
   return (
     <React.Fragment>
       <div className={styles.BtnFilter}>
         <div
-          className={`${styles.brand} ${action ? styles.brand__action : ""}`}
+          className={`${styles.brand} ${checkBrandStyles ? styles.brand__action : ""}`}
           onClick={() => {
-            setAction(true);
+            onGetActionBrandStyles(true);
           }}
         >
           <h1>브랜드</h1>
         </div>
         <div
           className={`${styles.concept} ${
-            action == false ? styles.concept__action : ""
+            !checkBrandStyles ? styles.concept__action : ""
           }`}
           onClick={() => {
-            setAction(false);
+            onGetActionBrandStyles(false);
           }}
         >
           <h1>룸투어</h1>
         </div>
       </div>
 
-      {action ? (
+      {checkBrandStyles && checkBrand == false ? (
         <div className={styles.list_brand_container}>
           <div className={styles.list_brand}>
             {brandList?.map((brand) => {
               return (
-                <div className={styles.list_img} 
-                    key= {brand.code_cd2}
-                    onClick={() => { handleFilterBarnd(brand.code_cd2) }}
+                <div
+                  className={styles.list_img}
+                  key={brand.code_cd2}
+                  onClick={() => onGetBrandCode(brand.code_cd2, brand.code_nm2) }
                 >
                   <img
                     className={styles.image}
@@ -255,13 +246,12 @@ const BtnFilter = () => {
         </div>
       ) : (
         styleList?.map((header) => {
-          console.log(styleList);
-
           return (
             <div className={styles.content_Container} key={header.h_code}>
               <div className={styles.content_Concept}>
                 <div className={styles.header_Concept}>{header.h_name}</div>
                 <div
+                className={styles.icon_arrow}
                   id={`icon-${header.h_code}`}
                   onClick={() => {
                     handleDetailAction(header.h_code);
@@ -270,13 +260,16 @@ const BtnFilter = () => {
                   {<RxChevronDown size={20} />}
                 </div>
               </div>
-              <div id={`detail-${header.h_code}`} style={{ display: "none" }}>
+              <div id={`detail-${header.h_code}`} style={{ display: "none" }} className={styles.filter_data}>
                 <div className={styles.room_list}>
                   {header.detailed?.map((detail) => {
                     return (
                       <div
                         key={detail.d_code}
                         className={styles.detail_Concept}
+                        onClick={() =>
+                          onGetStyleCode(detail)
+                        }
                       >
                         <div className={styles.detail_img}>
                           <img
@@ -286,7 +279,14 @@ const BtnFilter = () => {
                             alt="Furniture image"
                           />
                         </div>
-                        <div className={styles.detail_name}>
+                        <div
+                          className={styles.detail_name}
+                        >
+                          {checkActive(detail) ? (
+                            <GoCheckCircleFill size={12} />
+                          ) : (
+                            <GoCircle size={12} />
+                          )}
                           {detail.d_name}
                         </div>
                       </div>
@@ -302,6 +302,53 @@ const BtnFilter = () => {
   );
 };
 
+
+const ListFilter = ({
+      list,
+      onGetClearList,
+      onGetRemoveFilter
+}) =>{
+  let arrFilter =[]
+  list.map(items =>{
+    let item = items.split('|')
+    let list_filter ={}
+    list_filter.h_code = item[0]
+    list_filter.d_code = item[1]
+    list_filter.d_name = item[2]
+    arrFilter.push(list_filter)
+    return arrFilter
+  })
+  return(
+    <div className={styles.list_filter_containe}>
+      <div className={styles.list_filter_center}>
+        <div className={styles.list_filter}>
+          {arrFilter.map((item)=>{
+            return(
+                <div className={styles.label_filter} key={item.h_code} id={`filter-${item.h_code}-${item.d_code}`}>
+                <h1>{item.d_name}</h1>
+                  <div className={styles.icon_filter}>
+                      {<VscPassFilled size={15} 
+                        onClick={() => onGetRemoveFilter(item.h_code, item.d_code, item.d_name)}/>}
+                  </div>
+
+                </div>
+            )
+          })}
+          
+        </div>
+        <div className={`${styles.refresh_list_filter} ${
+            list.length === 0 ? styles.list_filter__empty : ""
+          }`}
+        >
+            {<VscDebugRestart size={28}
+              onClick={onGetClearList}
+            />}
+        </div>
+      </div>
+    </div>
+  )
+
+}
 
 
 const RoomList = ({ data, count, refElement, currentUser }) => {
@@ -341,15 +388,6 @@ const RoomList = ({ data, count, refElement, currentUser }) => {
     </>
   );
 };
-
-
-
-
-
-
-
-
-
 
 const SearchLayer = ({
   active,
@@ -452,18 +490,16 @@ const SearchLayer = ({
             placeholder="찾으시는 공간이나 제품을 입력해주세요"
           />
         </div>
-        {keyword?
-        <button
-          onClick={() => handleClick(keyword)}
-          className={styles.search_button}
-        >
-          취소
-        </button> 
-        : 
-        <BsXCircle size={22}
-        onClick={onRemoveKeyword}
-        />
-        }
+        {keyword ? (
+          <button
+            onClick={() => handleClick(keyword)}
+            className={styles.search_button}
+          >
+            취소
+          </button>
+        ) : (
+          <BsXCircle size={22} onClick={onRemoveKeyword} />
+        )}
       </div>
 
       <div className={styles.keyword_history}>
@@ -489,7 +525,6 @@ const SearchLayer = ({
       </div>
     </div>
   );
-
   const keywordArea = (
     <div className={styles.keyword_area}>
       <div className={styles.keyword_block}>
@@ -614,7 +649,10 @@ const NewConceptRoom = () => {
   const [showSearchLayer, setShowSearchLayer] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [refreshKeywordHistory, setRefreshKeywordHistory] = useState(false);
-
+  const [brandCode, setBrandCode] = useState([]);
+  const [optionFilter, setOptionFilter] = useState([]);
+  const [checkBrand,setCheckBrand] = useState(false)
+  const [actionBrandStyles, setActionBrandStyles] = useState(true);
   const cookies = new Cookies();
   const observer = useRef();
   const scrollToRef = useRef();
@@ -635,6 +673,7 @@ const NewConceptRoom = () => {
             keyword: keyword,
             session_id: getCookie("session_id"),
             cust_seq: currentUser?.cust_seq,
+            brand_cd: brandCode,
           },
         });
         setRooms(data.list);
@@ -647,7 +686,7 @@ const NewConceptRoom = () => {
       }
     };
     fetchData();
-  }, [dataFilter, rowCount, keyword]);
+  }, [dataFilter, rowCount, keyword, brandCode]);
 
   const lastRef = useCallback(
     (node) => {
@@ -673,11 +712,116 @@ const NewConceptRoom = () => {
   };
 
   const handleShowLayer = () => {
-    // if (!keyword) {
+    if (!keyword) {
       setShowSearchLayer(true);
-    // }
+    }
   };
 
+  const handleGetBrandCode = (valueBrandCode, valueBrandName) => {
+    const string = `${valueBrandCode}|900|${valueBrandName}`;
+    const existOption = optionFilter?.some(item => item.includes('900'));
+    const checkString = optionFilter?.some(item => item.includes(`${valueBrandCode}|900|${valueBrandName}`));
+    let optionArray = [];
+    if (checkString) {
+      setOptionFilter([])
+      setBrandCode([])
+      setCheckBrand(false)  
+      return
+    }
+    if (existOption){
+      optionArray = optionFilter.filter((item) => !item.includes('900'))
+      setOptionFilter([...optionArray, string]) 
+      setCheckBrand(true)
+      setBrandCode(valueBrandCode)
+      setActionBrandStyles(false)
+    } else if (!checkBrand) {
+      optionArray = optionFilter.filter((item) => !item.includes('900'));
+      setOptionFilter([...optionArray,string])
+      setBrandCode(valueBrandCode)
+      setCheckBrand(true)
+      setActionBrandStyles(false)
+    } else {
+      // optionArray = optionFilter.filter((item) => !item.includes(valueBrandCode))  
+      // setOptionFilter([...optionArray, string])
+      setOptionFilter([])
+      setBrandCode([])
+      setCheckBrand(false)      
+    }
+
+  };
+
+
+
+  const handleGetStyleCode = (option) => {
+    const string = `${option.h_code}|${option.d_code}`;
+    const stringOption = `${option.h_code}|${option.d_code}|${option.d_name}`;
+    const existOption = dataFilter?.includes(string);
+    let newArray = [];
+    let optionArray = [];
+    if (existOption) {
+      newArray = dataFilter.filter((item) => item !== string);
+      setDataFilter([...newArray]);
+
+      optionArray = optionFilter.filter((item) => item !== stringOption);
+      setOptionFilter([...optionArray])
+
+    } else {
+  
+      newArray = dataFilter.filter((item) => !item.includes(option.h_code));
+      setDataFilter([...newArray, string]);
+
+      optionArray = optionFilter.filter((item) => !item.includes(option.h_code));
+      setOptionFilter([...optionArray, stringOption])
+    }
+
+    $(`#detail-${option.h_code}`).slideUp("fast");
+    $(`#icon-${option.h_code}`).css("transform","none")
+    $(`#filter-${option.h_code}-${option.d_code}`).css("display","")
+
+
+  };
+  const handleClearList = () =>{
+    setDataFilter([])
+    setOptionFilter([])
+    setBrandCode([])
+    setCheckBrand(false)
+  }
+
+  const handleRemoveFilter = (h_code, d_code, d_name) =>{
+    let optionArrayRemove = [];
+    let optionArray = [];
+    const string = `${h_code}|${d_code}`;
+    optionArrayRemove = dataFilter.filter((item) => item !== string);
+    setDataFilter([...optionArrayRemove]);
+
+    const stringOption = `${h_code}|${d_code}|${d_name}`;
+    optionArray = optionFilter.filter((item) => item !== stringOption);
+    setOptionFilter([...optionArray])
+
+    console.log(h_code, d_code, d_name);
+    $(`#filter-${h_code}-${d_code}`).css("display","none")
+
+    if (d_code === "900"){
+      setBrandCode([]);
+      setCheckBrand(false)
+    }
+    if (!optionFilter) {
+      setDataFilter([])
+    }
+  }
+
+  const handleActionBradnStyles = (action) => {
+    setActionBrandStyles(action)
+    if (action === true){
+      setBrandCode([])
+      var optionArrayChangeTab =[]
+      optionArrayChangeTab = optionFilter.filter((item) => !item.includes('900'))
+      setOptionFilter([...optionArrayChangeTab]) 
+      setCheckBrand(false)
+    }
+
+  }
+  console.log(actionBrandStyles);
 
   return (
     <div className={styles.new_Concept_Room}>
@@ -685,17 +829,31 @@ const NewConceptRoom = () => {
       <Helmet>
         <title>아망떼 ㅣ컨셉룸</title>
       </Helmet>
-      
+
       <TitleLabel />
-      <SearchBox 
-                filter={dataFilter}
-                keyword={keyword}
-                onRemoveKeyword={handleRemoveKeyword}
-                onChange={setDataFilter}
-                onShowLayer={handleShowLayer}
-                scrollToRef={scrollToRef}
+      <SearchBox
+        filter={dataFilter}
+        keyword={keyword}
+        onRemoveKeyword={handleRemoveKeyword}
+        onChange={setDataFilter}
+        onShowLayer={handleShowLayer}
+        scrollToRef={scrollToRef}
       />
-      <BtnFilter/>
+      <BtnFilter
+        onGetBrandCode={handleGetBrandCode}
+        onGetStyleCode={handleGetStyleCode}
+        checkFilter={dataFilter}
+        checkBrand={checkBrand}
+        checkBrandStyles={actionBrandStyles}
+        onGetActionBrandStyles={handleActionBradnStyles}
+      />
+
+      <ListFilter
+        list={optionFilter}
+        onGetClearList={handleClearList}
+        onGetRemoveFilter={handleRemoveFilter}
+
+      />
 
       <RoomList
         data={rooms}

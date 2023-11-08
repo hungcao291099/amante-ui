@@ -152,7 +152,7 @@ const FilterAndSearch = ({
   const [activeFilter, setActiveFilter] = useState(false);
   const [activeSearchBar, setActiveSearchBar] = useState(false);
   const [styleList, setStyleList] = useState([]);
-
+  
   useEffect(() => {
     const fetchStyle = async () => {
       try {
