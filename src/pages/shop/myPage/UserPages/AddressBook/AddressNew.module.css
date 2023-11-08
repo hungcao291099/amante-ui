@@ -1,0 +1,104 @@
+.wrap,.content,.container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+}
+.content{
+    flex-direction:column;
+    gap: 10px;
+}
+.container{
+    width: fit-content;
+    flex-direction:column;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    max-width: 600px;
+}
+.container input[type="text"]{
+    width: 600px;
+}
+.container select{
+    background-color: white;
+}
+
+#address .field input:nth-child(2){
+    width: 390px;
+}
+#address .field input:nth-child(3){
+    width: 400px;
+}
+#address .field input:first-child{
+    width: 200px;
+}
+#address .field .btn_address{
+    width: 190px;
+    background-color: #d7e4e2 ;
+    border-radius: 5px;
+}
+#phone .field{
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+#phone input{
+    width: 184px;
+    max-width: 200px;
+}
+#contact .field{
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+#contact input{
+    width: 184px;
+    max-width: 200px;
+}
+.title{
+    text-align: left;
+    font-size: 15px;
+    font-weight: 700;
+}
+.field{
+    max-width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.checkbox_container{
+    width: 600px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+.checkbox_container input[type='checkbox']{
+    width: 20px;
+    height: 20px;
+    position: static;
+    opacity: 1;
+}
+.btn_container{
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+    width: 600px;
+    justify-content: center;
+}
+.btn_container input[type="button"]{
+    width: 40%;
+    padding: 10px;
+    border-radius: 5px;
+}
+.btn_container input[type="button"]:last-child{
+    background-color: #d7e4e2 ;
+}
+.btn_container input[type="button"]:last-child:hover{
+    background-color: #b7d8d3 ;
+}
+.btn_container input[type="button"]:first-child{
+    background-color: #e9e9e9 ;
+}
+.btn_container input[type="button"]:first-child:hover{
+    background-color: #d4d4d4 ;
+}

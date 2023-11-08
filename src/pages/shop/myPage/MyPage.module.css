@@ -1,0 +1,134 @@
+.wrap h3{
+    font-size: 1rem;
+    font-weight: 500;
+}
+.wrap h4{
+    font-size: 0.8rem;
+    font-weight: lighter;
+}
+
+.wrap{
+    margin: 10px auto;
+    width: fit-content;
+    min-height: 500px;
+    display: flex;
+    gap: 10px;
+    color: #222222;
+    background-color: #dadada;
+    padding: 10px;
+    border-radius: 5px;
+   
+}
+.left_wrap{
+    width: 300px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.user_info{
+    width: 100%;
+    background-color: #0D685B;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+.avatar{
+    width: 100px;
+    height: 100px;
+    background: url("/public/images/user_logo.png") center/cover ;
+    border-radius: 100%;
+    
+}
+.info{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    width: 190px;
+}
+.member{
+    display: grid;
+    grid-template-columns: repeat(3,auto);
+    gap: 10px;
+    margin-top: 10px;
+}
+.member > div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.user_props, .cart_props{
+    border-radius: 10px;
+    background-color: white;
+
+}
+.left_wrap ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: fit-content;
+    padding: 10px;
+}
+.left_wrap ul li{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 40px;
+    padding-left: 10px;
+    border-left: 2px solid transparent;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.left_wrap li:hover{
+    background-color: #d7e4e2 ;
+    border-left: 2px solid #0D685B ;
+    transition: .3s;
+    cursor: pointer;
+}
+.logout:hover{
+    background-color: #e6caca ;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.logout{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    height: 40px;
+    padding: 10px;
+    color: rgb(207, 41, 41);
+    background-color: white;
+    border-radius: 10px;
+}
+.logout > div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.right_wrap{
+    width: 800px;
+    background-color: rgb(243, 243, 243);
+    min-height: 1%;
+    border-radius: 10px;
+    padding: 10px;
+    overflow: hidden;
+    
+}
+.right_wrap_title{
+    margin: 20px;
+    font-size: 2rem;
+}
+.right_wrap_title span{
+    color:#0D685B;
+}

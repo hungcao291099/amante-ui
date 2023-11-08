@@ -723,7 +723,12 @@ const ProductList = () => {
                                         className="opt-text"
                                         htmlFor={`${d_code.D_CODE}`}
                                       >
-                                        {d_code.D_NAME}
+                                        {h_code.H_CODE==="55_51"?
+                                        <img src={baseUrl +`/uploads/product/color/color_${d_code.D_CODE}.png`} alt="" />
+                                        :null
+                                        
+                                      }
+                                      {d_code.D_NAME}
                                       </label>
 
                                       {d_code.D_NAME.length > 10 ? (

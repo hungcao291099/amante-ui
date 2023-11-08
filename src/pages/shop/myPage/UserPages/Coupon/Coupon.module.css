@@ -1,0 +1,27 @@
+.wrap{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.menu_tab{
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 10px;
+    text-align: center;
+    
+    
+}
+.content{
+    width: 100%;
+    min-height: fit-content;
+    
+}
+.tab_detail,.tab_register{
+    padding: 10px;
+    border: 2px solid transparent;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}

@@ -9,7 +9,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { AiOutlineCheck } from "react-icons/ai";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { Link } from "react-router-dom";
 
 import RoomCard from "@components/ConceptRoom/ConceptRoomList/RoomCard/RoomCard";
@@ -36,16 +36,23 @@ const Banner = () => (
   </div>
 );
 
-const FilterStyleList = ({ filter, setFilter, data }) => {
+const FilterStyleList = ({ filter, setFilter, data, setkeyword, brandData ,setBrandSelected, BrandSelected }) => {
   const [active, setActive] = useState(null);
   const filterRef = useRef(null);
-
+  const ref = useRef(null);
+  const [dropdownActive,setDropdownActive] = useState(false)
   const handleClick = (e, id) => {
     e.stopPropagation();
 
     setActive((prev) => (prev === id ? null : id));
   };
-
+  const handleSetKeyword =(e) =>{
+    
+    if (e.key === "Enter"){
+      setkeyword(e.target.value)
+    }
+    
+  }
   const checkActive = useCallback(
     (id) => {
       return id === active;
@@ -55,9 +62,22 @@ const FilterStyleList = ({ filter, setFilter, data }) => {
 
   useOutsideClick(filterRef, () => {
     setActive(null);
+    setDropdownActive(false)
   });
+  const handleBrandDropdown =(e) =>{
+    e.stopPropagation();
+   dropdownActive===false?setDropdownActive(true):setDropdownActive(false)
+  }
+  const handleBrandItemClick =(opt)=>{
+    
+    var exitsbrand = BrandSelected?.includes(opt)    
+    
+    exitsbrand?setBrandSelected([]):setBrandSelected(opt)
+    
+  }
 
   return (
+    <div className={styles.filter_category_container}>
     <div className={styles.filter_category}>
       {data?.map((style) => (
         <Dropdown
@@ -65,6 +85,7 @@ const FilterStyleList = ({ filter, setFilter, data }) => {
           key={style.h_code}
           label={style.h_name}
           data={style.detailed}
+
           // icon={
           //   checkActive(style.h_code) ? style.file_nm_enb : style.file_nm_dis
           // }
@@ -74,7 +95,38 @@ const FilterStyleList = ({ filter, setFilter, data }) => {
           onChange={setFilter}
         />
       ))}
+      <div className={styles.dropdown_block} 
+      ref={ref}
+      onClick={(e)=>handleBrandDropdown(e)}
+      >
+      <div className={`${styles.dropdown_label} ${dropdownActive ?styles.dropdown_label_active:""}`} >
+        <h4>Brand</h4>
+        {dropdownActive ? (
+          <IoIosArrowUp className={styles.arrow_icon} size={18} />
+        ) : (
+          <IoIosArrowDown className={styles.arrow_icon} size={18} />
+        )}
+        {dropdownActive &&
+        <ul className={styles.dropdown_list}>
+        {brandData.map((brand)=>{
+          var exist = brand.code_cd2===BrandSelected
+          return <li className={`${styles.dropdown_item} ${exist?styles.dropdown_item_active:styles.dropdown_item}`} onClick={()=>handleBrandItemClick(brand.code_cd2)}>{brand.code_nm2}{exist && <AiOutlineCheck />}</li>
+        })}
+      </ul>
+        }
+        
+      </div>
+      </div>
+      
     </div>
+    <div className={styles.search_bar_container}>
+        <div className={styles.search_bar}>
+          <img src="/images/concept-room/icon/search-icon.png" alt="" />
+          <input type="text" name="" id="" placeholder="찾으시는 공간이나 제품을 입력해주세요" onKeyDown={(e)=>handleSetKeyword(e)}/>
+        </div>
+  </div>
+    </div>
+    
   );
 };
 
@@ -189,7 +241,9 @@ const ConceptRoomList = () => {
   const [styleList, setStyleList] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [filter, setFilter] = useState({ value: "newest", name: "인기순" });
-
+  const [keyword, setKeyword] = useState("");
+  const [BrandData, setBrandData] = useState([])
+  const [BrandSelected, setBrandSelected] = useState()
   const observer = useRef();
 
   const lastRef = useCallback(
@@ -220,6 +274,21 @@ const ConceptRoomList = () => {
 
     fetchStyle();
   }, []);
+  useEffect(() => {
+    const fetchStyle = async () => {
+      try {
+        const { data } = await api({
+          url: "/shop/code2/list?code1=900",
+          method: "GET",
+        });
+        setBrandData(data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchStyle();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -231,7 +300,9 @@ const ConceptRoomList = () => {
             styles: encodeURIComponent(JSON.stringify(dataFilter)),
             row_count: rowCount,
             start_num: 1,
+            keyword:keyword,
             filter: filter.value,
+            brand_cd: BrandSelected
           },
         });
         setRooms(data.list);
@@ -244,7 +315,7 @@ const ConceptRoomList = () => {
     };
 
     fetchData();
-  }, [dataFilter, rowCount, filter]);
+  }, [dataFilter, rowCount, filter,keyword, BrandSelected]);
 
   return (
     <>
@@ -259,6 +330,10 @@ const ConceptRoomList = () => {
           filter={dataFilter}
           setFilter={setDataFilter}
           data={styleList}
+          setkeyword={setKeyword}
+          brandData = {BrandData}
+          setBrandSelected={setBrandSelected}
+          BrandSelected = {BrandSelected}
         />
       </div>
       <Filter filter={filter} setFilter={setFilter} />

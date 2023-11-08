@@ -1,0 +1,102 @@
+.wrap{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+
+}
+
+.select{
+    display: flex;
+    width: fit-content;
+    justify-content: flex-start;
+    gap: 10px;
+    align-items: center;
+
+}
+.delete{
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #e6caca;
+}
+.delete:hover{
+    background-color: #ceaaaa;
+}
+.content{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.items{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+    padding: 10px;
+}
+.items > div:not(:first-child){
+    width: 60px;
+    padding: 5px 10px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.items .btn_default_active{
+    font-size: 22px;
+    border-radius: 5px;
+    color: rgb(236, 218, 159);
+}
+.items .btn_default_active:hover{
+    background-color: #ebf3d7 ;
+    text-align: center;
+    color: rgb(206, 190, 139);
+}
+.items .btn_default:hover{
+    background-color: #ebf3d7 ;
+    text-align: center;
+    color: rgb(206, 190, 139);
+}
+.items .btn_default{
+    font-size: 22px;
+    border-radius: 5px;
+    color: rgb(153, 153, 153);
+}
+
+.items .btn_edit{
+    font-size: 22px;
+    border-radius: 5px;
+    color: rgb(141, 207, 169);
+}
+.items .btn_edit:hover{
+    background-color: #d7e4e2 ;
+    text-align: center;
+    color: rgb(139, 206, 173);
+}
+.items .btn_del:hover{
+    background-color: #e6caca ;
+}
+.items .btn_del{
+    font-size: 30px;
+    color: rgb(207, 41, 41);
+    border-radius: 5px;
+}
+.item{
+    color: #999;
+    font-size: 14px;
+}
+.btn_container{
+    width: fit-content;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    border-radius: 10px;
+    background-color: #d7e4e2 ;
+}

@@ -1,0 +1,154 @@
+.wrap{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.product_block{
+    width: 700px;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+}
+.product_block_title{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.product_block_title p{
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+}
+.product_block_title span{
+    color: #999;
+    font-size: 16px;
+    font-weight: lighter;
+}
+.product_block_title input[type="button"]{
+    color: #999;
+    font-size: 12px;
+    font-weight: lighter;
+    border-radius: 5px;
+    border: 1px solid #999;
+    padding: 5px;
+}
+.product_container{
+    display: flex;
+    gap: 30px;
+    flex-direction: column;
+    max-height: 300px;
+    padding: 10px;
+    overflow: hidden;
+    overflow-y: scroll;
+
+}
+.items{
+    display: flex;
+    gap: 30px;
+    height: 100px;
+}
+.item_img{
+    width: auto;
+    height: 100px;
+}
+.item_img img{
+    width: auto;
+    height: 100px;
+}
+.item_detail{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.item_props{
+    font-size: 14px;
+}
+.item_price{
+    margin-top: 10px;
+}
+.item_props,.item_price{
+    color: #999;
+}
+.info_block{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    font-size: 14px;
+}
+.payment_title,.shipping_title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgb(209, 228, 224);
+    border-radius: 5px;
+}
+.payment_title,.shipping_title p{
+   
+    font-size: 18px;
+    font-weight: 500;
+}
+.payment_block,.shipping_block{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+}
+.shipping_container,.payment_container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.table_shipping,.table_payment{
+    width: auto;
+}
+.table_shipping td {
+    text-align: left;
+}
+.table_shipping tr td:first-child{
+    width: auto;
+    padding-right: 20px;
+}
+.table_shipping td:last-child{
+    width: fit-content;
+    white-space: nowrap;
+}
+.table_payment td {
+    text-align: left;
+}
+.table_payment tr td:first-child{
+    width: auto;
+    padding-right: 20px;
+}
+.table_payment td:last-child{
+    width: fit-content;
+    white-space: nowrap;
+}
+.btn_container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.btn_submit,.btn_cancel{
+    padding: 5px 10px;
+    width: 100px;
+    font-size: 16px;
+    border-radius: 5px;
+}
+.btn_submit{
+    background-color: #b5ddd1;
+    border: 1px solid #86e0d3;
+}
+.btn_submit:hover{
+    background-color: #97d3ca;
+}
+.btn_cancel{
+    background-color: #c9c9c915;
+}
+.btn_cancel:hover{
+    background-color: #c5c5c536;
+}
