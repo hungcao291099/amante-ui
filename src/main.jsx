@@ -57,13 +57,9 @@ import RoomLookUp from "@pages/manager/RoomLookUp";
 import { ManagerProvider } from "@contexts/ManagerContext";
 import RoomRestore from "@pages/manager/RoomRestore";
 import NewHome from "./pages/shop/newHome/NewHome";
-<<<<<<< HEAD
 import NewConceptRoom from "./pages/shop/newConceptRoom/newConceptRoom";
 import MyPageMb from "./pages/shop/myPageMb/MyPageMB";
-=======
 import MyPage from "./pages/shop/myPage/MyPage";
->>>>>>> 166e4c67e84211812027abf1cea536ea3e2ee9b7
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <ScrollTop />
